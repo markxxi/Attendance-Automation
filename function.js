@@ -116,6 +116,7 @@ function submitFile() {
     let currentUser = null;
     let days = [];
     let times = [];
+<<<<<<< HEAD
     let firstHalfStored = false; // tracker
 
     console.log("Raw JSON Data:", json); 
@@ -136,6 +137,16 @@ function submitFile() {
                         mergeRecords(currentUser.records, newRecords);
                     }
                     users.push(currentUser); 
+=======
+    let firstHalfStored = false; 
+
+    json.forEach((row) => {
+        if (row[0]?.toString().startsWith("US")) {
+            const userDetails = row.join(" ").match(/ID:\s*(\d+)\s*Name:\s*([\w\s]+)\s*Dep\.\s*:\s*(\w+)/);
+            if (userDetails) {
+                if (currentUser) {
+                    users.push(currentUser);
+>>>>>>> 77502142f5bf9163de77c6db369bce7d9c56d015
                 }
 
                 currentUser = {
@@ -147,6 +158,7 @@ function submitFile() {
 
                 days = [];
                 times = [];
+<<<<<<< HEAD
                 firstHalfStored = false;
             }
         } else if (row[0] === "DD") {
@@ -204,6 +216,45 @@ function mapCKtoDD(days, times) {
 }
 
 
+=======
+                firstHalfStored = false;  
+            }
+        } else if (row[0] === "DD") {
+            if (firstHalfStored) {
+                let newRecords = mapCKtoDD(days, times);
+                Object.keys(newRecords).forEach(day => {
+                    if (!currentUser.records[day]) {
+                        currentUser.records[day] = [];
+                    }
+                    currentUser.records[day] = currentUser.records[day].concat(newRecords[day]);
+                });
+
+                days = [];
+                times = [];
+            }
+            days = row.slice(1);
+            firstHalfStored = true;
+        } else if (row[0] === "CK") {
+            times.push(row.slice(1));
+        }
+    });
+
+    if (currentUser) {
+        let finalRecords = mapCKtoDD(days, times);
+        Object.keys(finalRecords).forEach(day => {
+            if (!currentUser.records[day]) {
+                currentUser.records[day] = [];
+            }
+            currentUser.records[day] = currentUser.records[day].concat(finalRecords[day]);
+        });
+
+        users.push(currentUser);
+    }
+
+    console.log(JSON.stringify(users, null, 2));
+}
+
+>>>>>>> 77502142f5bf9163de77c6db369bce7d9c56d015
 
 function mapCKtoDD(days, times) {
     let records = {};
