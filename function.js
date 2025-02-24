@@ -169,7 +169,7 @@ function submitFile() {
         }
     });
 
-    // Store the last user's records
+    
     if (currentUser !== null && days.length > 0) {
         let finalRecords = mapCKtoDD(days, times);
         mergeRecords(currentUser.records, finalRecords);
