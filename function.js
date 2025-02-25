@@ -177,8 +177,9 @@ function submitFile() {
     }
     convertedToJsonObj = JSON.stringify(users, null, 2);
     //console.log(convertedToJsonObj);
-    getResult();
+   // getResult();
    // console.log("Final Output:", JSON.stringify(users, null, 2));
+   openTest2();
 }
 
 //important variable!!!
@@ -232,6 +233,10 @@ function mapCKtoDD(days, times) {
     });
 
     return records;
+}
+
+function openTest2(){
+    window.location.href = "test2.html";
 }
 
 
