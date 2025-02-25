@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  :root {
+  --white: #fff;
+  --main: #eaedf0;
+  --accent: #0041ff;
+  --accent-2: #ebedf0;
+}
+/*styles*/
+body {
+  background-color: var(--main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container {
+  display: inline-block;
+  background-color: var(--white);
+  border-radius: 35px;
+  padding: 0 1em;
+  margin-top: 2em;
+}
+header {
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+.header-display {
+  display: flex;
+  align-items: center;
+}
+.header-display p {
+  color: var(--accent);
+  margin: 5px;
+  font-size: 1.2rem;
+  word-spacing: 0.5rem;
+}
+pre {
+  padding: 10px;
+  margin: 0;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--accent);
+}
+.days,
+.week {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  margin: auto;
+  padding: 0 20px;
+  justify-content: space-between;
+}
+.week div,
+.days div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3rem;
+  width: 3em;
+  border-radius: 100%;
+}
+.days div:hover {
+  background: var(--accent-2);
+  color: rgb(25, 25, 201);
+  cursor: pointer;
+}
+.week div {
+  opacity: 0.5;
+}
+.current-date {
+  background-color: var(--accent);
+  color: var(--white);
+}
+.display-selected {
+  margin-bottom: 10px;
+  padding: 20px 20px;
+  text-align: center;
+}
+</style>
+<body>
+  <div class="container">
+    <div class="calendar">
+      <header>
+        <pre class="left">◀</pre>
+        <div class="header-display">
+          <p class="display">""</p>
+        </div>
+        <pre class="right">▶</pre>
+      </header>
+      <!-- <div class="week">
+        <div>Su</div>
+        <div>Mo</div>
+        <div>Tu</div>
+        <div>We</div>
+        <div>Th</div>
+        <div>Fr</div>
+        <div>Sa</div>
+      </div> -->
+      <div class="days">
+          <!--days will be filled here-->
+      </div>
+    </div>
+     <div class="display-selected">
+          <p class="selected"></p>
+        </div>
+  </div>
+  <script>
+    let display = document.querySelector(".display");
+let days = document.querySelector(".days");
+let previous = document.querySelector(".left");
+let next = document.querySelector(".right");
+let selected = document.querySelector(".selected");
+
+let date = new Date();
+
+let year = date.getFullYear();
+let month = date.getMonth();
+
+function displayCalendar() {
+  const firstDay = new Date(year, month, 1);
+
+  const lastDay = new Date(year, month + 1, 0);
+
+  const firstDayIndex = 0//4
+  
+  const numberOfDays = lastDay.getDate(); //31
+
+  let formattedDate = date.toLocaleString("en-US", {
+    month: "long",
+    year: "numeric"
+  });
+
+  display.innerHTML = `${formattedDate}`;
+
+  for (let x = 1; x <= firstDayIndex; x++) {
+    const div = document.createElement("div");
+    div.innerHTML += "";
+
+    days.appendChild(div);
+  }
+
+  for (let i = 1; i <= numberOfDays; i++) {
+    let div = document.createElement("div");
+    let currentDate = new Date(year, month, i);
+
+    div.dataset.date = currentDate.toDateString();
+     
+    div.innerHTML += i;
+    days.appendChild(div);
+    if (
+      currentDate.getFullYear() === new Date().getFullYear() &&
+      currentDate.getMonth() === new Date().getMonth() &&
+      currentDate.getDate() === new Date().getDate()
+    ) {
+      div.classList.add("current-date");
+    }
+  }
+}
+
+displayCalendar();
+
+previous.addEventListener("click", () => {
+  days.innerHTML = "";
+  selected.innerHTML = "";
+
+  if (month < 0) {
+    month = 11;
+    year = year - 1;
+  }
+
+  month = month - 1;
+
+  date.setMonth(month);
+
+  displayCalendar();
+  displaySelected();
+});
+
+next.addEventListener("click", () => {
+  days.innerHTML = "";
+  selected.innerHTML = "";
+
+  if (month > 11) {
+    month = 0;
+    year = year + 1;
+  }
+
+  month = month + 1;
+  date.setMonth(month);
+
+  displayCalendar();
+  displaySelected();
+});
+
+function displaySelected() {
+  const dayElements = document.querySelectorAll(".days div");
+  dayElements.forEach((day) => {
+    day.addEventListener("click", (e) => {
+      const selectedDate = e.target.dataset.date;
+      selected.innerHTML = `Selected Date : ${selectedDate}`;
+    });
+  });
+}
+displaySelected();
+  </script>
+</body>
+</html>

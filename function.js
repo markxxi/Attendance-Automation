@@ -27,7 +27,7 @@ function previewExcelFile(file) {
 
         json = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
         
-        console.log('JSON Output:', json);
+       // console.log('JSON Output:', json);
         displayTable(json);
     };
 
@@ -175,8 +175,22 @@ function submitFile() {
         mergeRecords(currentUser.records, finalRecords);
         users.push(currentUser);
     }
+    convertedToJsonObj = JSON.stringify(users, null, 2);
+    //console.log(convertedToJsonObj);
+    getResult();
+   // console.log("Final Output:", JSON.stringify(users, null, 2));
+}
 
-    console.log("Final Output:", JSON.stringify(users, null, 2));
+//important variable!!!
+var convertedToJsonObj;
+
+function getResult(){
+    var jsonparse = JSON.parse(convertedToJsonObj);
+
+    for(var test of jsonparse){
+        console.log(test.records[3][0]);
+        console.log();
+    }
 }
 
 function mergeRecords(existingRecords, newRecords) {
