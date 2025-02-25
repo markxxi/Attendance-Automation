@@ -26,18 +26,11 @@ body {
 .container1 {
   background-color: var(--white);
   border-radius: 35px;
-  width: 50%;
-  
+  width: fit-content;
+  padding: 15px;
 }
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-}
-.header-display {
-  display: flex;
-  align-items: center;
+  margin: 6px;
 }
 .header-display p {
   color: var(--accent);
@@ -53,7 +46,7 @@ pre {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   margin: auto;
-  padding: 0 20px;
+  
   justify-content: space-between;
 }
 .week div,
@@ -61,8 +54,8 @@ pre {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 1.8rem;
+  width: 1.8rem;
   border-radius: 100%;
 }
 .days div:hover {
@@ -80,17 +73,15 @@ pre {
 
 </style>
 <body>
-  <div class="container-fluid border">
-<div>
-  test
-</div>
-  <div class="container1 border-fluid">
-    <div class="calendar">
+  <div class="container-fluid ">
+
+  <div class="container1 ">
+    <div class="calendar ">
       <header>
         
-        <div class="header-display">
-          <p class="display">""</p>
-        </div>
+        <div class="header-display "></div>
+          <p class="display "></p>
+        
         
       </header>
       <!-- <div class="week">
@@ -128,7 +119,7 @@ function displayCalendar() {
 
   const lastDay = new Date(year, month + 1, 0);
 
-  const firstDayIndex = 0//4
+  const firstDayIndex = firstDay.getDay();//4
   
   const numberOfDays = lastDay.getDate(); //31
 
