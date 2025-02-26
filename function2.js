@@ -26,6 +26,7 @@ window.onload =  function displayJsonDataToTable(){
                 splitTime(key, cell4, 0);
                 splitTime(key, cell5, 3);
                 calculateTimeDifference(key, cell8);
+                overtime(cell6);
             }
         }
     }
@@ -58,11 +59,11 @@ function calculateTimeDifference(key, cell8){
         var getFirstTime = splitString[0];
         var getLastTime = splitString[3];
         
-      calc(getFirstTime, getLastTime, cell8);
+        calc(getFirstTime, getLastTime, cell8);
     }
 }
 var totalRenderedTime, hours, minutes;
-function calc(start, end, cell8){
+function calc(start, end, cell8, key){
     start = start.split(":");
     end = end.split(":");
     var startDate = new Date(0, 0, 0, start[0], start[1], 0);
@@ -71,14 +72,30 @@ function calc(start, end, cell8){
     //console.log(diff);
     hours = Math.floor(diff / 1000 / 60 / 60);
     diff -= hours * 1000 * 60 * 60;
+
     minutes = Math.floor(diff / 1000 / 60);
+
     totalRenderedTime = (hours <= 9 ? "0" : "") + hours-1 + " HRS " + (minutes <= 9? "0" : "") + minutes + " MINS ";
+    
     //console.log(totalRenderedTime);
+    
     cell8.textContent = totalRenderedTime;
     //console.log((hours <= 9 ? "0" : "") + hours-1 + ":" + (minutes <= 9 ? "0" : "") + minutes);
-}
 
-function overtime(){
-    
-}
+    }
 
+    function overtime(cell6){
+        if(!totalRenderedTime == 0){
+        if (hours > 8){
+            var minusHrs = hours - 9;
+            //console.log(minusHrs);
+            var totalOvertime = minusHrs + " " + minutes;
+            cell6.textContent = totalOvertime.replace("0", " ");
+            //console.log(hours - 9 + " " + minutes);
+        } else {
+            cell6.textContent = totalOvertime.replace("0"," ") + minutes;
+        }
+    } else {
+        console.log("-");
+    }
+    }
