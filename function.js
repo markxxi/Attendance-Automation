@@ -177,20 +177,32 @@ function submitFile() {
     }
     convertedToJsonObj = JSON.stringify(users, null, 2);
     //console.log(convertedToJsonObj);
-   // getResult();
-   // console.log("Final Output:", JSON.stringify(users, null, 2));
-   openTest2();
+    //getResult();
+    // console.log("Final Output:", JSON.stringify(users, null, 2));
+    // openTest2();
+    //window.location.href = "test3.html";
+  
+    //window.addEventListener('load',tableresult,false);
+    handleJsonString();
 }
 
 //important variable!!!
 var convertedToJsonObj;
-
+var jsonparse;
 function getResult(){
-    var jsonparse = JSON.parse(convertedToJsonObj);
+     jsonparse = JSON.parse(convertedToJsonObj);
+        for(var test of jsonparse){
+            //console.log(test.records[3][0]);
+            console.log(test);
+        }
+}
 
-    for(var test of jsonparse){
-        console.log(test.records[3][0]);
-        console.log();
+function handleJsonString(){
+    try{
+        localStorage.setItem('jsonData',convertedToJsonObj);
+        window.location.href="test3.html";
+    }catch(e){
+        console.log("Invalid format.");
     }
 }
 
@@ -218,11 +230,8 @@ function mapCKtoDD(days, times) {
     return records;
 }
 
-
-
 function mapCKtoDD(days, times) {
     let records = {};
-    
     days.forEach((day, index) => {
         if (!records[day]) records[day] = [];
         times.forEach(timeRow => {
@@ -235,11 +244,22 @@ function mapCKtoDD(days, times) {
     return records;
 }
 
-function openTest2(){
-    window.location.href = "test2.html";
-}
-
-
 uploadButton.addEventListener("click", uploadFile);
 reuploadButton.addEventListener("click", uploadFile);
 submitButton.addEventListener("click", submitFile);
+
+//-----------------------------
+
+function tableresult(){
+    const tableBody = document.querySelector('#tableResult tbody');
+    for(i = 0; i<jsonparse.length;i++){
+        const row = jsonparse[i];
+        const tr = document.createElement('tr');
+        for(let key in row){
+            const td = document.createElement('td');
+            td.textContent=row[key];
+            tr.appendChild(td);
+        }
+        tableBody.appendChild(tr);
+    }
+}
