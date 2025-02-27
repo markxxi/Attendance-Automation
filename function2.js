@@ -31,13 +31,15 @@ window.onload = function displayJsonDataToTable() {
 
                 
                 overtime(key, cell6);
+                undertime(key, cell7);
             }
         }
     }
 }
-
+var timeRecordForDate;
 function splitTime(key, cell4, index) {
-    var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
+    //arrays is related to calendar: change
+    timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
     if (typeof timeRecordForDate === "undefined") {
         cell4.textContent = "No available data.";
     } else {
@@ -49,7 +51,7 @@ function splitTime(key, cell4, index) {
 }
 
 function calculateTimeDifference(key, cell8) {
-    var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
+   // var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
 
     if (typeof timeRecordForDate === "undefined") {
         cell8.textContent = "No data";
@@ -94,7 +96,7 @@ function calc(start, end, cell8) {
 
 function overtime(key, cell6) {
     
-    var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
+   // var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
 
     if (typeof timeRecordForDate === "undefined") {
         cell6.textContent = "No data"; 
@@ -115,6 +117,27 @@ function overtime(key, cell6) {
     }
 }
 
-function undertime(){
-    
+function undertime(key, cell7){
+    if (typeof timeRecordForDate === "undefined"){
+        cell7.textContent="No data";
+        return;
+    }
+
+    if (hours !== undefined && minutes !== undefined){
+        if(hours < 8){
+            var undertimeHours = 8-hours;
+            console.log(undertimeHours);
+        } else {
+            cell7.textContent = "-";
+        }
+    } else {
+        cell7.textContent = "Invalid time data"
+    }
+}
+
+function testAssign (){
+    equiv = {};
+    for(i =0 ; i <= 3; i++){
+        
+    }
 }
