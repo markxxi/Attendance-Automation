@@ -16,6 +16,7 @@ window.onload = function displayJsonDataToTable() {
                 var cell6 = row.insertCell(5);
                 var cell7 = row.insertCell(6);
                 var cell8 = row.insertCell(7);
+                var cell9 = row.insertCell(8);
 
                 
                 cell1.textContent = jsonObject[key].id;
@@ -30,12 +31,12 @@ window.onload = function displayJsonDataToTable() {
                 calculateTimeDifference(key, cell8);
 
                 
-                overtime(key, cell6);
+                overtime(key, cell6, cell9);
                 undertime(key, cell7);
 
                 
             }
-        } testAssign();
+        } //minuteValues();
     }
 }
 var timeRecordForDate;
@@ -96,7 +97,7 @@ function calc(start, end, cell8) {
     }
 }
 
-function overtime(key, cell6) {
+function overtime(key, cell6, cell9) {
     
    // var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
 
@@ -108,9 +109,13 @@ function overtime(key, cell6) {
     if (hours !== undefined && minutes !== undefined) {
         if (hours > 8) {
             var overtimeHours = hours - 9; 
-           // console.log(overtimeHours);
+            //console.log(overtimeHours);
             var totalOvertime = (overtimeHours <=0 ? "" : overtimeHours + " HRS ") + (minutes <= 9 ? "0" : "") + minutes + " MINS";
+            
             cell6.textContent = totalOvertime;
+            minuteValues(minutes, cell9);
+            //cell9.textContent = convertedMins;
+            //console.log(minutes);
         } else {
             cell6.textContent = "No overtime"; 
         }
@@ -137,14 +142,7 @@ function undertime(key, cell7){
     }
 }
 
-function testAssign (){
-    const equiv = [0.1, 0.2,0.3];
-   // var hours = [];
-    let i = 0;
-    let arr = [];
-    let variables = ['a', 'b', 'c'];
-    let result = {};
-    
+function minuteValues(m, cell9){
     let minutes = []; //1-60
     let equivMins = []; //decimal for mins
     let valuesForMins = {};
@@ -177,21 +175,14 @@ function testAssign (){
     for(let i=1; i<= equivMins.length; i++){
         minutes.push(i);
     }
-    var x = 43;
+
     for (let i=0; i<=equivMins.length; i++){
         valuesForMins[minutes[i]] = equivMins[i];
     }
-    //console.log(valuesForMins);
+//console.log(valuesForMins[43]);
+   cell9.textContent = valuesForMins[m];
+}
 
-
-    for (let i = 1; i <= 3; i++) {
-        //arr.push(i);
-    }
-
-    for (let i = 0; i < arr.length; i++) {
-       //result[variables[i]] = arr[i];
-    }
-
-//console.log(result);
+function valueOfMinutesFromOT(minutes){
 
 }
