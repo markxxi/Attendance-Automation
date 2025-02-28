@@ -27,11 +27,11 @@ window.onload = function displayJsonDataToTable() {
                 splitTime(key, cell5, 3);
 
                 
-                //calculateTimeDifference(key, cell8);
+                calculateTimeDifference(key, cell8);
 
                 
-               // overtime(key, cell6);
-              //  undertime(key, cell7);
+                overtime(key, cell6);
+                undertime(key, cell7);
 
                 
             }
@@ -139,39 +139,49 @@ function undertime(key, cell7){
 
 function testAssign (){
     const equiv = [0.1, 0.2,0.3];
-    var hours = [];
+   // var hours = [];
     let i = 0;
     let arr = [];
     let variables = ['a', 'b', 'c'];
     let result = {};
     
+    let minutes = []; //1-60
+    let equivMins = []; //decimal for mins
+    let valuesForMins = {};
+    let hours = [1,2,3,4,5,6,7,8]; //1-8
+    let equivHours = [0.125, 0.250, 0.375,0.500, 0.625, 0.750, 0.875, 1.000]; //decimal for hours
+
+
     for (let i = 0.002; i <= 0.125; i += 0.002) {
         let roundedI = Math.round(i * 1000) / 1000; // Round to 3 decimal places
     
         if (roundedI === 0.012) {
             i = 0.013; 
-            continue;  
         }
     
         if (roundedI === 0.037) {
             i = 0.038;
-            continue;
         }
         if (roundedI === 0.062) {
             i = 0.063;
-            continue;
         }
         if (roundedI === 0.087) {
             i = 0.088;
-            continue;
         }
         if (roundedI === 0.112) {
             i = 0.113;
-            continue;
         }
-    
-        console.log(roundedI); 
+        equivMins.push(roundedI);
     }
+
+    for(let i=1; i<= equivMins.length; i++){
+        minutes.push(i);
+    }
+    var x = 43;
+    for (let i=0; i<=equivMins.length; i++){
+        valuesForMins[minutes[i]] = equivMins[i];
+    }
+    //console.log(valuesForMins);
 
 
     for (let i = 1; i <= 3; i++) {
@@ -179,9 +189,9 @@ function testAssign (){
     }
 
     for (let i = 0; i < arr.length; i++) {
-       // result[variables[i]] = arr[i];
+       //result[variables[i]] = arr[i];
     }
 
-//console.log(result.a);
+//console.log(result);
 
 }
