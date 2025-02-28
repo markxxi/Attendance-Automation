@@ -144,27 +144,35 @@ function testAssign (){
     let arr = [];
     let variables = ['a', 'b', 'c'];
     let result = {};
+    
+    for (let i = 0.002; i <= 0.125; i += 0.002) {
+        let roundedI = Math.round(i * 1000) / 1000; // Round to 3 decimal places
+    
+        if (roundedI === 0.012) {
+            i = 0.013; 
+            continue;  
+        }
+    
+        if (roundedI === 0.037) {
+            i = 0.038;
+            continue;
+        }
+        if (roundedI === 0.062) {
+            i = 0.063;
+            continue;
+        }
+        if (roundedI === 0.087) {
+            i = 0.088;
+            continue;
+        }
+        if (roundedI === 0.112) {
+            i = 0.113;
+            continue;
+        }
+    
+        console.log(roundedI); 
+    }
 
-
-        for (let i = 0.002; i <= 0.037; i+=0.002) {
-           
-            if (i.toFixed(3) === 0.012) {
-              i = 0.013; // continue odd
-            } /*
-            if(i===0.037){
-                i=38; 
-            }
-            if(i===0.062){
-                i=63;
-            }
-            if(i===0.087){
-               i=88;
-            }
-            if(i===0.112){
-                i=113;
-            } */
-          } 
-          
 
     for (let i = 1; i <= 3; i++) {
         //arr.push(i);
