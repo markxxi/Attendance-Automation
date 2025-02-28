@@ -27,13 +27,15 @@ window.onload = function displayJsonDataToTable() {
                 splitTime(key, cell5, 3);
 
                 
-                calculateTimeDifference(key, cell8);
+                //calculateTimeDifference(key, cell8);
 
                 
-                overtime(key, cell6);
-                undertime(key, cell7);
+               // overtime(key, cell6);
+              //  undertime(key, cell7);
+
+                
             }
-        }
+        } testAssign();
     }
 }
 var timeRecordForDate;
@@ -106,7 +108,7 @@ function overtime(key, cell6) {
     if (hours !== undefined && minutes !== undefined) {
         if (hours > 8) {
             var overtimeHours = hours - 9; 
-            console.log(overtimeHours);
+           // console.log(overtimeHours);
             var totalOvertime = (overtimeHours <=0 ? "" : overtimeHours + " HRS ") + (minutes <= 9 ? "0" : "") + minutes + " MINS";
             cell6.textContent = totalOvertime;
         } else {
@@ -126,7 +128,7 @@ function undertime(key, cell7){
     if (hours !== undefined && minutes !== undefined){
         if(hours < 8){
             var undertimeHours = 8-hours;
-            console.log(undertimeHours);
+            //console.log(undertimeHours);
         } else {
             cell7.textContent = "-";
         }
@@ -136,8 +138,42 @@ function undertime(key, cell7){
 }
 
 function testAssign (){
-    equiv = {};
-    for(i =0 ; i <= 3; i++){
-        
+    const equiv = [0.1, 0.2,0.3];
+    var hours = [];
+    let i = 0;
+    let arr = [];
+    let variables = ['a', 'b', 'c'];
+    let result = {};
+
+
+        for (let i = 0.002; i <= 0.037; i+=0.002) {
+           
+            if (i.toFixed(3) === 0.012) {
+              i = 0.013; // continue odd
+            } /*
+            if(i===0.037){
+                i=38; 
+            }
+            if(i===0.062){
+                i=63;
+            }
+            if(i===0.087){
+               i=88;
+            }
+            if(i===0.112){
+                i=113;
+            } */
+          } 
+          
+
+    for (let i = 1; i <= 3; i++) {
+        //arr.push(i);
     }
+
+    for (let i = 0; i < arr.length; i++) {
+       // result[variables[i]] = arr[i];
+    }
+
+//console.log(result.a);
+
 }
