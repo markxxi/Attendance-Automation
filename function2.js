@@ -1,46 +1,82 @@
+var selectedDate;
+function findLowestNumber(numbers) {
+    let lowest = numbers[0];  
+
+    for (let i = 1; i < numbers.length; i++) {
+        if (numbers[i] < lowest) {
+            lowest = numbers[i];
+        }
+    }
+
+    return lowest;
+}
+
+function firstNonEmptyKey (data){
+    return data.map(entry => {
+        const firstNonEmptyKey = Object.keys(entry.records).find(key => entry.records[key].length > 0);
+        return firstNonEmptyKey ? parseInt(firstNonEmptyKey) : null; 
+      });
+}
 
 var jsonObject;
 window.onload = function displayJsonDataToTable() {
     var jsonData = localStorage.getItem('jsonData');
     if (jsonData) {
-        jsonObject = JSON.parse(jsonData);
-        var tableBody = document.querySelector('#tableResult tbody');
-
-        for (var key in jsonObject) {
-            if (jsonObject.hasOwnProperty(key)) {
-                var row = tableBody.insertRow();
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
-                var cell3 = row.insertCell(2);
-                var cell4 = row.insertCell(3);
-                var cell5 = row.insertCell(4);
-                var cell6 = row.insertCell(5);
-                var cell7 = row.insertCell(6);
-                var cell8 = row.insertCell(7);
-                var cell9 = row.insertCell(8);
-
-                
-                cell1.textContent = jsonObject[key].id;
-                cell2.textContent = jsonObject[key].name;
-                cell3.textContent = jsonObject[key].department;
-
-                
-                splitTime(key, cell4, 0);
-                splitTime(key, cell5, 3);
-
-                
-                calculateTimeDifference(key, cell8, cell5);
-
-                
-                overtime(key, cell6, cell9);
-                undertime(key, cell7);
-
-                
-            }
-        } //minuteValues();
+    jsonObject = JSON.parse(jsonData);
+    selectedDate = findLowestNumber(firstNonEmptyKey(jsonObject));
+    updateTable(selectedDate); 
     }
 }
+
+document.getElementById("startDate").addEventListener("change", function (event) {
+    selectedDate = event.target.value; // Update selected date
+    //updateTable(selectedDate); // Refresh table with new date data
+    let lastCharDate = selectedDate.slice(-2);
+    if (lastCharDate[0] == '0') {
+        lastCharDate = lastCharDate.replace('0', '');  // Remove '0'
+        selectedDate = lastCharDate;
+      } else {
+        selectedDate = lastCharDate;
+      }
+    selectedDate = lastCharDate;
+    updateTable(selectedDate);
+    //console.log(selectedDate);
+});
+
+function updateTable(date) {
+    var tableBody = document.querySelector('#tableResult tbody');
+    tableBody.innerHTML = ""; // Clear previous rows
+
+    for (var key in jsonObject) {
+        if (jsonObject.hasOwnProperty(key)) {
+            var row = tableBody.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+            var cell8 = row.insertCell(7);
+            var cell9 = row.insertCell(8);
+
+            cell1.textContent = jsonObject[key].id;
+            cell2.textContent = jsonObject[key].name;
+            cell3.textContent = jsonObject[key].department;
+
+            splitTime(key, cell4, 0, date);
+            splitTime(key, cell5, 3, date);
+
+            calculateTimeDifference(key, cell8, cell5, date);
+
+            overtime(key, cell6, cell9, date);
+            undertime(key, cell7, date);
+        }
+    }
+}
+
 var timeRecordForDate;
+var getFirstTimeIndex;
 function splitTime(key, cell4, index) {
     //array records[3] is related to calendar: change
     timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
@@ -50,7 +86,7 @@ function splitTime(key, cell4, index) {
     } else {
         var timeToString = timeRecordForDate.toString();
         var splitString = timeToString.split(" ");
-        var getFirstTimeIndex = splitString[index];
+        getFirstTimeIndex = splitString[index];
         cell4.textContent = getFirstTimeIndex;
     }
 }
@@ -73,7 +109,7 @@ function calculateTimeDifference(key, cell8, cell5) {
 var totalRenderedTime, hours, minutes;
 
 function calc(start, end, cell8, cell5) {
-    if (start && end) { https://legendary-tribble-6994447q9jr53rwpq.github.dev/
+    if (start && end) { 
         start = start.split(":");
         end = end.split(":");
 
@@ -140,7 +176,7 @@ function overtime(key, cell6, cell9) {
                 cell9.textContent = "No data."
                 return;
             }
-            cell9.textContent = finalConversion;
+           cell9.textContent = finalConversion;
         } else {
             cell6.textContent = "No overtime"; 
         }

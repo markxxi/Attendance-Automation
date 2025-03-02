@@ -13,21 +13,26 @@ fileInput.addEventListener('change', (event) => {
     }
 });
 var json;
+
 function previewExcelFile(file) {
     const reader = new FileReader();
-    
+
     reader.onload = function(e) {
         const data = e.target.result;
-        const workbook = XLSX.read(data, { type: 'binary' });
-        
+        const workbook = XLSX.read(data, {
+            type: 'binary'
+        });
+
         const sheetNames = workbook.SheetNames;
         console.log('Sheet Names:', sheetNames);
 
         const firstSheet = workbook.Sheets[sheetNames[0]];
 
-        json = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-        
-       // console.log('JSON Output:', json);
+        json = XLSX.utils.sheet_to_json(firstSheet, {
+            header: 1
+        });
+
+        console.log('JSON Output:', json);
         displayTable(json);
     };
 
