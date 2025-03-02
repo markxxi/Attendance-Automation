@@ -1,3 +1,4 @@
+
 var jsonObject;
 window.onload = function displayJsonDataToTable() {
     var jsonData = localStorage.getItem('jsonData');
@@ -28,7 +29,7 @@ window.onload = function displayJsonDataToTable() {
                 splitTime(key, cell5, 3);
 
                 
-                calculateTimeDifference(key, cell8);
+                calculateTimeDifference(key, cell8, cell5);
 
                 
                 overtime(key, cell6, cell9);
@@ -41,10 +42,11 @@ window.onload = function displayJsonDataToTable() {
 }
 var timeRecordForDate;
 function splitTime(key, cell4, index) {
-    //arrays is related to calendar: change
+    //array records[3] is related to calendar: change
     timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
     if (typeof timeRecordForDate === "undefined") {
         cell4.textContent = "No available data.";
+
     } else {
         var timeToString = timeRecordForDate.toString();
         var splitString = timeToString.split(" ");
@@ -53,7 +55,7 @@ function splitTime(key, cell4, index) {
     }
 }
 
-function calculateTimeDifference(key, cell8) {
+function calculateTimeDifference(key, cell8, cell5) {
    // var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
 
     if (typeof timeRecordForDate === "undefined") {
@@ -64,13 +66,13 @@ function calculateTimeDifference(key, cell8) {
         var getFirstTime = splitString[0];
         var getLastTime = splitString[3];
 
-        calc(getFirstTime, getLastTime, cell8);
+        calc(getFirstTime, getLastTime, cell8, cell5);
     }
 }
 
 var totalRenderedTime, hours, minutes;
 
-function calc(start, end, cell8) {
+function calc(start, end, cell8, cell5) {
     if (start && end) { https://legendary-tribble-6994447q9jr53rwpq.github.dev/
         start = start.split(":");
         end = end.split(":");
@@ -94,6 +96,7 @@ function calc(start, end, cell8) {
         cell8.textContent = totalRenderedTime;
     } else {
         cell8.textContent = "No time data"; 
+        cell5.textContent = "No time data";
     }
 }
 
@@ -110,12 +113,34 @@ function overtime(key, cell6, cell9) {
         if (hours > 8) {
             var overtimeHours = hours - 9; 
             //console.log(overtimeHours);
-            var totalOvertime = (overtimeHours <=0 ? "" : overtimeHours + " HRS ") + (minutes <= 9 ? "0" : "") + minutes + " MINS";
-            
+            //var totalOvertime = (overtimeHours <=0 ? "" : overtimeHours + " HRS ") + (minutes <= 9 ? "0" : "") + minutes + " MINS";
+            var totalOvertime = "";
+
+        if (overtimeHours > 0) {
+            totalOvertime += overtimeHours + " HRS ";
+        }
+
+        if (minutes <= 9) {
+            totalOvertime += "0" + minutes;
+        } else {
+            totalOvertime += minutes;
+        }
+            totalOvertime += " MINS";
             cell6.textContent = totalOvertime;
-            minuteValues(minutes, cell9);
-            //cell9.textContent = convertedMins;
-            //console.log(minutes);
+            //console.log(overtimeHours);
+            console.log(hourValues(overtimeHours));
+            var ot = hourValues(overtimeHours);
+            if (typeof ot === "undefined"){
+               ot = 0.0;
+               //console.log(ot);
+            }
+            //add typeof for minute values
+            var finalConversion = ot+minuteValues(minutes);
+            if (typeof finalConversion === "undefined"){
+                cell9.textContent = "No data."
+                return;
+            }
+            cell9.textContent = finalConversion;
         } else {
             cell6.textContent = "No overtime"; 
         }
@@ -142,7 +167,7 @@ function undertime(key, cell7){
     }
 }
 
-function minuteValues(m, cell9){
+function minuteValues(m){
     let minutes = []; //1-60
     let equivMins = []; //decimal for mins
     let valuesForMins = {};
@@ -179,8 +204,20 @@ function minuteValues(m, cell9){
     for (let i=0; i<=equivMins.length; i++){
         valuesForMins[minutes[i]] = equivMins[i];
     }
-//console.log(valuesForMins[43]);
-   cell9.textContent = valuesForMins[m];
+    //console.log();
+    return valuesForMins[m];
+   //hourValues();
+}
+
+function hourValues(h){
+    let hours = [1,2,3,4,5,6,7,8]; //1-8
+    let equivHours = [0.125, 0.250, 0.375,0.500, 0.625, 0.750, 0.875, 1.000]; //decimal for hours
+    let valuesForHours = {};
+
+    for(let i = 0; i<=equivHours.length; i++){
+        valuesForHours[hours[i]]=equivHours[i];
+    }
+    return valuesForHours[h];
 }
 
 function valueOfMinutesFromOT(minutes){
