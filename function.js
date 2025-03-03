@@ -220,10 +220,11 @@ function validateTimeRecords(){
             const recordTimes = employee.records[day];
             const splitTimes = recordTimes[0]?recordTimes[0].split(' '):[];
             if(splitTimes.length !== 0 && splitTimes.length !== 4){
-                console.log(`Invalid record for ${employee.name} on day ${day}. Expected 4 time entries, found ${splitTimes.length}.`);
-            } else {
-                console.log(`Valid record for ${employee.name} on day ${day}.`);
-            }
+                const errorMsg =  `Invalid record for ${employee.name} on day ${day}. Expected 4 time entries, found ${splitTimes.length}` ;
+                $('#errorMessage').text(errorMsg);
+                $('#errorModal').modal('show');               
+                return;
+            } 
         }
     });
 }
