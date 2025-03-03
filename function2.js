@@ -24,14 +24,17 @@ window.onload = function displayJsonDataToTable() {
     if (jsonData) {
     jsonObject = JSON.parse(jsonData);
     selectedDate = findLowestNumber(firstNonEmptyKey(jsonObject));
+    //console.log(selectedDate);
     updateTable(selectedDate); 
     }
 }
 
 document.getElementById("startDate").addEventListener("change", function (event) {
-    selectedDate = event.target.value; // Update selected date
-    //updateTable(selectedDate); // Refresh table with new date data
+    selectedDate = event.target.value; 
+    //console.log(selectedDate);
+    //updateTable(selectedDate); 
     let lastCharDate = selectedDate.slice(-2);
+    //console.log(lastCharDate);
     if (lastCharDate[0] == '0') {
         lastCharDate = lastCharDate.replace('0', '');  // Remove '0'
         selectedDate = lastCharDate;
@@ -71,17 +74,19 @@ function updateTable(date) {
 
             overtime(key, cell6, cell9, date);
             undertime(key, cell7, date);
-        }
-    }
+
+            
+        } 
+    }getMonth();
 }
 
 var timeRecordForDate;
 var getFirstTimeIndex;
 function splitTime(key, cell4, index) {
     //array records[3] is related to calendar: change
-    timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
+    timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[selectedDate][0] : undefined;
     if (typeof timeRecordForDate === "undefined") {
-        cell4.textContent = "No available data.";
+        cell4.textContent = "-";
 
     } else {
         var timeToString = timeRecordForDate.toString();
@@ -95,7 +100,7 @@ function calculateTimeDifference(key, cell8, cell5) {
    // var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
 
     if (typeof timeRecordForDate === "undefined") {
-        cell8.textContent = "No data";
+        cell8.textContent = "-";
     } else {
         var timeToString = timeRecordForDate.toString();
         var splitString = timeToString.split(" ");
@@ -128,7 +133,7 @@ function calc(start, end, cell8, cell5) {
 
         minutes = Math.floor(diff / 1000 / 60);
 
-        totalRenderedTime = (hours <= 9 ? "0" : "") + hours1 + " HRS " + (minutes <= 9 ? "0" : "") + minutes + " MINS ";
+        totalRenderedTime = (hours <= 9 ? "" : "") + hours1 + " HR " + (minutes <= 9 ? "" : "") + minutes + " MIN ";
         cell8.textContent = totalRenderedTime;
     } else {
         cell8.textContent = "No time data"; 
@@ -141,7 +146,7 @@ function overtime(key, cell6, cell9) {
    // var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
 
     if (typeof timeRecordForDate === "undefined") {
-        cell6.textContent = "No data"; 
+        cell6.textContent = "-"; 
         return;
     }
 
@@ -153,18 +158,18 @@ function overtime(key, cell6, cell9) {
             var totalOvertime = "";
 
         if (overtimeHours > 0) {
-            totalOvertime += overtimeHours + " HRS ";
+            totalOvertime += overtimeHours + " HR ";
         }
 
         if (minutes <= 9) {
-            totalOvertime += "0" + minutes;
+            totalOvertime += "" + minutes;
         } else {
             totalOvertime += minutes;
         }
-            totalOvertime += " MINS";
+            totalOvertime += " MIN";
             cell6.textContent = totalOvertime;
             //console.log(overtimeHours);
-            console.log(hourValues(overtimeHours));
+            //console.log(hourValues(overtimeHours));
             var ot = hourValues(overtimeHours);
             if (typeof ot === "undefined"){
                ot = 0.0;
@@ -187,7 +192,7 @@ function overtime(key, cell6, cell9) {
 
 function undertime(key, cell7){
     if (typeof timeRecordForDate === "undefined"){
-        cell7.textContent="No data";
+        cell7.textContent="-";
         return;
     }
 
@@ -207,8 +212,7 @@ function minuteValues(m){
     let minutes = []; //1-60
     let equivMins = []; //decimal for mins
     let valuesForMins = {};
-    let hours = [1,2,3,4,5,6,7,8]; //1-8
-    let equivHours = [0.125, 0.250, 0.375,0.500, 0.625, 0.750, 0.875, 1.000]; //decimal for hours
+
 
 
     for (let i = 0.002; i <= 0.125; i += 0.002) {
@@ -256,6 +260,27 @@ function hourValues(h){
     return valuesForHours[h];
 }
 
-function valueOfMinutesFromOT(minutes){
+function getMonth(){
+    const cal= document.getElementById('startDate');
+    // const getMonth = localStorage.getItem('monthOfFile');
+    const getMonth = "Month : January 2025";
+    const regex = /Month\s*:\s*(\w+)\s*(\d{4})/;
+    const regexconv = getMonth.match(regex);
+    const year = regexconv[2];
+   // console.log(regexconv);
+   // const month = regexconv[1]; 
+   // console.log(month);
+    const month = regexconv[0].match(/Month\s*:\s*(\w+)\s*(\d{4})/)[1];
+    //console.log(month);
+    var months = ['January', 'February', 'March', 'April', 'May'];
+    for (m in months){
+       console.log(m);
+        if(m === month){
+           
+        }
+    }
+    //const date = new Date(year, month,1); 
+    //const formattedDate = date.toISOString().split('T')[0]; 
 
+    //cal.value = formattedDate;
 }

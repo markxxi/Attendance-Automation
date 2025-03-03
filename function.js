@@ -33,6 +33,18 @@ function previewExcelFile(file) {
         });
 
         console.log('JSON Output:', json);
+        let monthYear = '';
+        json.forEach((row, index) => {
+            
+                if (row[0]?.toString().startsWith("Month")) {
+                    monthYear = row.join(" "); 
+                    var monthOfFile = monthYear;
+                    console.log(monthOfFile);
+                    localStorage.setItem('monthOfFile', monthYear);
+                }
+        
+        });
+
         displayTable(json);
     };
 
@@ -48,7 +60,7 @@ function displayTable(data) {
 
     data.forEach((row, index) => {
         maxColumns = Math.max(maxColumns, row.length);
-
+        //localStorage.setItem('jsonMonth', row[0]?.toString().startsWith("Month"));
         if (index === 0) {
             tableHTML += `<thead><tr><th colspan="100%">${row.join(" ")}</th></tr></thead><tbody>`;
         } else if (row[0]?.toString().startsWith("DHSUD")) {
@@ -205,9 +217,9 @@ function getResult(){
 function handleJsonString(){
     try{
         localStorage.setItem('jsonData',convertedToJsonObj);
-        validateTimeRecords();
+        //validateTimeRecords();
         //console.log(convertedToJsonObj);
-        //window.location.href="test3.html";
+        window.location.href="test3.html";
     }catch(e){
         console.log("Invalid format.");
     }
