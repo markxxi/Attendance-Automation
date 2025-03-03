@@ -123,15 +123,15 @@ function submitFile() {
     let times = [];
     let firstHalfStored = false; // tracker
 
-    console.log("Raw JSON Data:", json); 
+    //console.log("Raw JSON Data:", json); 
 
     json.forEach((row, rowIndex) => {
-        console.log("Processing Row:", rowIndex, row); // debug point
+      //  console.log("Processing Row:", rowIndex, row); // debug point
 
         if (row[0]?.toString().startsWith("US")) {
             // Extract user details
             const userDetails = row.join(" ").match(/ID:\s*(\d+)\s*Name:\s*([\w\s]+)\s*Dep\.\s*:\s*(\w+)/);
-            console.log("Extracted User Details:", userDetails); // debug point
+            //console.log("Extracted User Details:", userDetails); // debug point
 
             if (userDetails) {
                 if (currentUser !== null) {
@@ -164,12 +164,12 @@ function submitFile() {
                 }
                 days = row.slice(1);
                 firstHalfStored = true;
-                console.log("Stored Days:", days); // debug point
+                //console.log("Stored Days:", days); // debug point
             }
         } else if (row[0] === "CK") {
             if (currentUser !== null) {
                 times.push(row.slice(1)); 
-                console.log("Captured CK Times:", times); // debug point
+                //console.log("Captured CK Times:", times); // debug point
             }
         }
     });
@@ -205,11 +205,29 @@ function getResult(){
 function handleJsonString(){
     try{
         localStorage.setItem('jsonData',convertedToJsonObj);
-        window.location.href="test3.html";
+        validateTimeRecords();
+        //console.log(convertedToJsonObj);
+        //window.location.href="test3.html";
     }catch(e){
         console.log("Invalid format.");
     }
 }
+
+function validateTimeRecords(){
+    const jsonData = JSON.parse(localStorage.getItem('jsonData'));
+    jsonData.forEach(employee => {
+        for(let day in employee.records){
+            const recordTimes = employee.records[day];
+            const splitTimes = recordTimes[0]?recordTimes[0].split(' '):[];
+            if(splitTimes.length !== 0 && splitTimes.length !== 4){
+                console.log(`Invalid record for ${employee.name} on day ${day}. Expected 4 time entries, found ${splitTimes.length}.`);
+            } else {
+                console.log(`Valid record for ${employee.name} on day ${day}.`);
+            }
+        }
+    });
+}
+
 
 function mergeRecords(existingRecords, newRecords) {
     Object.keys(newRecords).forEach(day => {
@@ -231,7 +249,7 @@ function mapCKtoDD(days, times) {
         });
     });
 
-    console.log("Mapped Records:", records); // debug point
+    //console.log("Mapped Records:", records); // debug point
     return records;
 }
 
