@@ -260,7 +260,7 @@ function hourValues(h){
     }
     return valuesForHours[h];
 }
-
+/*
 function getMonth(){
     const cal= document.getElementById('startDate');
     // const getMonth = localStorage.getItem('monthOfFile');
@@ -286,4 +286,29 @@ function getMonth(){
     //const formattedDate = date.toISOString().split('T')[0]; 
 
     //cal.value = formattedDate;
-}
+} */
+    function getMonth() {
+        const cal = document.getElementById('startDate');
+    
+        const getMonth = "Month : February 2025";  // replace with actual data or localStorage.getItem('monthOfFile')
+        const regex = /Month\s*:\s*(\w+)\s*(\d{4})/;
+        const regexconv = getMonth.match(regex);
+        const year = regexconv[2];
+        const month = regexconv[1];  // 'January'
+        
+        var months = ['January', 'February', 'March', 'April', 'May'];
+        
+        let monthIndex = months.indexOf(month);
+        if (monthIndex !== -1) {
+          let monthValueInDate = monthIndex;  
+          const date = new Date(year, monthValueInDate, 2);  
+          
+          const formattedDate = date.toISOString().split('T')[0];
+          console.log(formattedDate);
+          cal.value = formattedDate;
+        } else {
+          console.log("Month not found.");
+        }
+      }
+  
+      
