@@ -26,6 +26,7 @@ window.onload = function displayJsonDataToTable() {
     selectedDate = findLowestNumber(firstNonEmptyKey(jsonObject));
     //console.log(selectedDate);
     updateTable(selectedDate); 
+    getMonth();
     }
 }
 
@@ -77,7 +78,7 @@ function updateTable(date) {
 
             
         } 
-    }getMonth();
+    }//getMonth();
 }
 
 var timeRecordForDate;
@@ -267,18 +268,20 @@ function getMonth(){
     const regex = /Month\s*:\s*(\w+)\s*(\d{4})/;
     const regexconv = getMonth.match(regex);
     const year = regexconv[2];
-   // console.log(regexconv);
-   // const month = regexconv[1]; 
-   // console.log(month);
     const month = regexconv[0].match(/Month\s*:\s*(\w+)\s*(\d{4})/)[1];
     //console.log(month);
     var months = ['January', 'February', 'March', 'April', 'May'];
-    for (m in months){
-       console.log(m);
-        if(m === month){
-           
-        }
+    
+    let monthIndex = months.indexOf(month);
+    if(monthIndex!== -1){
+        let monthvalueindate = monthIndex+1;
+        const date = new Date(year, monthvalueindate, 1);
+        const formattedDate = date.toISOString().toString('T')[0];
+        cal.value = formattedDate;
+    } else {
+        console.log("Not found.");
     }
+
     //const date = new Date(year, month,1); 
     //const formattedDate = date.toISOString().split('T')[0]; 
 
