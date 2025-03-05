@@ -33,6 +33,7 @@ function previewExcelFile(file) {
         });
 
         console.log('JSON Output:', json);
+        localStorage.setItem('rawJsondata',json);
         let monthYear = '';
         json.forEach((row, index) => {
             

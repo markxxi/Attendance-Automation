@@ -12,7 +12,18 @@
 <body>
     
     <div class="container-fluid px-4 py-5">
-    <input id="startDate" class="form-control mb-4 w-25" type="date" />
+    <div class="row">
+        <div class=" col-sm-3">
+            <input id="startDate" class="form-control mb-4" type="date" />
+        </div>
+        <div class="col ">
+            <button id="tabView" class="btn btn-primary">Button</button>
+        </div>
+      <div class=" col-sm-6">
+
+      </div>
+    </div>   
+   <div class="container-fluid border" id="displayBox">
     <table class="table table-sm" id="tableResult">
         <thead>
             <tr>
@@ -30,7 +41,9 @@
           </thead>
           <tbody></tbody>
     </table>
+   </div>
     </div>
     <script src="function2.js"></script>
+    <script src="function3.js"></script>
 </body>
 </html>

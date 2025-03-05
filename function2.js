@@ -290,25 +290,44 @@ function getMonth(){
     function getMonth() {
         const cal = document.getElementById('startDate');
     
-        const getMonth = "Month : February 2025";  // replace with actual data or localStorage.getItem('monthOfFile')
+        //const getMonth = "Month : March 2025";  // replace with actual data or localStorage.getItem('monthOfFile')
+        const getMonth = localStorage.getItem('monthOfFile');
+        console.log(getMonth);
         const regex = /Month\s*:\s*(\w+)\s*(\d{4})/;
         const regexconv = getMonth.match(regex);
         const year = regexconv[2];
-        const month = regexconv[1];  // 'January'
+        const month = regexconv[1].toLowerCase();  // 'January'
         
-        var months = ['January', 'February', 'March', 'April', 'May'];
+        var months = ['january', 'february', 'march', 'april', 'may', 'june','july','august','september', 'october', 'november', 'december'];
         
         let monthIndex = months.indexOf(month);
+        //console.log(monthIndex);
         if (monthIndex !== -1) {
           let monthValueInDate = monthIndex;  
-          const date = new Date(year, monthValueInDate, 2);  
-          
+          console.log(selectedDate);
+          const date = new Date(year, monthValueInDate, selectedDate+1);  
+          console.log(date);
           const formattedDate = date.toISOString().split('T')[0];
+          console.log(formattedDate);
           console.log(formattedDate);
           cal.value = formattedDate;
         } else {
           console.log("Month not found.");
         }
       }
-  
+  function changeview(){
+    document.getElementById("tabView").addEventListener("click", function() {
+        fetch("test2.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('displayBox').innerHTML = data;
+        })
+        .catch(error => {
+            console.error("Error loading the file:", error);
+        
+      
+      });
+    });
+  }
+  changeview();
       
