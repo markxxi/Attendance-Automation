@@ -315,19 +315,58 @@ function getMonth(){
           console.log("Month not found.");
         }
       }
-  function changeview(){
-    document.getElementById("tabView").addEventListener("click", function() {
-        fetch("test2.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('displayBox').innerHTML = data;
-        })
-        .catch(error => {
-            console.error("Error loading the file:", error);
+ 
+      function changeview(){
+        document.getElementById("tabView").addEventListener("click", function() {
+            fetch("test2.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('displayBox').innerHTML = data;
+                let file = localStorage.getItem('rawJsondata');
+                if (file) {
+                  let jsonData = JSON.parse(file);
+                  createTable(jsonData);
+                }
+               
+            })
+            .catch(error => {
+                console.error("Error loading the file:", error);
+            });
+        });
+    }
+    
+    changeview();
+
+        function createTable(data) {
+          let table = document.getElementById('yyyy');
+          table.innerHTML = ""; // Clear previous table
+      
+          if (data.length === 0) return;
+      
+          // Create Table Header
+          let thead = document.createElement('thead');
+          let headerRow = document.createElement('tr');
+          Object.keys(data[0]).forEach(key => {
+            let th = document.createElement('th');
+            th.textContent = key;
+            headerRow.appendChild(th);
+          });
+          thead.appendChild(headerRow);
+          table.appendChild(thead);
+      
+          // Create Table Body
+          let tbody = document.createElement('tbody');
+          data.forEach(row => {
+            let tr = document.createElement('tr');
+            Object.values(row).forEach(value => {
+              let td = document.createElement('td');
+              td.textContent = value;
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
         
-      
-      });
-    });
-  }
-  changeview();
-      
+    
+    }
+

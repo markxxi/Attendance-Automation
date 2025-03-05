@@ -8,7 +8,7 @@ const submitButton = document.getElementById("submitFileBtn")
 fileInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
-        console.log('Selected file name testing:', file.name);
+       // console.log('Selected file name testing:', file.name);
         previewExcelFile(file)
     }
 });
@@ -24,7 +24,7 @@ function previewExcelFile(file) {
         });
 
         const sheetNames = workbook.SheetNames;
-        console.log('Sheet Names:', sheetNames);
+       // console.log('Sheet Names:', sheetNames);
 
         const firstSheet = workbook.Sheets[sheetNames[0]];
 
@@ -32,8 +32,8 @@ function previewExcelFile(file) {
             header: 1
         });
 
-        console.log('JSON Output:', json);
-        localStorage.setItem('rawJsondata',json);
+      //  console.log('JSON Output:', json);
+        localStorage.setItem('rawJsondata',JSON.stringify(json));
         let monthYear = '';
         json.forEach((row, index) => {
             
@@ -53,6 +53,7 @@ function previewExcelFile(file) {
 }
 
 function displayTable(data) {
+    console.log(data);
     let tableHTML = "<table class='table table-bordered table-striped table-hover'>";
     
     let currentUser = null;
@@ -211,7 +212,7 @@ function getResult(){
      jsonparse = JSON.parse(convertedToJsonObj);
         for(var test of jsonparse){
             //console.log(test.records[3][0]);
-            console.log(test);
+           // console.log(test);
         }
 }
 
