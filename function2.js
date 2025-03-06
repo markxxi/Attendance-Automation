@@ -326,7 +326,7 @@ function getMonth(){
                 let file = localStorage.getItem('rawJsondata');
                 if (file) {
                   let jsonData = JSON.parse(file);
-                  createTable(jsonData);
+                  displayTable(jsonData);
                 }
                
             })
@@ -337,148 +337,70 @@ function getMonth(){
     }
     
     changeview();
-/*
-        function createTable(data) {
-          let table = document.getElementById('yyyy');
-          table.innerHTML = ""; // Clear previous table
-      
-          if (data.length === 0) return;
-      
-          let thead = document.createElement('thead');
-          let headerRow = document.createElement('tr');
-          let columnKeys = Object.keys(data[0]);
-
-          columnKeys.forEach(key => {
-            let th = document.createElement('th');
-            th.textContent = key;
-            headerRow.appendChild(th);
-          });
-          thead.appendChild(headerRow);
-          table.appendChild(thead);
-      
-          let tbody = document.createElement('tbody');
-          data.forEach((row,index) => {
-            let tr = document.createElement('tr');
-            tr.dataset.rowIndex = index;
-            console.log(index);
+   
     
-            Object.values(row).forEach(value => {
-              let td = document.createElement('td');
-              td.textContent = value;
-              //console.log(row[key]);
-              tr.appendChild(td);
-              //console.log(tr);
+function displayTable(data) {
+    //console.log(data);
+    let tableHTML = "<table class='table table-bordered table-striped table-hover'>";
+    let excelView  = document.getElementById('excelView');
+    let currentUser = null;
+    let userDetails = "";
+    let maxColumns = 0; 
+
+    data.forEach((row, index) => {
+        maxColumns = Math.max(maxColumns, row.length);
+        //localStorage.setItem('jsonMonth', row[0]?.toString().startsWith("Month"));
+        if (index === 0) {
+            tableHTML += `<thead><tr><th colspan="100%">${row.join(" ")}</th></tr></thead><tbody>`;
+        } else if (row[0]?.toString().startsWith("DHSUD")) {
+            tableHTML += `<tr><td colspan="100%"><b>${row.join(" ")}</b></td></tr>`;
+        } else if (row[0]?.toString().startsWith("Month")) {
+            tableHTML += `<tr><td colspan="100%"><b>${row.join(" ")}</b></td></tr>`;
+        } else if (row[0]?.toString().startsWith("US")) {
+            if (currentUser) {
+                tableHTML += "</tbody>";
+            }
+            currentUser = row.join(" ");
+            userDetails = `<tr><th colspan="100%" style="text-align: left;">${currentUser}</th></tr>`;
+            tableHTML += `<thead>${userDetails}</thead><tbody>`;
+        } else if (row[0]?.toString().startsWith("ID")) {
+            // ID
+            tableHTML += "<tr>";
+            row.forEach(cell => {
+                tableHTML += `<th>${cell || ""}</th>`;  
             });
-            tbody.appendChild(tr);
-          });
-          table.appendChild(tbody);
-
-    }
-*/
-function createTable(data) {
-    if (!Array.isArray(data) || data.length === 0) return;
-
-    let table = document.getElementById('yyyy');
-    if (!table) {
-        console.error("Table element with ID 'yyyy' not found.");
-        return;
-    }
-
-    table.innerHTML = "";
-
-    let thead = document.createElement('thead');
-    let headerRow = document.createElement('tr');
-    Object.keys(data[0]).forEach(key => {
-        let th = document.createElement('th');
-        th.textContent = key;
-        headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    
-    let tbody = document.createElement('tbody');
-    data.forEach(row => {
-        let tr = document.createElement('tr');
-        let timeValues = {};
-        /*
-        let parts;
-        Object.values(row).forEach(value => {
-            //console.log(value);
-            if (typeof value === "string") {
-                parts = value.split(" ");
-                //console.log(value);
-                if (parts.length >= 5) {
-                    timeio = `${parts[0]} ${parts[3]}`;
-                    console.log(timeio);
-                }
+            tableHTML += "</tr>";
+        } else if (row[0]?.toString().startsWith("Month")) {
+            // Month
+            tableHTML += "<tr>";
+            row.forEach(cell => {
+                tableHTML += `<td><b>${cell || ""}</b></td>`;  
+            });
+            tableHTML += "</tr>";
+        } else if (row[0] === "DD") {
+            tableHTML += "<tr><th>DD</th>";
+            for (let i = 1; i < maxColumns; i++) {
+                tableHTML += `<th>${row[i] || ""}</th>`;
             }
-        }); */
-
-        Object.entries(row).forEach(([key, value]) => {
-            if (typeof value === "string" && value.includes("CK")) {
-                let parts = value.split(" ");
-                if (parts.length >= 4) {
-                    timeValues[key] = `${parts[0]} ${parts[3]}`;
-                }
+            tableHTML += "</tr>";
+        } else if (row[0] === "CK") {
+            tableHTML += "<tr><th>CK</th>";
+            for (let i = 1; i < maxColumns; i++) {
+                tableHTML += `<td>${row[i] || ""}</td>`;
             }
-        });
-
-        Object.entries(row).forEach(([key, value]) => {
-            let td = document.createElement('td');
-
-            // If current column had a "CK" and extracted time, use the extracted time
-            if (timeValues[key]) {
-                td.textContent = timeValues[key];
-            } else {
-                td.textContent = value;
+            tableHTML += "</tr>";
+        } else {
+            tableHTML += "<tr>";
+            row.forEach((cell, idx) => {
+                tableHTML += `<td>${cell || ""}</td>`; 
+            });
+            for (let i = row.length; i < maxColumns; i++) {
+                tableHTML += `<td></td>`;
             }
-
-            tr.appendChild(td);
-        });
-        
-        /*Object.values(row).forEach(value => {
-            let td = document.createElement('td');
-            if (typeof value === "string" && value!="CK" && timeio) {
-                td.textContent = timeio;
-                //var trtResult = calculate();
-               //console.log(parts[0]);
-            } else {
-                td.textContent = value;
-            }
-            tr.appendChild(td);
-        }); */
-
-        tbody.appendChild(tr);
-    });
-
-    table.appendChild(tbody);
-}
-
-function calculate (){
-    if (start && end) { 
-        start = start.split(":");
-        end = end.split(":");
-
-        var startDate = new Date(0, 0, 0, start[0], start[1], 0);
-        var endDate = new Date(0, 0, 0, end[0], end[1], 0);
-        var diff = endDate.getTime() - startDate.getTime();
-
-        if (diff < 0) {
-            cell8.textContent = "Invalid time range"; 
-            return;
+            tableHTML += "</tr>";
         }
+    });
 
-        hours = Math.floor(diff / 1000 / 60 / 60);
-        hours1 = hours - 1;
-        diff -= hours * 1000 * 60 * 60;
-
-        minutes = Math.floor(diff / 1000 / 60);
-
-        totalRenderedTime = (hours <= 9 ? "" : "") + hours1 + " HR " + (minutes <= 9 ? "" : "") + minutes + " MIN ";
-        return totalRenderedTime;
-    } else {
-        cell8.textContent = "No time data"; 
-        cell5.textContent = "No time data";
-    }
+    tableHTML += "</tbody></table>";
+    excelView.innerHTML = tableHTML;
 }
