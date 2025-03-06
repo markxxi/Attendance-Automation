@@ -135,6 +135,7 @@ function calc(start, end, cell8, cell5) {
         minutes = Math.floor(diff / 1000 / 60);
 
         totalRenderedTime = (hours <= 9 ? "" : "") + hours1 + " HR " + (minutes <= 9 ? "" : "") + minutes + " MIN ";
+        //console.log(totalRenderedTime);
         cell8.textContent = totalRenderedTime;
     } else {
         cell8.textContent = "No time data"; 
@@ -290,7 +291,7 @@ function getMonth(){
     function getMonth() {
         const cal = document.getElementById('startDate');
     
-        //const getMonth = "Month : March 2025";  // replace with actual data or localStorage.getItem('monthOfFile')
+        //const getMonth = "Month : March 2025";  
         const getMonth = localStorage.getItem('monthOfFile');
         console.log(getMonth);
         const regex = /Month\s*:\s*(\w+)\s*(\d{4})/;
@@ -336,17 +337,18 @@ function getMonth(){
     }
     
     changeview();
-
+/*
         function createTable(data) {
           let table = document.getElementById('yyyy');
           table.innerHTML = ""; // Clear previous table
       
           if (data.length === 0) return;
       
-          // Create Table Header
           let thead = document.createElement('thead');
           let headerRow = document.createElement('tr');
-          Object.keys(data[0]).forEach(key => {
+          let columnKeys = Object.keys(data[0]);
+
+          columnKeys.forEach(key => {
             let th = document.createElement('th');
             th.textContent = key;
             headerRow.appendChild(th);
@@ -354,19 +356,129 @@ function getMonth(){
           thead.appendChild(headerRow);
           table.appendChild(thead);
       
-          // Create Table Body
           let tbody = document.createElement('tbody');
-          data.forEach(row => {
+          data.forEach((row,index) => {
             let tr = document.createElement('tr');
+            tr.dataset.rowIndex = index;
+            console.log(index);
+    
             Object.values(row).forEach(value => {
               let td = document.createElement('td');
               td.textContent = value;
+              //console.log(row[key]);
               tr.appendChild(td);
+              //console.log(tr);
             });
             tbody.appendChild(tr);
           });
           table.appendChild(tbody);
-        
-    
+
+    }
+*/
+function createTable(data) {
+    if (!Array.isArray(data) || data.length === 0) return;
+
+    let table = document.getElementById('yyyy');
+    if (!table) {
+        console.error("Table element with ID 'yyyy' not found.");
+        return;
     }
 
+    table.innerHTML = "";
+
+    let thead = document.createElement('thead');
+    let headerRow = document.createElement('tr');
+    Object.keys(data[0]).forEach(key => {
+        let th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    
+    let tbody = document.createElement('tbody');
+    data.forEach(row => {
+        let tr = document.createElement('tr');
+        let timeValues = {};
+        /*
+        let parts;
+        Object.values(row).forEach(value => {
+            //console.log(value);
+            if (typeof value === "string") {
+                parts = value.split(" ");
+                //console.log(value);
+                if (parts.length >= 5) {
+                    timeio = `${parts[0]} ${parts[3]}`;
+                    console.log(timeio);
+                }
+            }
+        }); */
+
+        Object.entries(row).forEach(([key, value]) => {
+            if (typeof value === "string" && value.includes("CK")) {
+                let parts = value.split(" ");
+                if (parts.length >= 4) {
+                    timeValues[key] = `${parts[0]} ${parts[3]}`;
+                }
+            }
+        });
+
+        Object.entries(row).forEach(([key, value]) => {
+            let td = document.createElement('td');
+
+            // If current column had a "CK" and extracted time, use the extracted time
+            if (timeValues[key]) {
+                td.textContent = timeValues[key];
+            } else {
+                td.textContent = value;
+            }
+
+            tr.appendChild(td);
+        });
+        
+        /*Object.values(row).forEach(value => {
+            let td = document.createElement('td');
+            if (typeof value === "string" && value!="CK" && timeio) {
+                td.textContent = timeio;
+                //var trtResult = calculate();
+               //console.log(parts[0]);
+            } else {
+                td.textContent = value;
+            }
+            tr.appendChild(td);
+        }); */
+
+        tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+}
+
+function calculate (){
+    if (start && end) { 
+        start = start.split(":");
+        end = end.split(":");
+
+        var startDate = new Date(0, 0, 0, start[0], start[1], 0);
+        var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+        var diff = endDate.getTime() - startDate.getTime();
+
+        if (diff < 0) {
+            cell8.textContent = "Invalid time range"; 
+            return;
+        }
+
+        hours = Math.floor(diff / 1000 / 60 / 60);
+        hours1 = hours - 1;
+        diff -= hours * 1000 * 60 * 60;
+
+        minutes = Math.floor(diff / 1000 / 60);
+
+        totalRenderedTime = (hours <= 9 ? "" : "") + hours1 + " HR " + (minutes <= 9 ? "" : "") + minutes + " MIN ";
+        return totalRenderedTime;
+    } else {
+        cell8.textContent = "No time data"; 
+        cell5.textContent = "No time data";
+    }
+}
