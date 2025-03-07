@@ -174,47 +174,50 @@ function overtime(key, cell6, cell9, cell7) {
         }
             totalOvertime += " MIN";
             cell6.textContent = totalOvertime;
+            //cell7.textContent = "-";
             //console.log(overtimeHours);
             //console.log(hourValues(overtimeHours));
             var ot = hourValues(overtimeHours);
             if (typeof ot === "undefined"){
                ot = 0.0;
-               //console.log(ot);
-            }
-            var ut = minuteValues(minutes);
-            if (ut = 0){
-            
             }
             //add typeof for minute values
-            var finalConversion = ot+minuteValues(minutes);
+            var finalConversion = ot + minuteValues(minutes);
             if (typeof finalConversion === "undefined"){
                 cell9.textContent = "No data."
                 return;
-            } //console.log(finalConversion);
-           cell9.textContent = finalConversion;
+            } 
+          cell9.textContent = finalConversion;
         } else {
             cell6.textContent = "-"; 
-            undertime(key, cell7);
+            undertime(key, cell7, cell9);
         }
     } else {
         cell6.textContent = "Invalid time data"; 
     }
 }
 
-function undertime(key, cell7) {
+function undertime(key, cell7, cell9) {
     if (typeof timeRecordForDate === "undefined") {
         cell7.textContent = "-";
         return;
     }
 
-    if (hours !== undefined && minutes !== undefined) {
+    if (hours !== undefined && minutes !== undefined ) {
         if (hours <= 8) {
             var undertimeHours = 8 - hours;
-            var undertimeMinutes = 60 - minutes;
-            
-            cell7.textContent =  undertimeHours + " hr " + undertimeMinutes + " min";
+            var undertimeMinutes = 60 - minutes; 
+            var undertime = undertimeHours + " HR " + undertimeMinutes + " MIN";
+            var ut = hourValues(undertimeHours);
+            if (typeof ut === "undefined"){
+                ut = 0.0
+            }
+            var finalConversion = ut+minuteValues(undertimeMinutes);
+           // console.log("!!!!!" + finalConversion);
+            cell7.textContent = undertime;
+            cell9.textContent = finalConversion;
         } else {
-            cell7.textContent = undertimeMinutes;
+            cell7.textContent = "-";
         }
     } else {
         cell7.textContent = "Invalid time data";
