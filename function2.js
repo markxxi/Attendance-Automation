@@ -77,8 +77,8 @@ function updateTable(date) {
 
             calculateTimeDifference(key, cell8, cell5, date);
 
-            overtime(key, cell6, cell9, date);
-            undertime(key, cell7, date);
+            overtime(key, cell6, cell9, cell7);
+           // undertime(key, cell7);
 
             
         } 
@@ -147,7 +147,7 @@ function calc(start, end, cell8, cell5) {
     }
 }
 
-function overtime(key, cell6, cell9) {
+function overtime(key, cell6, cell9, cell7) {
     
    // var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
 
@@ -181,15 +181,20 @@ function overtime(key, cell6, cell9) {
                ot = 0.0;
                //console.log(ot);
             }
+            var ut = minuteValues(minutes);
+            if (ut = 0){
+            
+            }
             //add typeof for minute values
             var finalConversion = ot+minuteValues(minutes);
             if (typeof finalConversion === "undefined"){
                 cell9.textContent = "No data."
                 return;
-            }
+            } //console.log(finalConversion);
            cell9.textContent = finalConversion;
         } else {
             cell6.textContent = "No overtime"; 
+            undertime(key, cell7);
         }
     } else {
         cell6.textContent = "Invalid time data"; 
@@ -203,13 +208,13 @@ function undertime(key, cell7) {
     }
 
     if (hours !== undefined && minutes !== undefined) {
-        if (hours < 8) {
+        if (hours <= 8) {
             var undertimeHours = 8 - hours;
             var undertimeMinutes = 60 - minutes;
-
-            cell7.textContent = undertimeHours + " hr " + undertimeMinutes + " min";
+            
+            cell7.textContent =  undertimeHours + " hr " + undertimeMinutes + " min";
         } else {
-            cell7.textContent = "-";
+            cell7.textContent = undertimeMinutes;
         }
     } else {
         cell7.textContent = "Invalid time data";
@@ -221,8 +226,10 @@ function minuteValues(m){
     let equivMins = []; //decimal for mins
     let valuesForMins = {};
 
-
-
+    if (m === 0){
+        return 0;
+    }
+    
     for (let i = 0.002; i <= 0.125; i += 0.002) {
         let roundedI = Math.round(i * 1000) / 1000; // Round to 3 decimal places
     
@@ -267,61 +274,41 @@ function hourValues(h){
     }
     return valuesForHours[h];
 }
-/*
-function getMonth(){
-    const cal= document.getElementById('startDate');
-    // const getMonth = localStorage.getItem('monthOfFile');
-    const getMonth = "Month : January 2025";
-    const regex = /Month\s*:\s*(\w+)\s*(\d{4})/;
-    const regexconv = getMonth.match(regex);
-    const year = regexconv[2];
-    const month = regexconv[0].match(/Month\s*:\s*(\w+)\s*(\d{4})/)[1];
-    //console.log(month);
-    var months = ['January', 'February', 'March', 'April', 'May'];
-    
-    let monthIndex = months.indexOf(month);
-    if(monthIndex!== -1){
-        let monthvalueindate = monthIndex+1;
-        const date = new Date(year, monthvalueindate, 1);
-        const formattedDate = date.toISOString().toString('T')[0];
-        cal.value = formattedDate;
-    } else {
-        console.log("Not found.");
-    }
-
-    //const date = new Date(year, month,1); 
-    //const formattedDate = date.toISOString().split('T')[0]; 
-
-    //cal.value = formattedDate;
-} */
-    function getMonth() {
+      function getMonth() {
         const cal = document.getElementById('startDate');
-    
-        const getMonth = "Month : March 2025";  
-        //const getMonth = localStorage.getItem('monthOfFile');
-        console.log(getMonth);
-        const regex = /Month\s*:\s*(\w+)\s*(\d{4})/;
-        const regexconv = getMonth.match(regex);
-
-        const year = regexconv[2];
-        const month = regexconv[1].toLowerCase();  // 'January'
-        
+        const getMonth = localStorage.getItem('monthOfFile');
+        //const getMonth = "Month : JANUARY 2025";
         var months = ['january', 'february', 'march', 'april', 'may', 'june','july','august','september', 'october', 'november', 'december'];
-        
-        let monthIndex = months.indexOf(month);
-        //console.log(monthIndex);
-        if (monthIndex !== -1) {
-          let monthValueInDate = monthIndex;  
-          console.log(selectedDate);
-          const date = new Date(year, monthValueInDate, selectedDate+1);  
-          console.log(date);
-          const formattedDate = date.toISOString().split('T')[0];
-          console.log(formattedDate);
-          console.log(formattedDate);
-          cal.value = formattedDate;
+       
+
+        const regex1 = /Month\s*:\s*(\w+)\s*(\d{4})/;
+        const regex2 = /\s*:\s*(\d{2})/;
+
+        let match;
+
+        if (regex1.test(getMonth)) {
+            match = getMonth.match(regex1);
+            let monthLC = match[1].toLowerCase();
+            //let test = "february";
+            let monthIndex = months.indexOf(monthLC);
+            //console.log("Extracted:", monthIndex+1); 
+            const date = new Date(match[2], monthIndex,selectedDate+1);
+            const formattedDate = date.toISOString().split('T')[0];
+            cal.value = formattedDate;
+        } else if (regex2.test(getMonth)) {
+            match = getMonth.match(regex2);
+            let monthNumber = parseInt(match[1], 10);
+            //let monthName = months[monthNumber-1];
+            const year = new Date();
+            const getYear = year.getFullYear();
+            const date = new Date(getYear, monthNumber-1,selectedDate+1);
+            const formattedDate = date.toISOString().split('T')[0];
+            cal.value = formattedDate;
+            console.log("Extracted:", formattedDate); // Output: "02"
         } else {
-          console.log("Month not found.");
+            console.log("No match found");
         }
+
       }
  
       function changeview(){
