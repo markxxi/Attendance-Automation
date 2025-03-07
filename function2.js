@@ -193,7 +193,7 @@ function overtime(key, cell6, cell9, cell7) {
             } //console.log(finalConversion);
            cell9.textContent = finalConversion;
         } else {
-            cell6.textContent = "No overtime"; 
+            cell6.textContent = "-"; 
             undertime(key, cell7);
         }
     } else {
