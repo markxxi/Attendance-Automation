@@ -196,21 +196,23 @@ function overtime(key, cell6, cell9) {
     }
 }
 
-function undertime(key, cell7){
-    if (typeof timeRecordForDate === "undefined"){
-        cell7.textContent="-";
+function undertime(key, cell7) {
+    if (typeof timeRecordForDate === "undefined") {
+        cell7.textContent = "-";
         return;
     }
 
-    if (hours !== undefined && minutes !== undefined){
-        if(hours < 8){
-            var undertimeHours = 8-hours;
-            //console.log(undertimeHours);
+    if (hours !== undefined && minutes !== undefined) {
+        if (hours < 8) {
+            var undertimeHours = 8 - hours;
+            var undertimeMinutes = 60 - minutes;
+
+            cell7.textContent = undertimeHours + " hr " + undertimeMinutes + " min";
         } else {
             cell7.textContent = "-";
         }
     } else {
-        cell7.textContent = "Invalid time data"
+        cell7.textContent = "Invalid time data";
     }
 }
 
