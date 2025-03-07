@@ -219,9 +219,12 @@ function getResult(){
 function handleJsonString(){
     try{
         localStorage.setItem('jsonData',convertedToJsonObj);
-        //validateTimeRecords();
+        
+        if (validateTimeRecords()){
+            window.location.href = "test3.html";
+        }
         //console.log(convertedToJsonObj);
-        window.location.href="test3.html";
+        //window.location.href="test3.html";
     }catch(e){
         console.log("Invalid format.");
     }
@@ -229,7 +232,7 @@ function handleJsonString(){
 
 function validateTimeRecords(){
     const jsonData = JSON.parse(localStorage.getItem('jsonData'));
-    jsonData.forEach(employee => {
+    for (const employee of jsonData){
         for(let day in employee.records){
             const recordTimes = employee.records[day];
             const splitTimes = recordTimes[0]?recordTimes[0].split(' '):[];
@@ -237,10 +240,11 @@ function validateTimeRecords(){
                 const errorMsg =  `Invalid record for ${employee.name} on day ${day}. Expected 4 time entries, found ${splitTimes.length}` ;
                 $('#errorMessage').text(errorMsg);
                 $('#errorModal').modal('show');               
-                return;
+                return false;
             } 
         }
-    });
+    }return true;
+
 }
 
 

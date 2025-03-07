@@ -1,21 +1,26 @@
 var selectedDate;
-function findLowestNumber(numbers) {
-    let lowest = numbers[0];  
 
+function findLowestNumber(numbers) {
+    numbers = numbers.filter(num => num !== null); // Remove null values
+    if (numbers.length === 0) return null; // Return null if the array is empty
+    
+    let lowest = numbers[0];
     for (let i = 1; i < numbers.length; i++) {
         if (numbers[i] < lowest) {
             lowest = numbers[i];
         }
     }
-
     return lowest;
 }
 
-function firstNonEmptyKey (data){
-    return data.map(entry => {
-        const firstNonEmptyKey = Object.keys(entry.records).find(key => entry.records[key].length > 0);
-        return firstNonEmptyKey ? parseInt(firstNonEmptyKey) : null; 
-      });
+function firstNonEmptyKey(data) {
+    return data
+        .map(entry => {
+            const firstNonEmptyKey = Object.keys(entry.records).find(key => entry.records[key].length > 0);
+           // console.log(firstNonEmptyKey);
+            return firstNonEmptyKey !== undefined ? parseInt(firstNonEmptyKey) : null;
+        })
+        .filter(value => value !== null); // Remove null values (previously undefined ones)
 }
 
 var jsonObject;
@@ -24,7 +29,6 @@ window.onload = function displayJsonDataToTable() {
     if (jsonData) {
     jsonObject = JSON.parse(jsonData);
     selectedDate = findLowestNumber(firstNonEmptyKey(jsonObject));
-    //console.log(selectedDate);
     updateTable(selectedDate); 
     getMonth();
     }
@@ -291,11 +295,12 @@ function getMonth(){
     function getMonth() {
         const cal = document.getElementById('startDate');
     
-        //const getMonth = "Month : March 2025";  
-        const getMonth = localStorage.getItem('monthOfFile');
+        const getMonth = "Month : March 2025";  
+        //const getMonth = localStorage.getItem('monthOfFile');
         console.log(getMonth);
         const regex = /Month\s*:\s*(\w+)\s*(\d{4})/;
         const regexconv = getMonth.match(regex);
+
         const year = regexconv[2];
         const month = regexconv[1].toLowerCase();  // 'January'
         
@@ -385,10 +390,29 @@ function displayTable(data) {
             tableHTML += "</tr>";
         } else if (row[0] === "CK") {
             tableHTML += "<tr><th>CK</th>";
+            let timeResults = [];
+            var timeio = [];
+            for (let i = 1; i < row.length; i++) {
+                if (row[i] && typeof row[i] === "string") { 
+                    timeResults.push(row[i]);
+                } else { timeResults.push(" "); } 
+            } 
+            timeResults.forEach((timeString, index) => {
+                if (timeString === undefined) { 
+                    timeString = " ";
+                }
+                const times = timeString.split(" ");
+                const splitTimes = times.length >= 4 ? times[0] + " " + times[3] : timeString;
+                
+                timeio.push(splitTimes);
+            });
+            console.log(timeio);
             for (let i = 1; i < maxColumns; i++) {
-                tableHTML += `<td>${row[i] || ""}</td>`;
+                tableHTML += `<td>${timeio[i-1]  ??  " "}</td>`;
             }
+            
             tableHTML += "</tr>";
+
         } else {
             tableHTML += "<tr>";
             row.forEach((cell, idx) => {
@@ -404,3 +428,4 @@ function displayTable(data) {
     tableHTML += "</tbody></table>";
     excelView.innerHTML = tableHTML;
 }
+
