@@ -24,7 +24,12 @@ function firstNonEmptyKey(data) {
 }
 
 var jsonObject;
-window.onload = function displayJsonDataToTable() {
+
+window.onload = function() {
+    displayJsonDataToTable(); 
+};
+
+function displayJsonDataToTable() {
     var jsonData = localStorage.getItem('jsonData');
     if (jsonData) {
     jsonObject = JSON.parse(jsonData);
@@ -173,7 +178,6 @@ function overtime(key, cell6, cell9, cell7) {
             totalOvertime += minutes;
         }
             totalOvertime += " MIN";
-            //cell7.textContent = "";
             cell6.textContent = totalOvertime;
             cell7.textContent = "-";
             console.log(totalOvertime);
@@ -213,8 +217,6 @@ function undertime(key, cell7, cell9) {
             }
             var finalConversion = ut+minuteValues(undertimeMinutes);
             
-            //console.log(ut);
-            //console.log(cell7);
             cell7.textContent = undertime;
             cell9.textContent = finalConversion;
         } 
@@ -316,7 +318,7 @@ function hourValues(h){
 
       }
  
-      function changeview(){
+      function ExcelView(){
         document.getElementById("tabView").addEventListener("click", function() {
             fetch("test2.html")
             .then(response => response.text())
@@ -335,8 +337,14 @@ function hourValues(h){
         });
     }
     
-    changeview();
+    ExcelView();
    
+    function TableViewDefault(){
+        document.getElementById('tableView').addEventListener('click', function(){
+            window.location.href = "test3.html";
+        });
+    }
+    TableViewDefault();
     
 function displayTable(data) {
     //console.log(data);
