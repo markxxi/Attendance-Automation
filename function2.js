@@ -173,15 +173,14 @@ function overtime(key, cell6, cell9, cell7) {
             totalOvertime += minutes;
         }
             totalOvertime += " MIN";
+            //cell7.textContent = "";
             cell6.textContent = totalOvertime;
-            //cell7.textContent = "-";
-            //console.log(overtimeHours);
-            //console.log(hourValues(overtimeHours));
+            cell7.textContent = "-";
+            console.log(totalOvertime);
             var ot = hourValues(overtimeHours);
             if (typeof ot === "undefined"){
                ot = 0.0;
             }
-            //add typeof for minute values
             var finalConversion = ot + minuteValues(minutes);
             if (typeof finalConversion === "undefined"){
                 cell9.textContent = "No data."
@@ -204,7 +203,7 @@ function undertime(key, cell7, cell9) {
     }
 
     if (hours !== undefined && minutes !== undefined ) {
-        if (hours <= 8) {
+        if (hours <=8 ) {
             var undertimeHours = 8 - hours;
             var undertimeMinutes = 60 - minutes; 
             var undertime = undertimeHours + " HR " + undertimeMinutes + " MIN";
@@ -213,17 +212,20 @@ function undertime(key, cell7, cell9) {
                 ut = 0.0
             }
             var finalConversion = ut+minuteValues(undertimeMinutes);
-           // console.log("!!!!!" + finalConversion);
+            
+            //console.log(ut);
+            //console.log(cell7);
             cell7.textContent = undertime;
             cell9.textContent = finalConversion;
-        } else {
-            cell7.textContent = "-";
+        } 
+        else {
+            cell7.textContent=  "-";
         }
-    } else {
+    } 
+    else {
         cell7.textContent = "Invalid time data";
     }
 }
-
 function minuteValues(m){
     let minutes = []; //1-60
     let equivMins = []; //decimal for mins
