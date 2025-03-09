@@ -232,7 +232,7 @@ function handleJsonString(){
 
 function validateTimeRecords() {
     const jsonData = JSON.parse(localStorage.getItem('jsonData'));
-    let errorMessages = []; // Store all errors
+    let errorRecords = {}; // Object to group errors by employee
 
     for (const employee of jsonData) {
         for (let day in employee.records) {
@@ -240,17 +240,24 @@ function validateTimeRecords() {
             const splitTimes = recordTimes[0] ? recordTimes[0].split(' ') : [];
 
             if (splitTimes.length !== 0 && splitTimes.length !== 4) {
-                const errorMsg = `Invalid record for ${employee.name} on day ${day}. Expected 4 time entries, found ${splitTimes.length}`;
-                errorMessages.push(errorMsg);
+                if (!errorRecords[employee.name]) {
+                    errorRecords[employee.name] = [];
+                }
+                errorRecords[employee.name].push(`day ${day} (found ${splitTimes.length})`);
             }
         }
     }
 
-    if (errorMessages.length > 0) {
-        $('#errorMessage').html(errorMessages.join('<br>')); // Display all errors
+    if (Object.keys(errorRecords).length > 0) {
+        let errorMessages = Object.entries(errorRecords).map(([name, days]) => 
+            `Invalid record for ${name} on ${days.join(", ")}. Expected 4 time entries.`
+        );
+
+        $('#errorMessage').html(errorMessages.join('<br>')); // Display grouped errors
         $('#errorModal').modal('show'); 
     }
 }
+
 
 
 
