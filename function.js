@@ -255,7 +255,9 @@ function validateTimeRecords() {
 
         $('#errorMessage').html(errorMessages.join('<br>')); // Display grouped errors
         $('#errorModal').modal('show'); 
+        return false;
     }
+    return true;
 }
 
 
