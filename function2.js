@@ -380,6 +380,7 @@ function displayTable(data) {
             tableHTML += "<tr><th>CK</th>";
             let timeResults = [];
             var timeio = [];
+            var calculatedtimeio = [];
             for (let i = 1; i < row.length; i++) {
                 if (row[i] && typeof row[i] === "string") { 
                     timeResults.push(row[i]);
@@ -392,11 +393,15 @@ function displayTable(data) {
                 const times = timeString.split(" ");
                 const splitTimes = times.length >= 4 ? times[0] + " " + times[3] : timeString;
                 
+               // console.log(calc2("08:16","18:40"));
                 timeio.push(splitTimes);
+               calculatedtimeio.push(calc2(times[0],times[3]));
             });
-            console.log(timeio);
+            //console.log(timeio);
             for (let i = 1; i < maxColumns; i++) {
-                tableHTML += `<td>${timeio[i-1]  ??  " "}</td>`;
+                tableHTML += `<td>${timeio[i-1] && timeio[i-1].trim() ? timeio[i-1] + "<hr>" : ""}${calculatedtimeio[i-1]} </td>`;
+                //${calculatedtimeio[i-1]}
+               // console.log(calculatedtimeio[i-1]);
             }
             
             tableHTML += "</tr>";
@@ -417,3 +422,24 @@ function displayTable(data) {
     excelView.innerHTML = tableHTML;
 }
 
+function calc2(start, end) {
+    if (start && end) { 
+        start = start.split(":");
+        end = end.split(":");
+
+        var startDate = new Date(0, 0, 0, start[0], start[1], 0);
+        var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+        var diff = endDate.getTime() - startDate.getTime();
+
+
+        hours = Math.floor(diff / 1000 / 60 / 60);
+        hours1 = hours - 1;
+        diff -= hours * 1000 * 60 * 60;
+
+        minutes = Math.floor(diff / 1000 / 60);
+
+        totalRenderedTime = (hours <= 9 ? "" : "") + hours1 + " HR " + (minutes <= 9 ? "" : "") + minutes + " MIN ";
+        //console.log(totalRenderedTime);
+       return totalRenderedTime;
+    } 
+}
