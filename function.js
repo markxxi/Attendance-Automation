@@ -232,7 +232,7 @@ function handleJsonString(){
 
 function validateTimeRecords() {
     const jsonData = JSON.parse(localStorage.getItem('jsonData'));
-    let errorRecords = {}; // Object to group errors by employee
+    let errorRecords = {}; 
 
     for (const employee of jsonData) {
         for (let day in employee.records) {
@@ -250,7 +250,7 @@ function validateTimeRecords() {
 
     if (Object.keys(errorRecords).length > 0) {
         let errorMessages = Object.entries(errorRecords).map(([name, days]) => 
-            `Invalid record for ${name} on ${days.join(", ")}. Expected 4 time entries.`
+            ` • Invalid record for ${name} on ${days.join(", ")}. Expected 4 time entries.`
         );
 
         $('#errorMessage').html(errorMessages.join('<br>')); // Display grouped errors
