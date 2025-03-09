@@ -230,22 +230,28 @@ function handleJsonString(){
     }
 }
 
-function validateTimeRecords(){
+function validateTimeRecords() {
     const jsonData = JSON.parse(localStorage.getItem('jsonData'));
-    for (const employee of jsonData){
-        for(let day in employee.records){
-            const recordTimes = employee.records[day];
-            const splitTimes = recordTimes[0]?recordTimes[0].split(' '):[];
-            if(splitTimes.length !== 0 && splitTimes.length !== 4){
-                const errorMsg =  `Invalid record for ${employee.name} on day ${day}. Expected 4 time entries, found ${splitTimes.length}` ;
-                $('#errorMessage').text(errorMsg);
-                $('#errorModal').modal('show');               
-                return false;
-            } 
-        }
-    }return true;
+    let errorMessages = []; // Store all errors
 
+    for (const employee of jsonData) {
+        for (let day in employee.records) {
+            const recordTimes = employee.records[day];
+            const splitTimes = recordTimes[0] ? recordTimes[0].split(' ') : [];
+
+            if (splitTimes.length !== 0 && splitTimes.length !== 4) {
+                const errorMsg = `Invalid record for ${employee.name} on day ${day}. Expected 4 time entries, found ${splitTimes.length}`;
+                errorMessages.push(errorMsg);
+            }
+        }
+    }
+
+    if (errorMessages.length > 0) {
+        $('#errorMessage').html(errorMessages.join('<br>')); // Display all errors
+        $('#errorModal').modal('show'); 
+    }
 }
+
 
 
 function mergeRecords(existingRecords, newRecords) {
