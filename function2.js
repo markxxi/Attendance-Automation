@@ -72,7 +72,10 @@ function updateTable(date) {
             var cell7 = row.insertCell(6);
             var cell8 = row.insertCell(7);
             var cell9 = row.insertCell(8);
+            var cell10 = row.insertCell(9);
 
+            cell10.innerHTML = `<button class="btn custom-arrow"><i class="bi bi-chevron-right"></i></button>`;
+            
             cell1.textContent = jsonObject[key].id;
             cell2.textContent = jsonObject[key].name;
             cell3.textContent = jsonObject[key].department;
