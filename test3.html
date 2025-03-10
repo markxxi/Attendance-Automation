@@ -32,8 +32,34 @@
             <input id="startDate" class="form-control mb-4" type="date" />
         </div>
         <div class="col-md-3">
-            <button id="tabView" class="btn btn-outline-dark">Excel View</button>
             <button id="tableView" class="btn btn-outline-dark">Table View</button>
+            <button id="tabView" class="btn btn-outline-dark">Excel View</button>
+           
+        </div>
+        <div class="col-md-7 justify-content-end ">
+            <div class="d-flex  flex-wrap gap-1 justify-content-end mb-3">
+                <!-- Search Bar -->
+                <input type="text" class="form-control w-25" placeholder="Search..." style="min-width: 200px;">
+            
+                <!-- Sort Dropdown -->
+                <select class="form-select w-auto">
+                    <option selected>Sort by</option>
+                    <option>Name</option>
+                    <option>ID</option>
+                    <option></option>
+                </select>
+            
+                <!-- Filter Dropdown -->
+                <select class="form-select w-auto">
+                    <option selected>Filter by</option>
+                    <option>Overtime</option>
+                    <option>Under-time</option>
+                    <option>Division</option>
+                </select>
+
+                   <!-- Export Button -->
+                   <button class="btn btn-primary">Export</button>
+            </div>
         </div>
   
     <div class="col">
