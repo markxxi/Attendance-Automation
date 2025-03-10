@@ -1,3 +1,11 @@
+//view function
+document.querySelectorAll('.btn-group .btn').forEach(button => {
+    button.addEventListener('click', function () {
+        document.querySelectorAll('.btn-group .btn').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
 var selectedDate;
 
 function findLowestNumber(numbers) {
@@ -390,7 +398,7 @@ function displayTable(data) {
             for (let i = 1; i < row.length; i++) {
                 if (row[i] && typeof row[i] === "string") { 
                     timeResults.push(row[i]);
-                } else { timeResults.push(" "); } 
+                } else { timeResults.push(""); } 
             } 
             timeResults.forEach((timeString, index) => {
                 if (timeString === undefined) { 
@@ -401,11 +409,11 @@ function displayTable(data) {
                 
                // console.log(calc2("08:16","18:40"));
                 timeio.push(splitTimes);
-               calculatedtimeio.push(calc2(times[0],times[3]));
+                calculatedtimeio.push(calc2(times[0],times[3]));
             });
-            //console.log(timeio);
+                //console.log(timeio);
             for (let i = 1; i < maxColumns; i++) {
-                tableHTML += `<td>${timeio[i-1] && timeio[i-1].trim() ? timeio[i-1] + "<hr>" : ""}${calculatedtimeio[i-1]} </td>`;
+                tableHTML += `<td>${timeio[i-1] && timeio[i-1].trim() ? timeio[i-1] + "<hr>" : ""}${calculatedtimeio[i-1] !== undefined ? calculatedtimeio[i-1] : ""} </td>`;
                 //${calculatedtimeio[i-1]}
                // console.log(calculatedtimeio[i-1]);
             }
@@ -429,6 +437,7 @@ function displayTable(data) {
 }
 
 function calc2(start, end) {
+
     if (start && end) { 
         start = start.split(":");
         end = end.split(":");
