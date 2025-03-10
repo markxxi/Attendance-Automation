@@ -191,7 +191,7 @@ function overtime(key, cell6, cell9, cell7) {
             cell7.textContent = "-";
 
             var ot = hourValues(overtimeHours) || 0.0;
-            var finalConversion = ot + minuteValues(minutes);
+            var finalConversion = (ot + minuteValues(minutes)).toFixed(3);
 
     
             cell9.textContent = finalConversion;
@@ -213,7 +213,7 @@ function undertime(key, cell7, cell9) {
             var undertime = undertimeHours + " HR " + undertimeMinutes + " MIN";
 
             var ut = hourValues(undertimeHours) || 0.0;
-            var finalConversion = ut + minuteValues(undertimeMinutes);
+            var finalConversion = (ut + minuteValues(undertimeMinutes)).toFixed(3);
 
             cell7.textContent = undertime;
 
