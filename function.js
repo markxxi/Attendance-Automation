@@ -253,7 +253,7 @@ function validateTimeRecords() {
             ` • Invalid record for ${name} on ${days.join(", ")}. Expected 4 time entries.`
         );
 
-        $('#errorMessage').html(errorMessages.join('<br>')); // Display grouped errors
+        $('#errorMessage').html(errorMessages.join('<br>')); 
         $('#errorModal').modal('show'); 
         return false;
     }

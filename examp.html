@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapsible Dynamic Table by ID</title>
+    <style>
+        .collapsible-content {
+            display: none;
+            background-color: #f1f1f1;
+            padding: 10px;
+        }
+
+        .collapsible-btn {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            text-align: center;
+        }
+
+        .collapsible-btn:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Collapsible Dynamic Table by ID</h2>
+
+<table id="dynamic-table">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script>
+    const tableData = [
+        { item: 'Item 1', price: '10', description: 'This is a detailed description of Item 1.' },
+        { item: 'Item 2', price: '20', description: 'This is a detailed description of Item 2.' },
+        { item: 'Item 3', price: '30', description: 'This is a detailed description of Item 3.' }
+    ];
+
+    const tableBody = document.querySelector('#dynamic-table tbody');
+
+    tableData.forEach((data, index) => {
+        const row = document.createElement('tr');
+        const buttonId = `toggle-${index + 1}`;
+        const detailsId = `details-${index + 1}`;
+
+        row.innerHTML = `
+            <td>${data.item}</td>
+            <td>${data.price}</td>
+            <td><button class="collapsible-btn" id="${buttonId}">Toggle Details</button></td>
+        `;
+        tableBody.appendChild(row);
+
+        const detailRow = document.createElement('tr');
+        detailRow.id = detailsId;
+        detailRow.classList.add('collapsible-content');
+        detailRow.innerHTML = `<td colspan="3">${data.description}</td>`;
+        tableBody.appendChild(detailRow);
+
+        document.getElementById(buttonId).addEventListener('click', function() {
+            toggleDetails(detailsId);
+        });
+    });
+
+    function toggleDetails(detailsId) {
+        const detailsRow = document.getElementById(detailsId);
+        if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+            detailsRow.style.display = 'table-row';
+        } else {
+            detailsRow.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>

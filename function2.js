@@ -74,7 +74,7 @@ function updateTable(date) {
             var cell9 = row.insertCell(8);
             var cell10 = row.insertCell(9);
 
-            cell10.innerHTML = `<button class="btn custom-arrow"><i class="bi bi-chevron-right"></i></button>`;
+            cell10.innerHTML = `<button id="collapsibleArrow" class="btn custom-arrow"><i class="bi bi-chevron-right"></i></button>`;
             
             cell1.textContent = jsonObject[key].id;
             cell2.textContent = jsonObject[key].name;
@@ -86,8 +86,14 @@ function updateTable(date) {
             calculateTimeDifference(key, cell8, cell5, date);
 
             overtime(key, cell6, cell9, cell7);
-           // undertime(key, cell7);
+            var detailsRow = tableBody.insertRow();
+            detailsRow.classList.add('collapsible-content', 'd-none'); 
+            var detailsCell = detailsRow.insertCell(0);
+            detailsCell.colSpan = 10; 
+            detailsCell.innerHTML = `<div class="p-2">Detailed information for ${jsonObject[key].name}</div>`;
 
+            //undertime(key, cell7);
+            collapsibleArrowFunction(row, detailsRow);
             
         } 
     }//getMonth();
@@ -443,3 +449,18 @@ function calc2(start, end) {
        return totalRenderedTime;
     } 
 }
+
+const collapsibleArrowFunction = (row, detailsRow) => {
+    const collBt = row.querySelector('.custom-arrow');
+
+    collBt.addEventListener('click', function () {
+        const icon = collBt.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('bi-chevron-right');
+            icon.classList.toggle('bi-chevron-down');
+        }
+
+        // toggle visibility
+        detailsRow.classList.toggle('d-none');
+    });
+};
