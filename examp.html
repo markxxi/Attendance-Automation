@@ -1,100 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collapsible Dynamic Table by ID</title>
-    <style>
-        .collapsible-content {
-            display: none;
-            background-color: #f1f1f1;
-            padding: 10px;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
 
-        .collapsible-btn {
-            cursor: pointer;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            text-align: center;
-        }
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
 
-        .collapsible-btn:hover {
-            background-color: #45a049;
-        }
+#myTable {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+#myTable th, #myTable td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
 
-        table, th, td {
-            border: 1px solid black;
-        }
+#myTable th {
+  background-color: #f2f2f2;
+}
 
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-    </style>
+#myTable tr:hover {
+  background-color: #f1f1f1;
+}
+</style>
 </head>
 <body>
 
-<h2>Collapsible Dynamic Table by ID</h2>
+<h2>My Phonebook</h2>
 
-<table id="dynamic-table">
-    <thead>
-        <tr>
-            <th>Item</th>
-            <th>Price</th>
-            <th>Details</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+<table id="myTable">
+  <thead>
+    <tr>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><a href="#">Adele</a></td></tr>
+    <tr><td><a href="#">Agnes</a></td></tr>
+    <tr><td><a href="#">Billy</a></td></tr>
+    <tr><td><a href="#">Bob</a></td></tr>
+    <tr><td><a href="#">Calvin</a></td></tr>
+    <tr><td><a href="#">Christina</a></td></tr>
+    <tr><td><a href="#">Cindy</a></td></tr>
+  </tbody>
 </table>
 
 <script>
-    const tableData = [
-        { item: 'Item 1', price: '10', description: 'This is a detailed description of Item 1.' },
-        { item: 'Item 2', price: '20', description: 'This is a detailed description of Item 2.' },
-        { item: 'Item 3', price: '30', description: 'This is a detailed description of Item 3.' }
-    ];
-
-    const tableBody = document.querySelector('#dynamic-table tbody');
-
-    tableData.forEach((data, index) => {
-        const row = document.createElement('tr');
-        const buttonId = `toggle-${index + 1}`;
-        const detailsId = `details-${index + 1}`;
-
-        row.innerHTML = `
-            <td>${data.item}</td>
-            <td>${data.price}</td>
-            <td><button class="collapsible-btn" id="${buttonId}">Toggle Details</button></td>
-        `;
-        tableBody.appendChild(row);
-
-        const detailRow = document.createElement('tr');
-        detailRow.id = detailsId;
-        detailRow.classList.add('collapsible-content');
-        detailRow.innerHTML = `<td colspan="3">${data.description}</td>`;
-        tableBody.appendChild(detailRow);
-
-        document.getElementById(buttonId).addEventListener('click', function() {
-            toggleDetails(detailsId);
-        });
-    });
-
-    function toggleDetails(detailsId) {
-        const detailsRow = document.getElementById(detailsId);
-        if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
-            detailsRow.style.display = 'table-row';
-        } else {
-            detailsRow.style.display = 'none';
+function myFunction() {
+    var input, filter, table, tr, td, a, i, txtValue;
+    input = document.getElementById("myInput"); //search
+    filter = input.value.toUpperCase(); //search value for case sensitivity
+    table = document.getElementById("myTable"); //table to search from
+    tr = table.getElementsByTagName("tr"); //get table row 
+    for (i = 1; i < tr.length; i++) { // Start from 1 to avoid the header row
+        td = tr[i].getElementsByTagName("td")[0]; // Get the first column (name)
+        if (td) {
+            a = td.getElementsByTagName("a")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
         }
     }
+}
 </script>
 
 </body>
