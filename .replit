@@ -1,0 +1,12 @@
+modules = ["nodejs-20", "web"]
+run = "live-server ."
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "meow"]
+
+[[ports]]
+localPort = 8080
+externalPort = 80

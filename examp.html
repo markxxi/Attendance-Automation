@@ -1,87 +1,101 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dropdown Menu</title>
-    <style>
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content div {
-            color: black;
-            padding: 12px 16px;
-            cursor: pointer;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content div:hover {
-            background-color: #ddd;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-    </style>
-</head>
-<body>
-
-<div class="dropdown">
-    <button onclick="toggleDropdown()" class="dropbtn">Dropdown</button>
-    <div id="myDropdown" class="dropdown-content">
-        <div onclick="option1()">Option 1</div>
-        <div onclick="option2()">Option 2</div>
-        <div onclick="option3()">Option 3</div>
-    </div>
-</div>
-
-<script>
-    function toggleDropdown() {
-        document.getElementById("myDropdown").classList.toggle("show");
-    }
-
-    function option1() {
-        alert("Option 1 selected");
-    }
-
-    function option2() {
-        alert("Option 2 selected");
-    }
-
-    function option3() {
-        alert("Option 3 selected");
-    }
-
-    // Close dropdown when clicking outside
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            for (var i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Counter Input</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <style>
+            body {
+                background-color: #eaf3fc; /* Light blue background */
             }
-        }
-    }
-</script>
+            .counter-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+            }
+            .counter-box {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            }
+            .counter-input {
+                width: 50px;
+                border: none;
+                outline: none;
+            }
+            .btn-counter {
+                border: none;
+                background: none;
+                font-size: 20px;
+                cursor: pointer;
+                padding: 5px 10px;
+            }
+            .btn-counter:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="counter-container">
+            <div class="counter-box">
+                <label class="text-muted form-label"
+                    >INPUT VACATION LEAVE</label
+                >
 
-<style>
-    .show { display: block; }
-</style>
+                <input
+                    type="text"
+                    id="counterInput"
+                    class="border counter-input"
+                    value="1"
+                    readonly
+                />
 
-</body>
+                <button class="btn-counter" id="decreaseBtn">−</button>
+                <button class="btn-counter" id="increaseBtn">+</button>
+            </div>
+        </div>
+
+        <script>
+            const counterInput = document.getElementById("counterInput");
+            const decreaseBtn = document.getElementById("decreaseBtn");
+            const increaseBtn = document.getElementById("increaseBtn");
+
+            let count = 1;
+            const maxCount = 7;
+            const minCount = 1;
+
+            function updateButtons() {
+                decreaseBtn.disabled = count <= minCount;
+                increaseBtn.disabled = count >= maxCount;
+            }
+
+            decreaseBtn.addEventListener("click", function () {
+                if (count > minCount) {
+                    count--;
+                    counterInput.value = count;
+                    updateButtons();
+                }
+            });
+
+            increaseBtn.addEventListener("click", function () {
+                if (count < maxCount) {
+                    count++;
+                    counterInput.value = count;
+                    updateButtons();
+                }
+            });
+
+            updateButtons();
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>
