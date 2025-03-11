@@ -1,87 +1,87 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-* {
-  box-sizing: border-box;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Menu</title>
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
 
-#myInput {
-  background-image: url('/css/searchicon.png');
-  background-position: 10px 12px;
-  background-repeat: no-repeat;
-  width: 100%;
-  font-size: 16px;
-  padding: 12px 20px 12px 40px;
-  border: 1px solid #ddd;
-  margin-bottom: 12px;
-}
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
 
-#myTable {
-  width: 100%;
-  border-collapse: collapse;
-}
+        .dropdown-content div {
+            color: black;
+            padding: 12px 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
 
-#myTable th, #myTable td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
-}
+        .dropdown-content div:hover {
+            background-color: #ddd;
+        }
 
-#myTable th {
-  background-color: #f2f2f2;
-}
-
-#myTable tr:hover {
-  background-color: #f1f1f1;
-}
-</style>
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
-<h2>My Phonebook</h2>
-
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-
-<table id="myTable">
-  <thead>
-    <tr>
-      <th>Name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td><a href="#">Adele</a></td></tr>
-    <tr><td><a href="#">Agnes</a></td></tr>
-    <tr><td><a href="#">Billy</a></td></tr>
-    <tr><td><a href="#">Bob</a></td></tr>
-    <tr><td><a href="#">Calvin</a></td></tr>
-    <tr><td><a href="#">Christina</a></td></tr>
-    <tr><td><a href="#">Cindy</a></td></tr>
-  </tbody>
-</table>
+<div class="dropdown">
+    <button onclick="toggleDropdown()" class="dropbtn">Dropdown</button>
+    <div id="myDropdown" class="dropdown-content">
+        <div onclick="option1()">Option 1</div>
+        <div onclick="option2()">Option 2</div>
+        <div onclick="option3()">Option 3</div>
+    </div>
+</div>
 
 <script>
-function myFunction() {
-    var input, filter, table, tr, td, a, i, txtValue;
-    input = document.getElementById("myInput"); //search
-    filter = input.value.toUpperCase(); //search value for case sensitivity
-    table = document.getElementById("myTable"); //table to search from
-    tr = table.getElementsByTagName("tr"); //get table row 
-    for (i = 1; i < tr.length; i++) { // Start from 1 to avoid the header row
-        td = tr[i].getElementsByTagName("td")[0]; // Get the first column (name)
-        if (td) {
-            a = td.getElementsByTagName("a")[0];
-            txtValue = a.textContent || a.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
+    function toggleDropdown() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function option1() {
+        alert("Option 1 selected");
+    }
+
+    function option2() {
+        alert("Option 2 selected");
+    }
+
+    function option3() {
+        alert("Option 3 selected");
+    }
+
+    // Close dropdown when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
             }
         }
     }
-}
 </script>
+
+<style>
+    .show { display: block; }
+</style>
 
 </body>
 </html>

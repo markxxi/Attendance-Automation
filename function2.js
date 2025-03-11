@@ -498,3 +498,21 @@ function searchByName() {
     }
 }
 
+// dropdown for filter by division
+function filterTable() {
+    var filterValue = document.getElementById("filter").value;
+    var table = document.getElementById("tableResult");
+    var tr = table.getElementsByTagName("tr");
+
+    for (var i = 1; i < tr.length; i++) { // Start at 1 to skip table header
+        var td = tr[i].getElementsByTagName("td")[2]; // 3rd column (Department)
+        if (td) {
+            var val = td.textContent || td.innerText;
+            if (filterValue === "" || val.indexOf(filterValue) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}

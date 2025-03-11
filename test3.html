@@ -40,14 +40,14 @@
         <div class="col-md-7 justify-content-end ">
             <div class="d-flex  flex-wrap gap-1 justify-content-end mb-3">
                 <!-- Search Bar -->
-                <input type="text" id="myInput" onkeyup="searchByName()" class="form-control w-25" placeholder="Search..." style="min-width: 200px;">
+                <input type="text" id="myInput" onkeyup="searchByName()" class="form-control w-25" placeholder="Search by Name/Div" style="min-width: 200px;">
             
                 <!-- Filter Dropdown -->
-                <select class="form-select w-auto">
-                    <option selected>Filter by (Division)</option>
-                    <option>AFD</option>
-                    <option>ELUPDD</option>
-                    <option>EMES</option>
+                <select id="filter" onchange="filterTable()" class="form-select w-auto">
+                    <option selected value="">Filter by (Division)</option>
+                    <option >AFD</option>
+                    <option >ELUPDD</option>
+                    <option >EMES</option>
                     <option>HREDRD</option>
                     <option>HOACDD</option>
                     <option>ORD</option>
