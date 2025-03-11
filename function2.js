@@ -320,21 +320,26 @@ function hourValues(h){
  
       function ExcelView(){
         document.getElementById("tabView").addEventListener("click", function() {
+            hideSearchFilter();
             fetch("test2.html")
             .then(response => response.text())
             .then(data => {
+                
                 document.getElementById('displayBox').innerHTML = data;
                 let file = localStorage.getItem('rawJsondata');
                 if (file) {
                   let jsonData = JSON.parse(file);
                   displayTable(jsonData);
+                 
                 }
                
-            })
+            } 
+        )
             .catch(error => {
                 console.error("Error loading the file:", error);
             });
         });
+        
     }
     
     ExcelView();
@@ -515,4 +520,11 @@ function filterTable() {
             }
         }
     }
+}
+
+function hideSearchFilter(){
+    var search = document.getElementById("myInput");
+    var filter = document.getElementById("filter");
+    search.style.display = "none";
+    filter.style.display = "none";
 }
