@@ -103,6 +103,7 @@ function updateTable(date) {
                 detailsCell.innerHTML = `
                     <div class="p-2">
                         <h5>Detailed information for ${jsonObject[key].name}</h5>
+                        ${content}
                     </div>`;
             });
 
