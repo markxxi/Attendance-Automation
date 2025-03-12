@@ -105,7 +105,7 @@ function updateTable(date) {
         } 
     }//getMonth();
 }
-function fetchDetailsContent(detailsCell) {
+    function fetchDetailsContent(detailsCell) {
     detailsCell.innerHTML = `<div class="table-responsive">Loading...</div>`; // Placeholder text
 
     fetch("test4.html")
