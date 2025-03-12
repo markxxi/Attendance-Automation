@@ -20,7 +20,7 @@
             }
             .counter-box {
                 background: white;
-                padding: 20px;
+
                 border-radius: 10px;
                 text-align: center;
                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -41,25 +41,26 @@
                 opacity: 0.5;
                 cursor: not-allowed;
             }
+            .cont-box {
+                width: 200px;
+                overflow: auto;
+            }
         </style>
     </head>
     <body>
         <div class="counter-container">
-            <div class="counter-box">
-                <label class="text-muted form-label"
-                    >INPUT VACATION LEAVE</label
-                >
-
+            <div class="counter-box d-flex">
                 <input
                     type="text"
                     id="counterInput"
-                    class="border counter-input"
+                    class="counter-input ms-2"
                     value="1"
                     readonly
                 />
-
-                <button class="btn-counter" id="decreaseBtn">−</button>
-                <button class="btn-counter" id="increaseBtn">+</button>
+                <div class="pe-1">
+                    <button class="btn-counter" id="decreaseBtn">−</button>
+                    <button class="btn-counter" id="increaseBtn">+</button>
+                </div>
             </div>
         </div>
 

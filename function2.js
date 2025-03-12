@@ -98,13 +98,26 @@ function updateTable(date) {
             detailsRow.classList.add('collapsible-content', 'd-none'); 
             var detailsCell = detailsRow.insertCell(0);
             detailsCell.colSpan = 10; 
-            detailsCell.innerHTML = `<div class="p-2">Detailed information for ${jsonObject[key].name}</div>`;
+            
+    detailsCell.innerHTML = `<div class="p-2">Detailed information for ${jsonObject[key].name}<br><</div>`;
+
+
+
 
             //undertime(key, cell7);
             collapsibleArrowFunction(row, detailsRow);
             
         } 
     }//getMonth();
+}
+
+function ExpandDetails() {
+    return fetch("test4.html")
+        .then(response => response.text())  // Get the response as text
+        .catch(error => {
+            console.error("Error fetching data:", error);
+            return "Error loading details."; // Return error message if fetch fails
+        });
 }
 
 var timeRecordForDate;
@@ -528,3 +541,4 @@ function hideSearchFilter(){
     search.style.display = "none";
     filter.style.display = "none";
 }
+

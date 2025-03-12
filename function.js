@@ -1,15 +1,14 @@
-
 const uploadButton = document.getElementById("uploadBtn");
 const fileInput = document.getElementById("fileInput");
-const filePreview = document.getElementById("previewExcelFile")
-const reuploadButton = document.getElementById("changeFileBtn")
-const submitButton = document.getElementById("submitFileBtn")
+const filePreview = document.getElementById("previewExcelFile");
+const reuploadButton = document.getElementById("changeFileBtn");
+const submitButton = document.getElementById("submitFileBtn");
 
-fileInput.addEventListener('change', (event) => {
+fileInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (file) {
-       // console.log('Selected file name testing:', file.name);
-        previewExcelFile(file)
+        // console.log('Selected file name testing:', file.name);
+        previewExcelFile(file);
     }
 });
 var json;
@@ -17,33 +16,31 @@ var json;
 function previewExcelFile(file) {
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         const data = e.target.result;
         const workbook = XLSX.read(data, {
-            type: 'binary'
+            type: "binary",
         });
 
         const sheetNames = workbook.SheetNames;
-       // console.log('Sheet Names:', sheetNames);
+        // console.log('Sheet Names:', sheetNames);
 
         const firstSheet = workbook.Sheets[sheetNames[0]];
 
         json = XLSX.utils.sheet_to_json(firstSheet, {
-            header: 1
+            header: 1,
         });
 
-      //  console.log('JSON Output:', json);
-        localStorage.setItem('rawJsondata',JSON.stringify(json));
-        let monthYear = '';
+        //  console.log('JSON Output:', json);
+        localStorage.setItem("rawJsondata", JSON.stringify(json));
+        let monthYear = "";
         json.forEach((row, index) => {
-            
-                if (row[0]?.toString().startsWith("Month")) {
-                    monthYear = row.join(" "); 
-                    var monthOfFile = monthYear;
-                    console.log(monthOfFile);
-                    localStorage.setItem('monthOfFile', monthYear);
-                }
-        
+            if (row[0]?.toString().startsWith("Month")) {
+                monthYear = row.join(" ");
+                var monthOfFile = monthYear;
+                console.log(monthOfFile);
+                localStorage.setItem("monthOfFile", monthYear);
+            }
         });
 
         displayTable(json);
@@ -54,11 +51,12 @@ function previewExcelFile(file) {
 
 function displayTable(data) {
     console.log(data);
-    let tableHTML = "<table class='table table-bordered table-striped table-hover'>";
-    
+    let tableHTML =
+        "<table class='table table-bordered table-striped table-hover'>";
+
     let currentUser = null;
     let userDetails = "";
-    let maxColumns = 0; 
+    let maxColumns = 0;
 
     data.forEach((row, index) => {
         maxColumns = Math.max(maxColumns, row.length);
@@ -79,15 +77,15 @@ function displayTable(data) {
         } else if (row[0]?.toString().startsWith("ID")) {
             // ID
             tableHTML += "<tr>";
-            row.forEach(cell => {
-                tableHTML += `<th>${cell || ""}</th>`;  
+            row.forEach((cell) => {
+                tableHTML += `<th>${cell || ""}</th>`;
             });
             tableHTML += "</tr>";
         } else if (row[0]?.toString().startsWith("Month")) {
             // Month
             tableHTML += "<tr>";
-            row.forEach(cell => {
-                tableHTML += `<td><b>${cell || ""}</b></td>`;  
+            row.forEach((cell) => {
+                tableHTML += `<td><b>${cell || ""}</b></td>`;
             });
             tableHTML += "</tr>";
         } else if (row[0] === "DD") {
@@ -105,7 +103,7 @@ function displayTable(data) {
         } else {
             tableHTML += "<tr>";
             row.forEach((cell, idx) => {
-                tableHTML += `<td>${cell || ""}</td>`; 
+                tableHTML += `<td>${cell || ""}</td>`;
             });
             for (let i = row.length; i < maxColumns; i++) {
                 tableHTML += `<td></td>`;
@@ -119,12 +117,11 @@ function displayTable(data) {
     hideUploadButtonShowChangeFileButton();
 }
 
-
 function uploadFile() {
     fileInput.click();
 }
 
-function hideUploadButtonShowChangeFileButton(){
+function hideUploadButtonShowChangeFileButton() {
     uploadButton.style.display = "none";
     reuploadButton.style.display = "inline-block";
     submitButton.style.display = "inline-block";
@@ -137,31 +134,32 @@ function submitFile() {
     let times = [];
     let firstHalfStored = false; // tracker
 
-    //console.log("Raw JSON Data:", json); 
+    //console.log("Raw JSON Data:", json);
 
     json.forEach((row, rowIndex) => {
-      //  console.log("Processing Row:", rowIndex, row); // debug point
+        //  console.log("Processing Row:", rowIndex, row); // debug point
 
         if (row[0]?.toString().startsWith("US")) {
             // Extract user details
-            const userDetails = row.join(" ").match(/ID:\s*(\d+)\s*Name:\s*([\w\s]+)\s*Dep\.\s*:\s*(\w+)/);
+            const userDetails = row
+                .join(" ")
+                .match(/ID:\s*(\d+)\s*Name:\s*([\w\s]+)\s*Dep\.\s*:\s*(\w+)/);
             //console.log("Extracted User Details:", userDetails); // debug point
 
             if (userDetails) {
                 if (currentUser !== null) {
-                    
                     if (days.length > 0) {
                         let newRecords = mapCKtoDD(days, times);
                         mergeRecords(currentUser.records, newRecords);
                     }
-                    users.push(currentUser); 
+                    users.push(currentUser);
                 }
 
                 currentUser = {
                     id: userDetails[1],
                     name: userDetails[2].trim(),
                     department: userDetails[3],
-                    records: {}
+                    records: {},
                 };
 
                 days = [];
@@ -182,13 +180,12 @@ function submitFile() {
             }
         } else if (row[0] === "CK") {
             if (currentUser !== null) {
-                times.push(row.slice(1)); 
+                times.push(row.slice(1));
                 //console.log("Captured CK Times:", times); // debug point
             }
         }
     });
 
-    
     if (currentUser !== null && days.length > 0) {
         let finalRecords = mapCKtoDD(days, times);
         mergeRecords(currentUser.records, finalRecords);
@@ -200,7 +197,7 @@ function submitFile() {
     // console.log("Final Output:", JSON.stringify(users, null, 2));
     // openTest2();
     //window.location.href = "test3.html";
-  
+
     //window.addEventListener('load',tableresult,false);
     handleJsonString();
 }
@@ -208,67 +205,67 @@ function submitFile() {
 //important variable!!!
 var convertedToJsonObj;
 var jsonparse;
-function getResult(){
-     jsonparse = JSON.parse(convertedToJsonObj);
-        for(var test of jsonparse){
-            //console.log(test.records[3][0]);
-           // console.log(test);
-        }
+function getResult() {
+    jsonparse = JSON.parse(convertedToJsonObj);
+    for (var test of jsonparse) {
+        //console.log(test.records[3][0]);
+        // console.log(test);
+    }
 }
 
-function handleJsonString(){
-    try{
-        localStorage.setItem('jsonData',convertedToJsonObj);
-        
-        if (validateTimeRecords()){
+function handleJsonString() {
+    try {
+        localStorage.setItem("jsonData", convertedToJsonObj);
+
+        if (validateTimeRecords()) {
             window.location.href = "test3.html";
         }
         //console.log(convertedToJsonObj);
         //window.location.href="test3.html";
-    }catch(e){
+    } catch (e) {
         console.log("Invalid format.");
     }
 }
 
 function validateTimeRecords() {
-    const jsonData = JSON.parse(localStorage.getItem('jsonData'));
-    let errorRecords = {}; 
+    const jsonData = JSON.parse(localStorage.getItem("jsonData"));
+    let errorRecords = {};
 
     for (const employee of jsonData) {
         for (let day in employee.records) {
             const recordTimes = employee.records[day];
-            const splitTimes = recordTimes[0] ? recordTimes[0].split(' ') : [];
+            const splitTimes = recordTimes[0] ? recordTimes[0].split(" ") : [];
 
             if (splitTimes.length !== 0 && splitTimes.length !== 4) {
                 if (!errorRecords[employee.name]) {
                     errorRecords[employee.name] = [];
                 }
-                errorRecords[employee.name].push(`day ${day} (found ${splitTimes.length})`);
+                errorRecords[employee.name].push(
+                    `day ${day} (found ${splitTimes.length})`,
+                );
             }
         }
     }
 
     if (Object.keys(errorRecords).length > 0) {
-        let errorMessages = Object.entries(errorRecords).map(([name, days]) => 
-            ` • Invalid record for ${name} on ${days.join(", ")}. Expected 4 time entries.`
+        let errorMessages = Object.entries(errorRecords).map(
+            ([name, days]) =>
+                ` • Invalid record for ${name} on ${days.join(", ")}. Expected 4 time entries.`,
         );
 
-        $('#errorMessage').html(errorMessages.join('<br>')); 
-        $('#errorModal').modal('show'); 
+        $("#errorMessage").html(errorMessages.join("<br>"));
+        $("#errorModal").modal("show");
         return false;
     }
     return true;
 }
 
-
-
-
 function mergeRecords(existingRecords, newRecords) {
-    Object.keys(newRecords).forEach(day => {
+    Object.keys(newRecords).forEach((day) => {
         if (!existingRecords[day]) {
             existingRecords[day] = [];
         }
-        existingRecords[day] = existingRecords[day].concat(newRecords[day]); 
+        existingRecords[day] = existingRecords[day].concat(newRecords[day]);
     });
 }
 
@@ -276,9 +273,9 @@ function mapCKtoDD(days, times) {
     let records = {};
     days.forEach((day, index) => {
         if (!records[day]) records[day] = [];
-        times.forEach(timeRow => {
+        times.forEach((timeRow) => {
             if (timeRow[index]) {
-                records[day].push(timeRow[index].trim()); 
+                records[day].push(timeRow[index].trim());
             }
         });
     });
@@ -291,9 +288,9 @@ function mapCKtoDD(days, times) {
     let records = {};
     days.forEach((day, index) => {
         if (!records[day]) records[day] = [];
-        times.forEach(timeRow => {
+        times.forEach((timeRow) => {
             if (timeRow[index]) {
-                records[day].push(timeRow[index].trim()); 
+                records[day].push(timeRow[index].trim());
             }
         });
     });
@@ -307,14 +304,14 @@ submitButton.addEventListener("click", submitFile);
 
 //-----------------------------
 
-function tableresult(){
-    const tableBody = document.querySelector('#tableResult tbody');
-    for(i = 0; i<jsonparse.length;i++){
+function tableresult() {
+    const tableBody = document.querySelector("#tableResult tbody");
+    for (i = 0; i < jsonparse.length; i++) {
         const row = jsonparse[i];
-        const tr = document.createElement('tr');
-        for(let key in row){
-            const td = document.createElement('td');
-            td.textContent=row[key];
+        const tr = document.createElement("tr");
+        for (let key in row) {
+            const td = document.createElement("td");
+            td.textContent = row[key];
             tr.appendChild(td);
         }
         tableBody.appendChild(tr);
