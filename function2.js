@@ -99,12 +99,19 @@ function updateTable(date) {
             var detailsCell = detailsRow.insertCell(0);
             detailsCell.colSpan = 10; 
             
+            // Load the details content immediately to ensure it's ready when expanded
             ExpandDetails().then(content => {
                 detailsCell.innerHTML = `
                     <div class="p-2">
                         <h5>Detailed information for ${jsonObject[key].name}</h5>
                         ${content}
                     </div>`;
+                
+                // Initialize the counters in the loaded content
+                initializeCounters(detailsRow);
+            }).catch(err => {
+                console.error("Failed to load details:", err);
+                detailsCell.innerHTML = `<div class="p-2 text-danger">Error loading details</div>`;
             });
 
             //undertime(key, cell7);
@@ -116,17 +123,29 @@ function updateTable(date) {
 
 function ExpandDetails() {
     return fetch("test4.html")
-        .then(response => response.text())  // Get the response as text
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.text();
+        })
         .then(htmlContent => {
             // Extract just the content we need from test4.html
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlContent, 'text/html');
             const contentDiv = doc.querySelector('.container-fluid');
-            return contentDiv ? contentDiv.outerHTML : "No details available";
+            
+            if (!contentDiv) {
+                console.error("Container element not found in test4.html");
+                return "Content could not be loaded properly.";
+            }
+            
+            // Apply any additional processing to the content if needed
+            return contentDiv.outerHTML;
         })
         .catch(error => {
-            console.error("Error fetching data:", error);
-            return "Error loading details."; // Return error message if fetch fails
+            console.error("Error fetching or processing data:", error);
+            return "Error loading details: " + error.message;
         });
 }
 
@@ -489,6 +508,11 @@ function calc2(start, end) {
 
 const collapsibleArrowFunction = (row, detailsRow) => {
     const collBt = row.querySelector('.custom-arrow');
+    
+    if (!collBt) {
+        console.error('Collapsible button not found in row:', row);
+        return;
+    }
 
     collBt.addEventListener('click', function () {
         const icon = collBt.querySelector('i');
@@ -497,8 +521,21 @@ const collapsibleArrowFunction = (row, detailsRow) => {
             icon.classList.toggle('bi-chevron-down');
         }
 
-        // toggle visibility
-        detailsRow.classList.toggle('d-none');
+        // Toggle visibility with a small delay to ensure content is loaded
+        if (detailsRow.classList.contains('d-none')) {
+            detailsRow.classList.remove('d-none');
+            
+            // Force a reflow to ensure content is displayed correctly
+            setTimeout(() => {
+                const counters = detailsRow.querySelectorAll('.counter-input');
+                if (counters.length === 0) {
+                    // If content didn't load, try to initialize again
+                    initializeCounters(detailsRow);
+                }
+            }, 50);
+        } else {
+            detailsRow.classList.add('d-none');
+        }
     });
 };
 
@@ -552,3 +589,41 @@ function hideSearchFilter(){
     filter.style.display = "none";
 }
 
+function initializeCounters(containerElement) {
+    const counterInputs = containerElement.querySelectorAll('.counter-input');
+    const decreaseBtns = containerElement.querySelectorAll('[id^="decreaseBtn"]');
+    const increaseBtns = containerElement.querySelectorAll('[id^="increaseBtn"]');
+    
+    counterInputs.forEach((input, index) => {
+        let count = parseInt(input.value) || 0;
+        const minCount = 0;
+        const maxCount = 24; // Assuming max hours in a day
+        
+        const updateButtons = () => {
+            if (decreaseBtns[index]) decreaseBtns[index].disabled = count <= minCount;
+            if (increaseBtns[index]) increaseBtns[index].disabled = count >= maxCount;
+        };
+        
+        if (decreaseBtns[index]) {
+            decreaseBtns[index].addEventListener('click', function() {
+                if (count > minCount) {
+                    count--;
+                    input.value = count;
+                    updateButtons();
+                }
+            });
+        }
+        
+        if (increaseBtns[index]) {
+            increaseBtns[index].addEventListener('click', function() {
+                if (count < maxCount) {
+                    count++;
+                    input.value = count;
+                    updateButtons();
+                }
+            });
+        }
+        
+        updateButtons();
+    });
+}
