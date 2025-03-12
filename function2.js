@@ -121,7 +121,7 @@ function updateTable(date) {
     }//getMonth();
 }
 
-function ExpandDetails() {
+async function ExpandDetails() {
     return fetch("test4.html")
         .then(response => {
             if (!response.ok) {
