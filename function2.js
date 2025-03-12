@@ -11,7 +11,7 @@ var selectedDate;
 function findLowestNumber(numbers) {
     numbers = numbers.filter(num => num !== null); // Remove null values
     if (numbers.length === 0) return null; // Return null if the array is empty
-
+    
     let lowest = numbers[0];
     for (let i = 1; i < numbers.length; i++) {
         if (numbers[i] < lowest) {
@@ -83,7 +83,7 @@ function updateTable(date) {
             var cell10 = row.insertCell(9);
 
             cell10.innerHTML = `<button id="collapsibleArrow" class="btn custom-arrow"><i class="bi bi-chevron-right"></i></button>`;
-
+            
             cell1.textContent = jsonObject[key].id;
             cell2.textContent = jsonObject[key].name;
             cell3.textContent = jsonObject[key].department;
@@ -98,57 +98,28 @@ function updateTable(date) {
             detailsRow.classList.add('collapsible-content', 'd-none'); 
             var detailsCell = detailsRow.insertCell(0);
             detailsCell.colSpan = 10; 
-
-            // Load the details content immediately to ensure it's ready when expanded
-            ExpandDetails().then(content => {
-                detailsCell.innerHTML = `
-                    <div class="p-2">
-                        <h5>Detailed information for ${jsonObject[key].name}</h5>
-                        ${content}
-                    </div>`;
-
-                // Initialize the counters in the loaded content
-                initializeCounters(detailsRow);
-            }).catch(err => {
-                console.error("Failed to load details:", err);
-                detailsCell.innerHTML = `<div class="p-2 text-danger">Error loading details</div>`;
-            });
-
-            //undertime(key, cell7);
+            
+            fetchDetailsContent(detailsCell);
             collapsibleArrowFunction(row, detailsRow);
-
+            
         } 
     }//getMonth();
 }
+function fetchDetailsContent(detailsCell) {
+    detailsCell.innerHTML = `<div class="table-responsive">Loading...</div>`; // Placeholder text
 
-async function ExpandDetails() {
-    return fetch("test4.html")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.text();
-        })
-        .then(htmlContent => {
-            // Extract just the content we need from test4.html
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(htmlContent, 'text/html');
-            const contentDiv = doc.querySelector('.container-fluid');
-
-            if (!contentDiv) {
-                console.error("Container element not found in test4.html");
-                return "Content could not be loaded properly.";
-            }
-
-            // Apply any additional processing to the content if needed
-            return contentDiv.outerHTML;
+    fetch("test4.html")
+        .then(response => response.text())
+        .then(data => {
+            detailsCell.innerHTML = `<div class="table-responsive p-2">${data}</div>`;
         })
         .catch(error => {
-            console.error("Error fetching or processing data:", error);
-            return "Error loading details: " + error.message;
+            console.error("Error fetching test4.html:", error);
+            detailsCell.innerHTML = `<div class="table-responsive text-danger">Error loading details.</div>`;
         });
 }
 
+// Main funct
 var timeRecordForDate;
 var getFirstTimeIndex;
 function splitTime(key, cell4, index) {
@@ -175,7 +146,7 @@ function calculateTimeDifference(key, cell8, cell5) {
         var splitString = timeToString.split(" ");
         var getFirstTime = splitString[0];
         var getLastTime = splitString[3];
-
+       
         calc(getFirstTime, getLastTime, cell8, cell5);
     }
 }
@@ -235,7 +206,7 @@ function overtime(key, cell6, cell9, cell7) {
             var ot = hourValues(overtimeHours) || 0.0;
             var finalConversion = (ot + minuteValues(minutes)).toFixed(3);
 
-
+    
             cell9.textContent = finalConversion;
         } else {
             cell6.textContent = "-"; 
@@ -259,7 +230,7 @@ function undertime(key, cell7, cell9) {
 
             cell7.textContent = undertime;
 
-
+        
             cell9.textContent = finalConversion;
         } else {
             cell7.textContent = "-";
@@ -278,14 +249,14 @@ function minuteValues(m){
     if (m === 0){
         return 0;
     }
-
+    
     for (let i = 0.002; i <= 0.125; i += 0.002) {
         let roundedI = Math.round(i * 1000) / 1000; // Round to 3 decimal places
-
+    
         if (roundedI === 0.012) {
             i = 0.013; 
         }
-
+    
         if (roundedI === 0.037) {
             i = 0.038;
         }
@@ -328,7 +299,7 @@ function hourValues(h){
         const getMonth = localStorage.getItem('monthOfFile');
         //const getMonth = "Month : JANUARY 2025";
         var months = ['january', 'february', 'march', 'april', 'may', 'june','july','august','september', 'october', 'november', 'december'];
-
+       
 
         const regex1 = /Month\s*:\s*(\w+)\s*(\d{4})/;
         const regex2 = /\s*:\s*(\d{2})/;
@@ -359,40 +330,40 @@ function hourValues(h){
         }
 
       }
-
+ 
       function ExcelView(){
         document.getElementById("tabView").addEventListener("click", function() {
             hideSearchFilter();
             fetch("test2.html")
             .then(response => response.text())
             .then(data => {
-
+                
                 document.getElementById('displayBox').innerHTML = data;
                 let file = localStorage.getItem('rawJsondata');
                 if (file) {
                   let jsonData = JSON.parse(file);
                   displayTable(jsonData);
-
+                 
                 }
-
+               
             } 
         )
             .catch(error => {
                 console.error("Error loading the file:", error);
             });
         });
-
+        
     }
-
+    
     ExcelView();
-
+   
     function TableViewDefault(){
         document.getElementById('tableView').addEventListener('click', function(){
             window.location.href = "test3.html";
         });
     }
     TableViewDefault();
-
+    
 function displayTable(data) {
     //console.log(data);
     let tableHTML = "<table class='table table-bordered table-striped table-hover'>";
@@ -453,7 +424,7 @@ function displayTable(data) {
                 }
                 const times = timeString.split(" ");
                 const splitTimes = times.length >= 4 ? times[0] + " " + times[3] : timeString;
-
+                
                // console.log(calc2("08:16","18:40"));
                 timeio.push(splitTimes);
                 calculatedtimeio.push(calc2(times[0],times[3]));
@@ -464,7 +435,7 @@ function displayTable(data) {
                 //${calculatedtimeio[i-1]}
                // console.log(calculatedtimeio[i-1]);
             }
-
+            
             tableHTML += "</tr>";
 
         } else {
@@ -509,11 +480,6 @@ function calc2(start, end) {
 const collapsibleArrowFunction = (row, detailsRow) => {
     const collBt = row.querySelector('.custom-arrow');
 
-    if (!collBt) {
-        console.error('Collapsible button not found in row:', row);
-        return;
-    }
-
     collBt.addEventListener('click', function () {
         const icon = collBt.querySelector('i');
         if (icon) {
@@ -521,21 +487,8 @@ const collapsibleArrowFunction = (row, detailsRow) => {
             icon.classList.toggle('bi-chevron-down');
         }
 
-        // Toggle visibility with a small delay to ensure content is loaded
-        if (detailsRow.classList.contains('d-none')) {
-            detailsRow.classList.remove('d-none');
-
-            // Force a reflow to ensure content is displayed correctly
-            setTimeout(() => {
-                const counters = detailsRow.querySelectorAll('.counter-input');
-                if (counters.length === 0) {
-                    // If content didn't load, try to initialize again
-                    initializeCounters(detailsRow);
-                }
-            }, 50);
-        } else {
-            detailsRow.classList.add('d-none');
-        }
+        // toggle visibility
+        detailsRow.classList.toggle('d-none');
     });
 };
 
@@ -549,11 +502,11 @@ function searchByName() {
     for (var i = 1; i < tr.length; i++) {
         var td1 = tr[i].getElementsByTagName("td")[1];
         var td2 = tr[i].getElementsByTagName("td")[2];
-
+        
         if (td1 && td2) {
             var txtValue1 = td1.textContent || td1.innerText;
             var txtValue2 = td2.textContent || td2.innerText;
-
+            
             if (txtValue1.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = "";
             } else {
@@ -587,43 +540,4 @@ function hideSearchFilter(){
     var filter = document.getElementById("filter");
     search.style.display = "none";
     filter.style.display = "none";
-}
-
-function initializeCounters(containerElement) {
-    const counterInputs = containerElement.querySelectorAll('.counter-input');
-    const decreaseBtns = containerElement.querySelectorAll('[id^="decreaseBtn"]');
-    const increaseBtns = containerElement.querySelectorAll('[id^="increaseBtn"]');
-
-    counterInputs.forEach((input, index) => {
-        let count = parseInt(input.value) || 0;
-        const minCount = 0;
-        const maxCount = 24; // Assuming max hours in a day
-
-        const updateButtons = () => {
-            if (decreaseBtns[index]) decreaseBtns[index].disabled = count <= minCount;
-            if (increaseBtns[index]) increaseBtns[index].disabled = count >= maxCount;
-        };
-
-        if (decreaseBtns[index]) {
-            decreaseBtns[index].addEventListener('click', function() {
-                if (count > minCount) {
-                    count--;
-                    input.value = count;
-                    updateButtons();
-                }
-            });
-        }
-
-        if (increaseBtns[index]) {
-            increaseBtns[index].addEventListener('click', function() {
-                if (count < maxCount) {
-                    count++;
-                    input.value = count;
-                    updateButtons();
-                }
-            });
-        }
-
-        updateButtons();
-    });
 }
