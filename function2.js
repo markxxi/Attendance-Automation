@@ -99,10 +99,13 @@ function updateTable(date) {
             var detailsCell = detailsRow.insertCell(0);
             detailsCell.colSpan = 10; 
             
-    detailsCell.innerHTML = `<div class="p-2">Detailed information for ${jsonObject[key].name}<br><</div>`;
-
-
-
+            ExpandDetails().then(content => {
+                detailsCell.innerHTML = `
+                    <div class="p-2">
+                        <h5>Detailed information for ${jsonObject[key].name}</h5>
+                        <div class="employee-details">${content}</div>
+                    </div>`;
+            });
 
             //undertime(key, cell7);
             collapsibleArrowFunction(row, detailsRow);
@@ -114,6 +117,13 @@ function updateTable(date) {
 function ExpandDetails() {
     return fetch("test4.html")
         .then(response => response.text())  // Get the response as text
+        .then(htmlContent => {
+            // Extract just the content we need from test4.html
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlContent, 'text/html');
+            const contentDiv = doc.querySelector('.container-fluid');
+            return contentDiv ? contentDiv.outerHTML : "No details available";
+        })
         .catch(error => {
             console.error("Error fetching data:", error);
             return "Error loading details."; // Return error message if fetch fails
