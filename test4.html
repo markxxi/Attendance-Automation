@@ -23,16 +23,18 @@
     </head>
     <style>
         p {
-                line-height: 0.7rem;
-                font-size: 1rem;
-            }
-            .counter-box, .counter-box1 {
-                display: inline-block;
-                
-                border-radius: 10px;
-                
-                
-            }
+            line-height: 0.7rem;
+            font-size: 1rem;
+        }
+        .counter-box,
+        .counter-box1 {
+            display: inline-block;
+
+            border-radius: 10px;
+        }
+        .custom-tb-colp {
+            font-size: 10px;
+        }
         .counter-box {
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             height: 35px;
@@ -40,48 +42,44 @@
         .counter-box1 {
             box-shadow: 0px 10px 20px rgba(135, 162, 222, 0.2);
         }
-            .counter-input {
-                
-                width:40px;
-                border: none;
-                outline: none;
-            }
-            .btn-counter {
-                border: none;
-                background: #83aff5;
-                font-size:14px;
-                cursor: pointer;
-                height:35px;
-                color: white;
-                
-            }
-            .btn-counter1 {
-                border: none;
-                background: #3764cb;
-                font-size: 14px;
-                cursor: pointer;
-                height:35px;
-                color: white;
-                border-radius: 0px 9px 9px 0px;
-                
-                
-            }
-            .btn-counter:disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
-        .btn-submit {
-            background-color: #3D4F7B;
+        .counter-input {
+            width: 40px;
+            border: none;
+            outline: none;
+        }
+        .btn-counter {
+            border: none;
+            background: #83aff5;
+            font-size: 14px;
+            cursor: pointer;
+            height: 35px;
             color: white;
-            border-radius: 10px;   
+        }
+        .btn-counter1 {
+            border: none;
+            background: #3764cb;
+            font-size: 14px;
+            cursor: pointer;
+            height: 35px;
+            color: white;
+            border-radius: 0px 9px 9px 0px;
+        }
+        .btn-counter:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-submit {
+            background-color: #3d4f7b;
+            color: white;
+            border-radius: 10px;
             font-size: 11px;
             height: 35px;
         }
-        </style>
+    </style>
     <body>
-        <div class="container-fluid ">
+        <div class="container-fluid">
             <div class="row">
-                <div class="col ">
+                <div class="col">
                     <p>TOTAL COMPUTATION</p>
                     <p>Late:</p>
                     <p>Overtime:</p>
@@ -92,57 +90,58 @@
                         <span class="text-muted">{ placeholder }</span> to
                         <span class="text-muted">{ placeholder }</span> :
                     </p>
-                 <div class="d-flex align-items-center border p-3">
-  <!-- Left side: counter boxes -->
-  <div class="d-flex">
-    <!-- First counter box -->
-    <div class="counter-box me-3">
-      <input
-        type="text"
-        class="counter-input ms-2"
-        value="0"
-        readonly
-      />
-      <div class="btn-group" role="group">
-        <button class="btn-counter px-2">
-          <i class="bi bi-dash"></i>
-        </button>
-        <button class="btn-counter1 px-2">
-          <i class="bi bi-plus"></i>
-        </button>
-      </div>
-    </div>
-    
-    <!-- Second counter box -->
-    <div class="counter-box">
-      <input
-        type="text"
-        class="counter-input ms-2"
-        value="0"
-        readonly
-      />
-      <div class="btn-group" role="group">
-        <button class="btn-counter px-2">
-          <i class="bi bi-dash"></i>
-        </button>
-        <button class="btn-counter1 px-2">
-          <i class="bi bi-plus"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Right side: Compute button -->
-  <div class="ms-auto">
-    <button class="btn btn-submit px-4" id="computeBtn">
-      COMPUTE
-    </button>
-  </div>
-</div>
+                    <div class="d-flex align-items-center p-0">
+                        <!-- Left side: counter boxes -->
+                        <div class="d-flex">
+                            <!-- First counter box -->
+                            <div class="counter-box me-3">
+                                <input
+                                    type="text"
+                                    class="counter-input"
+                                    value="0"
+                                    readonly
+                                />
+                                <div class="btn-group" role="group">
+                                    <button class="btn-counter px-2">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                    <button class="btn-counter1 px-2">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Second counter box -->
+                            <div class="counter-box">
+                                <input
+                                    type="text"
+                                    class="counter-input"
+                                    value="0"
+                                    readonly
+                                />
+                                <div class="btn-group" role="group">
+                                    <button class="btn-counter px-2">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                    <button class="btn-counter1 px-2">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right side: Compute button -->
+                        <div class="ms-auto">
+                            <button class="btn btn-submit px-4" id="computeBtn">
+                                COMPUTE
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="col border">mam keysi</div>
+                <div class="col border" id="mamKeysi">
+                    <div id="excelView"></div>
+                </div>
             </div>
         </div>
-
     </body>
 </html>
