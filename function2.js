@@ -110,12 +110,12 @@ function updateTable(date) {
             detailsCell.colSpan = 10;
  
         //    fetchDetailsContent(detailsCell, jsonObject[key].id);
-            fetchDetailsContent(detailsCell);
+            fetchDetailsContent(detailsCell, jsonObject[key].id);
             collapsibleArrowFunction(row, detailsRow);
         }
    } //getMonth();
 }
-function fetchDetailsContent(detailsCell) {
+function fetchDetailsContent(detailsCell, selectedID) {
  //   detailsCell.innerHTML = `<div class="table-responsive">Loading...</div>`; // Placeholder text
 
     fetch("test4.html")
@@ -127,7 +127,8 @@ function fetchDetailsContent(detailsCell) {
 
             // Loop through each found element and insert "hello"
             excelViewElements.forEach((element) => {
-                element.innerHTML = "hello";
+              //  element.innerHTML = "hello";
+                ExcelViewForCollapsible(element, selectedID);
             });
 
         
@@ -152,6 +153,112 @@ const collapsibleArrowFunction = (row, detailsRow) => {
     });
 };
 
+function ExcelViewForCollapsible(excelView, selectedUSID) {
+    let file = localStorage.getItem("rawJsondata");
+    if (!file) {
+        console.warn("No data found in localStorage.");
+        return;
+    }
+
+    let jsonData = JSON.parse(file);
+    let tableHTML =
+        "<table class='table table-bordered table-striped table-hover custom-tb-colp'>";
+    let currentUser = null;
+    let maxColumns = 0;
+    let isMatchingUSID = false;
+    let foundData = false; //
+
+    //console.log("Selected US ID:", selectedUSID); // Debugging
+
+    jsonData.forEach((row) => {
+        maxColumns = Math.max(maxColumns, row.length);
+
+        if (row[0]?.toString().startsWith("US")) {
+            let rowUSID = row.join(" "); // 
+            //isMatchingUSID = rowUSID.startsWith(selectedUSID); //
+            var splits = rowUSID.split("  ");
+            // console.log(splits);
+            var splitsGet0 = splits[0];
+            console.log(splitsGet0);
+            var regex = splitsGet0.match(/\d+/g);
+            isMatchingUSID = parseInt(regex ? regex.join("") : "0", 10) === parseInt(selectedUSID, 10);
+            //console.log(selectedUSID + ":" + regex);
+            //console.log("Extracted ID from regex:", regex ? regex.join("") : "No Match");
+
+        }
+
+
+        if (isMatchingUSID) {
+            foundData = true; // 
+
+            if (row[0]?.toString().startsWith("US")) {
+                if (currentUser) {
+                    tableHTML += "</tbody>";
+                }
+                currentUser = row.join(" ");
+                //userDetails = `<tr><th colspan="100%" style="text-align: left;">${currentUser}</th></tr>`;
+                // tableHTML += `<thead>${userDetails}</thead><tbody>`;
+            } else if (row[0] === "DD") {
+                tableHTML += "<tr><th>DD</th>";
+                for (let i = 1; i < maxColumns; i++) {
+                    tableHTML += `<th>${row[i] || ""}</th>`;
+                }
+                tableHTML += "</tr>";
+            } else if (row[0] === "CK") {
+                tableHTML += "<tr><th>CK</th>";
+                let timeResults = [];
+                var timeio = [];
+                var calculatedtimeio = [];
+                for (let i = 1; i < row.length; i++) {
+                    if (row[i] && typeof row[i] === "string") {
+                        timeResults.push(row[i]);
+                    } else {
+                        timeResults.push("");
+                    }
+                }
+                timeResults.forEach((timeString, index) => {
+                    if (timeString === undefined) {
+                        timeString = " ";
+                    }
+                    const times = timeString.split(" ");
+                    const splitTimes =
+                        times.length >= 4 ? times[0] + " " + times[3] : timeString;
+
+                    // console.log(calc2("08:16","18:40"));
+                    timeio.push(splitTimes);
+                    calculatedtimeio.push(calc2(times[0], times[3]));
+                });
+                //console.log(timeio);
+                for (let i = 1; i < maxColumns; i++) {
+                    tableHTML += `<td>${calculatedtimeio[i - 1] !== undefined ? calculatedtimeio[i - 1] : ""} </td>`;
+                    //${calculatedtimeio[i-1]}
+                    // console.log(calculatedtimeio[i-1]);
+                }
+
+                tableHTML += "</tr>";
+            } else {
+
+                tableHTML += "<tr>";
+                row.forEach((cell, idx) => {
+                    tableHTML += `<td>${cell || ""}</td>`;
+                });
+                for (let i = row.length; i < maxColumns; i++) {
+                    tableHTML += `<td></td>`;
+                }
+                tableHTML += "</tr>";
+            }
+        }
+    });
+
+    if (!foundData) {
+        console.warn("No matching data found for US ID:", selectedUSID);
+        tableHTML += `<tr><td colspan="${maxColumns}" class="text-center text-danger">No data found for ${selectedUSID}</td></tr>`;
+    }
+
+    tableHTML += "</tbody></table>";
+    excelView.innerHTML = tableHTML;
+    
+}
 
 // Main funct
 var timeRecordForDate;
