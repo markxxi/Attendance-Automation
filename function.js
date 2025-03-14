@@ -3,6 +3,8 @@ const fileInput = document.getElementById("fileInput");
 const filePreview = document.getElementById("previewExcelFile");
 const reuploadButton = document.getElementById("changeFileBtn");
 const submitButton = document.getElementById("submitFileBtn");
+const hideFirstContainer = document.getElementById("hideFirstContainer");
+const previewScreen = document.getElementById("previewScreen");
 
 fileInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
@@ -14,6 +16,9 @@ fileInput.addEventListener("change", (event) => {
 var json;
 
 function previewExcelFile(file) {
+    hideFirstContainer.style.display = "none";
+previewScreen.style.display = "block";
+    filePreview.style.display = "inline-block";
     const reader = new FileReader();
 
     reader.onload = function (e) {
