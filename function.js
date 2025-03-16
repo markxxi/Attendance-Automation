@@ -10,16 +10,21 @@ fileInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (file) {
         // console.log('Selected file name testing:', file.name);
+        displayContainer();
         previewExcelFile(file);
     }
 });
+
+function displayContainer(){
+    hideFirstContainer.style.display = "none";
+    previewScreen.style.display = "block";
+    
+}
+
 var json;
 
 function previewExcelFile(file) {
-    hideFirstContainer.style.display = "none";
-previewScreen.style.display = "block";
-    filePreview.style.display = "inline-block";
-    const reader = new FileReader();
+      const reader = new FileReader();
 
     reader.onload = function (e) {
         const data = e.target.result;
