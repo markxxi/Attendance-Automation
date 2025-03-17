@@ -94,7 +94,7 @@
         top: 0;
         z-index: 10;
         background: inherit;
-        border: 1px solid black;
+        
       }
       .left-controls, .right-controls {
         display: flex;
@@ -226,6 +226,60 @@
       justify-content: center;
       align-items: center;
     }
+    /* === DESIGN NI JULIA === */
+    /* .date-red
+     {
+       background-color: #e74c3c;
+       height: clamp(20px, 5vh, 50px);;
+     } */
+    .date-red {
+        background-color: #e74c3c; /* Red background */
+        color: #fff; /* White text */
+        font-weight: bold;
+        font-size: clamp(1.1rem, 1vw, 1.5rem);
+        position: relative;
+        padding-left: clamp(10px, 2.2vw, 50px) !important;
+        display: flex;
+        border: none;
+        border-radius: 12px; /* Rounded corners */
+        
+        outline: none;
+        height: clamp(20px, 5vh, 50px);
+        width: clamp(80px, 15vw, 135px);
+        box-shadow : 0px 0px 10px #ff2600;
+        overflow: visible;
+    }
+    .date-red:focus,
+    .date-red:active {
+        color: #fff !important; /* Ensures text stays white */
+        background-color: #e74c3c;
+        outline: none !important;
+        box-shadow : 0px 0px 10px #ff2600;
+    }
+    
+    .date-red::-webkit-calendar-picker-indicator {
+        color: white;
+        cursor: pointer;
+    }
+
+    .date-red:hover {
+        background-color: #e74c3c; /* Darker red on hover */
+    }
+
+    .date-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .calendar-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: white; /* Ensure icon is white */
+        font-size: clamp(0.8rem, 1.2vw, 1.2rem);
+        pointer-events: none;
+    }
   </style>
 </head>
 <body class="container-fluid p-3">
@@ -246,11 +300,17 @@
     <div class="controls">
       <div class="left-controls">
         <!-- <button class="red">Feb 01, 2025 ▼</button> -->
-        <input id="startDate" class="form-control" type="date" />
+        <div class="date-container">
+          <input id="startDate" class=" form-control date-red" type="date" />
+          <i class="bi bi-calendar3 calendar-icon"></i>
+        </div>
+
         <!-- <button class="blue">05 Default</button>
         <button class="yellow">05 Table</button> -->
-        <button id="tableView" class="btn btn-outline-dark active">Table View</button>
-        <button id="tabView" class="btn btn-outline-dark">Excel View</button>
+        <div class="btn-group" role="group">
+            <button id="tableView" class="btn btn-outline-dark active">Table View</button>
+            <button id="tabView" class="btn btn-outline-dark">Excel View</button>
+         </div>
       </div>
       <div class="right-controls">
         <input type="text" class="search-bar" placeholder="Search...">
