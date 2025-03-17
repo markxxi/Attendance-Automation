@@ -79,6 +79,7 @@
         backdrop-filter: blur(10px);
         z-index: -1;
         border-radius: 10px;
+        
       }
 
       /* ===== CONTROLS ===== */
@@ -94,6 +95,7 @@
         top: 0;
         z-index: 10;
         background: inherit;
+        border: 1px solid black;
         
       }
       .left-controls, .right-controls {
@@ -140,18 +142,34 @@
         color: white;
       }
       .dropdown {
-        width: clamp(80px, 8vw, 135px);
-        height: clamp(20px, 4vh, 50px);
+         width: clamp(80px, 8vw, 135px); 
+        height: clamp(20px, 5vh, 35px);
         color: #020202;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.33);
+        box-shadow: 0px 0px 20px 0px #87A2DE;
       }
       .export {
-        width: clamp(80px, 8vw, 135px);
-        height: clamp(20px, 4vh, 50px);
+        /* width: clamp(80px, 8vw, 135px); */
+        height: clamp(20px, 5vh, 35px);
         color: #020202;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.33);
+        box-shadow: 0px 0px 20px 0px #87A2DE;
       }
       .search-bar {
-        width: clamp(80px, 8vw, 135px);
-        height: clamp(20px, 4vh, 50px);
+        /* width: clamp(80px, 8vw, 135px); */
+        height: clamp(20px, 5vh, 35px);
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.33);
+        box-shadow: 0px 0px 20px 0px #87A2DE;
+        display: flex;
+        width: 136px;
+        height: 37px;
+        padding: 10px 24px 10px 22px;
+        justify-content: center;
+        align-items: center;
+        gap: 9px;
       }
 
       /* ===== TABLE SECTION ===== */
@@ -227,11 +245,7 @@
       align-items: center;
     }
     /* === DESIGN NI JULIA === */
-    /* .date-red
-     {
-       background-color: #e74c3c;
-       height: clamp(20px, 5vh, 50px);;
-     } */
+
     .date-red {
         background-color: #e74c3c; /* Red background */
         color: #fff; /* White text */
@@ -244,7 +258,7 @@
         border-radius: 12px; /* Rounded corners */
         
         outline: none;
-        height: clamp(20px, 5vh, 50px);
+        height: clamp(20px, 5vh, 35px);
         width: clamp(80px, 15vw, 135px);
         box-shadow : 0px 0px 10px #ff2600;
         overflow: visible;
@@ -271,7 +285,7 @@
       display: inline-block;
     }
 
-    .calendar-icon {
+    .calendar-icon, .search-icon {
         position: absolute;
         left: 12px;
         top: 50%;
@@ -279,6 +293,16 @@
         color: white; /* Ensure icon is white */
         font-size: clamp(0.8rem, 1.2vw, 1.2rem);
         pointer-events: none;
+    }
+    .search-input {
+      position: relative;
+      display: inline-block;
+    }
+    .search-bar:focus,
+    .search-bar:active {
+      background: rgba(255, 255, 255, 0.33);
+      outline: none !important;
+      box-shadow: none !important;
     }
   </style>
 </head>
@@ -313,21 +337,47 @@
          </div>
       </div>
       <div class="right-controls">
-        <input type="text" class="search-bar" placeholder="Search...">
-        <select class="dropdown">
-          <option>Sort by</option>
-          <option>Name</option>
-          <option>Time In</option>
-          <option>Time Out</option>
-        </select>
-        <button class="export">Export</button>
-        <select class="dropdown">
-          <option>Filter by</option>
-          <option>Overtime</option>
-          <option>Under-time</option>
-          <option>Division</option>
-        </select>
-      </div>
+        <!-- <input type="text" class="search-bar" placeholder="Search...">
+
+          <select class="dropdown">
+            <option>Sort by</option>
+            <option>Name</option>
+            <option>Time In</option>
+            <option>Time Out</option>
+          </select>
+          <button class="export">Export</button>
+          <select class="dropdown">
+            <option>Filter by</option>
+            <option>Overtime</option>
+            <option>Under-time</option>
+            <option>Division</option>
+          </select>
+        </div> -->
+
+          <!-- Search Bar -->
+<div class="search-input"> 
+  <input type="text" id="myInput" onkeyup="searchByName()" class="search-bar form-control" placeholder="Search by Name/Div" >
+  <i class="bi bi-search search-icon"></i>
+</div>
+
+
+          <!-- Filter Dropdown -->
+          <select id="filter" onchange="filterTable()" class="form-select dropdown">
+             <option selected value="">Filter by (Division)</option>
+             <option>AFD</option>
+             <option>ELUPDD</option>
+             <option>EMES</option>
+             <option>HREDRD</option>
+             <option>HOACDD</option>
+             <option>ORD</option>
+             <option>PLS</option>
+             <option>PHSD</option>
+             <option>RECORDS</option>
+          </select>
+          <!-- Export Button -->
+          <button class="export">Export</button>
+        </div>
+
     </div>
 
     <!-- TABLE -->
