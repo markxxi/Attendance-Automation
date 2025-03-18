@@ -1,0 +1,60 @@
+<body>
+  
+
+<div class="spinner">
+  <img src="content/Logo.png" alt="Loading" class="spinner-image">
+</div>
+  </body>
+<style>
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+.spinner {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  position: relative; /* Needed for absolute positioning of the image */
+  animation: spinner-plncf9 4s infinite;
+  
+}
+
+.spinner::before,
+.spinner::after {
+  content: "";
+  grid-area: 1/1;
+  border: 6px solid;
+  border-radius: 50%;
+  border-color: #1E4CBD #1E4CBD #0000 #0000;
+  mix-blend-mode: darken;
+  animation: spinner-plncf9 1s infinite linear;
+  
+}
+
+.spinner::after {
+  border-color: #0000 #0000 #dbdcef #dbdcef;
+  animation-direction: reverse;
+}
+
+@keyframes spinner-plncf9 {
+  100% {
+      transform: rotate(1turn);
+  }
+}
+
+/* Center the image inside the spinner */
+.spinner-image {
+  width: 40px; /* Adjust as needed */
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%; /* Make sure the image is circular */
+  object-fit: cover; /* Ensures the image covers the area properly */
+}
+</style>
