@@ -706,14 +706,15 @@ function filterTable() {
 }
 
 function hideSearchFilter() {
-    var search = document.getElementById("myInput");
+    var search = document.getElementById("search-input");
     var filter = document.getElementById("filter");
     search.style.display = "none";
     filter.style.display = "none";
+    
 }
 
 function showSearchFilter() {
-    var search = document.getElementById("myInput");
+    var search = document.getElementById("search-input");
     var filter = document.getElementById("filter");
     search.style.display = "inline-block";
     filter.style.display = "inline-block";

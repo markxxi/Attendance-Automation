@@ -228,7 +228,7 @@ function handleJsonString() {
         localStorage.setItem("jsonData", convertedToJsonObj);
 
         if (validateTimeRecords()) {
-            window.location.href = "test3.html";
+            window.location.href = "result.html";
         }
         //console.log(convertedToJsonObj);
         //window.location.href="test3.html";
