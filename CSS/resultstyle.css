@@ -24,7 +24,7 @@
 
  .header {
     background: rgba(255, 255, 255, 0);
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
     color: #ffffff;
     text-align: center;
@@ -34,18 +34,18 @@
  }
 
  .header img {
-    width: 80px;
+    width: 70px;
     height: auto;
  }
 
  .header h2 {
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-weight: bold;
     margin-bottom: 5px;
  }
 
  .header h3 {
-    font-size: 1em;
+    font-size: 0.8em;
     font-weight: normal;
  }
 
@@ -81,7 +81,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    padding: 10px 0;
+    
     flex-wrap: nowrap;
     overflow: visible;
     position: sticky;
@@ -146,8 +146,8 @@
     height: clamp(20px, 5vh, 35px);
     color: #020202;
     border-radius: 9px;
-    background: rgba(255, 255, 255, 0.33);
-    box-shadow: 0px 0px 20px 0px #87A2DE;
+     background: rgba(255, 255, 255, 0.33);
+     drop-shadow: 0px 0px 20px 0px #87A2DE ;
     text-indent: 4px;
     color: #fff;
  }
@@ -182,7 +182,7 @@
  /* ===== TABLE SECTION ===== */
  .table-container {
     margin-top: 20px;
-    max-height: 460px ;
+    max-height: 510px ;
     overflow: auto !important;
      border-radius: 5px;
  }
@@ -273,7 +273,7 @@
  }
  .btn-group .btn {
     width: clamp(60px, 8vw, 135px);
-    height: clamp(20px, 5vh, 50px);
+    height: clamp(20px, 4.6vh, 50px);
     border: none;
     margin: 0;
   }
@@ -282,12 +282,14 @@
     box-shadow: -2px 0px 10px rgb(130, 209, 255);
     border-radius: 10px 0 0 10px;
     color: white;
+    height: clamp(20px, 5vh, 35px);
   }
   .btn-table {
     background-color: #F5A623 !important;
     box-shadow:  2px 0px 10px rgb(255, 201, 100);
     border-radius: 0 10px 10px 0;
     color: white;
+    height: clamp(20px, 5vh, 35px);
   }
   .btn-group .btn.active-shadow {
     box-shadow: 0px 0px 10px rgb(255, 0, 0);
@@ -308,7 +310,7 @@
     outline: none;
     height: clamp(20px, 5vh, 35px);
     width: clamp(80px, 11vw, 135px);
-    box-shadow: 0px 0px 10px #ff2600;
+ 
     overflow: visible;
     text-indent: 19px;
  }
