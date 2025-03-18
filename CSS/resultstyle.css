@@ -147,7 +147,7 @@
     color: #020202;
     border-radius: 9px;
      background: rgba(255, 255, 255, 0.33);
-     drop-shadow: 0px 0px 20px 0px #87A2DE ;
+     box-shadow: 0px 0px 20px 0px #87A2DE ;
     text-indent: 4px;
     color: #fff;
  }
@@ -159,12 +159,12 @@
     color: #020202;
     border-radius: 9px;
     background: rgba(255, 255, 255, 0.33);
-    box-shadow: 0px 0px 20px 0px #87A2DE;
+    filter: drop-shadow( 0px 0px 20px 0px #87A2DE) !important;
  }
 
  .search-bar {
-    width: clamp(80px, 8vw, 135px);
-    height: clamp(20px, 5vh, 35px);
+    /* width: clamp(80px, 8vw, 135px);
+    height: clamp(20px, 5vh, 35px); */
     border-radius: 9px;
     background: rgba(255, 255, 255, 0.33);
     box-shadow: 0px 0px 20px 0px #87A2DE;
@@ -281,14 +281,14 @@
     background-color: #466A9F !important;
     box-shadow: -2px 0px 10px rgb(130, 209, 255);
     border-radius: 10px 0 0 10px;
-    color: white;
+    
     height: clamp(20px, 5vh, 35px);
   }
   .btn-table {
     background-color: #F5A623 !important;
     box-shadow:  2px 0px 10px rgb(255, 201, 100);
     border-radius: 0 10px 10px 0;
-    color: white;
+    
     height: clamp(20px, 5vh, 35px);
   }
   .btn-group .btn.active-shadow {

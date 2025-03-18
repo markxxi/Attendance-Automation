@@ -522,9 +522,17 @@ function TableViewDefault() {
     
     const tableView = document.getElementById("tableView");
     tableView.addEventListener("click", function () {
-        window.location.href = "result.html";
+        // window.location.href = "result.html";
+        
         tableView.classList.remove("btn-default");
         tableView.classList.add("btn-table");
+
+        fetch("TableView.html")
+        .then ((response) => response.text())
+        .then ((data)=>{
+            document.getElementById("displayBox").innerHTML = data;
+            displayJsonDataToTable();
+        });
     });
 }
 TableViewDefault();
