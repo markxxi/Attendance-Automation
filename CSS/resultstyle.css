@@ -1,0 +1,371 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+ body {
+    background-image: url("../content/bg.png");
+    min-height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+ }
+
+ /* ===== Reset & Global Styles ===== */
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat';
+ }
+
+ /* ===== HEADER SECTION ===== */
+ .header-container {
+    margin-bottom: 10px;
+ }
+
+ .header {
+    background: rgba(255, 255, 255, 0);
+    padding: 20px;
+    border-radius: 10px;
+    color: #ffffff;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+ }
+
+ .header img {
+    width: 80px;
+    height: auto;
+ }
+
+ .header h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 5px;
+ }
+
+ .header h3 {
+    font-size: 1em;
+    font-weight: normal;
+ }
+
+ /* ===== MAIN CONTAINER ===== */
+ .container1 {
+    max-width: 1350px;
+    margin: 0 auto;
+    background: #f4f4f4(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(177, 39, 39, 0.1),
+       0 0 10px rgba(0, 0, 255, 0.4);
+    color: #fff;
+    position: relative;
+ }
+
+ .container1::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.27);
+    backdrop-filter: blur(10px);
+    z-index: -1;
+    border-radius: 10px;
+ }
+
+ /* ===== CONTROLS ===== */
+ .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 0;
+    flex-wrap: nowrap;
+    overflow: visible;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: inherit;
+ }
+
+ .left-controls,
+ .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    flex-shrink: 0.5;
+    min-width: 0;
+ }
+
+ .right-controls {
+    margin-left: auto;
+ }
+
+ .controls input,
+ .controls select,
+ .controls button {
+    padding: 3px 8px;
+    border-radius: 9px;
+    font-size: clamp(0.4rem, 1vw, 1rem);
+    flex-shrink: 0.5;
+    white-space: nowrap;
+    transition: all 0.1s ease-in-out;
+    border: none;
+ }
+
+ .red {
+    width: clamp(80px, 8vw, 135px);
+    height: clamp(20px, 4vh, 50px);
+    background-color: #e74c3c;
+    filter: drop-shadow(0px 0px 10px #ff2600);
+    color: white;
+ }
+
+ .blue {
+    width: clamp(80px, 8vw, 135px);
+    height: clamp(20px, 4vh, 50px);
+    background-color: #3498db;
+    filter: drop-shadow(0px 0px 10px #3498db);
+    color: white;
+ }
+
+ .yellow {
+    width: clamp(80px, 8vw, 135px);
+    height: clamp(20px, 4vh, 50px);
+    background-color: #f39c12;
+    filter: drop-shadow(0px 0px 10px #f39c12);
+    color: white;
+ }
+
+ .dropdown {
+    /* width: clamp(80px, 25vw, 135px); */
+    width: 13vw;
+    height: clamp(20px, 5vh, 35px);
+    color: #020202;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.33);
+    box-shadow: 0px 0px 20px 0px #87A2DE;
+    text-indent: 4px;
+    color: #fff;
+ }
+
+ .export {
+    /* width: clamp(80px, 8vw, 135px); */
+    width: clamp(80px, 8vw, 135px);
+    height: clamp(20px, 5vh, 35px);
+    color: #020202;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.33);
+    box-shadow: 0px 0px 20px 0px #87A2DE;
+ }
+
+ .search-bar {
+    width: clamp(80px, 8vw, 135px);
+    height: clamp(20px, 5vh, 35px);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.33);
+    box-shadow: 0px 0px 20px 0px #87A2DE;
+    display: flex;
+    width: 136px;
+    height: 37px;
+    padding: 10px 24px 10px 22px;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    text-indent: 25px;
+    color: #fff;
+ }
+
+ /* ===== TABLE SECTION ===== */
+ .table-container {
+    margin-top: 20px;
+    max-height: 460px ;
+    overflow: auto !important;
+     border-radius: 5px;
+ }
+
+ table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    table-layout: auto;
+    color: #030303;
+    background: rgba(255, 255, 255, 0.1);
+    
+     overflow: hidden;
+ }
+
+ th,
+ td {
+    padding: 6px;
+
+    word-wrap: break-word;
+    font-size: clamp(0.4rem, 1vw, 1rem);
+ }
+
+ th {
+     
+     padding: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    color: #000;
+ }
+
+ /* ===== MEDIA QUERIES ===== */
+ @media (max-width: 1024px) {
+    .controls {
+       gap: 6px;
+    }
+
+    .controls input,
+    .controls select,
+    .controls button {
+       padding: 5px;
+    }
+
+    th,
+    td {
+       padding: 10px;
+    }
+ }
+
+ @media (max-width: 768px) {
+    .controls {
+       gap: 4px;
+    }
+
+    .controls input,
+    .controls select,
+    .controls button {
+       padding: 4px;
+    }
+
+    th,
+    td {
+       padding: 8px;
+    }
+ }
+
+ @media (max-width: 512px) {
+    .controls {
+       gap: 2px;
+    }
+
+    .controls input,
+    .controls select,
+    .controls button {
+       padding: 2px;
+    }
+
+    th,
+    td {
+       padding: 6px;
+    }
+ }
+
+ .center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ }
+ .btn-group .btn {
+    width: clamp(60px, 8vw, 135px);
+    height: clamp(20px, 5vh, 50px);
+    border: none;
+    margin: 0;
+  }
+  .btn-default {
+    background-color: #466A9F !important;
+    box-shadow: -2px 0px 10px rgb(130, 209, 255);
+    border-radius: 10px 0 0 10px;
+    color: white;
+  }
+  .btn-table {
+    background-color: #F5A623 !important;
+    box-shadow:  2px 0px 10px rgb(255, 201, 100);
+    border-radius: 0 10px 10px 0;
+    color: white;
+  }
+  .btn-group .btn.active-shadow {
+    box-shadow: 0px 0px 10px rgb(255, 0, 0);
+  }
+ /* === DESIGN NI JULIA === */
+ .date-red {
+    background-color: #e74c3c;
+    /* Red background */
+    color: #fff;
+    /* White text */
+    font-weight: bold;
+    font-size: clamp(1.1rem, 1vw, 1.5rem);
+    position: relative;
+    text-align: right !important;
+    border: none;
+    border-radius: 12px;
+    /* Rounded corners */
+    outline: none;
+    height: clamp(20px, 5vh, 35px);
+    width: clamp(80px, 11vw, 135px);
+    box-shadow: 0px 0px 10px #ff2600;
+    overflow: visible;
+    text-indent: 19px;
+ }
+
+ .date-red:focus,
+ .date-red:active {
+    color: #fff !important;
+    /* Ensures text stays white */
+    background-color: #e74c3c;
+    outline: none !important;
+    box-shadow: 0px 0px 10px #ff2600;
+ }
+
+ .date-red::-webkit-calendar-picker-indicator {
+    color: white;
+    cursor: pointer;
+ }
+
+ .date-red:hover {
+    background-color: #e74c3c;
+    /* Darker red on hover */
+ }
+
+ .date-container {
+    position: relative;
+    display: inline-block;
+ }
+
+ .calendar-icon,
+ .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: clamp(0.8rem, 1.2vw, 1.2rem);
+    pointer-events: none;
+ }
+
+ .search-input {
+    position: relative;
+    display: inline-block;
+ }
+
+ .search-bar:focus,
+ .search-bar:active {
+    background: rgba(255, 255, 255, 0.33);
+    outline: none !important;
+    box-shadow: none !important;
+ }
+
+ .dropdown:focus,
+ .dropdown:active {
+    background: rgba(255, 255, 255, 0.33);
+    outline: none !important;
+    box-shadow: none !important;
+ }
+ .search-bar::placeholder {
+    color: #fff;
+ }

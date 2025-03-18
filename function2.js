@@ -490,8 +490,16 @@ function getMonth() {
 }
 
 function ExcelView() {
-    document.getElementById("tabView").addEventListener("click", function () {
+    const excelView = document.getElementById("tabView");
+    const tableView = document.getElementById("tableView");
+    excelView.addEventListener("click", function () {
         hideSearchFilter();
+        tableView.classList.remove("btn-table");
+        
+        excelView.classList.remove("btn-default");
+        tableView.classList.add("btn-default");
+        excelView.classList.add("btn-table");
+        
         fetch("test2.html")
             .then((response) => response.text())
             .then((data) => {
@@ -511,8 +519,12 @@ function ExcelView() {
 ExcelView();
 
 function TableViewDefault() {
-    document.getElementById("tableView").addEventListener("click", function () {
-        window.location.href = "test3.html";
+    
+    const tableView = document.getElementById("tableView");
+    tableView.addEventListener("click", function () {
+        window.location.href = "result.html";
+        tableView.classList.remove("btn-default");
+        tableView.classList.add("btn-table");
     });
 }
 TableViewDefault();
