@@ -495,7 +495,6 @@ function ExcelView() {
     excelView.addEventListener("click", function () {
         hideSearchFilter();
         tableView.classList.remove("btn-table");
-        
         excelView.classList.remove("btn-default");
         tableView.classList.add("btn-default");
         excelView.classList.add("btn-table");
@@ -519,14 +518,16 @@ function ExcelView() {
 ExcelView();
 
 function TableViewDefault() {
-    
+    const excelView = document.getElementById("tabView");
     const tableView = document.getElementById("tableView");
     tableView.addEventListener("click", function () {
         // window.location.href = "result.html";
         
         tableView.classList.remove("btn-default");
         tableView.classList.add("btn-table");
-
+        excelView.classList.remove("btn-table");
+        excelView.classList.add("btn-default");
+        showSearchFilter();
         fetch("TableView.html")
         .then ((response) => response.text())
         .then ((data)=>{
@@ -709,4 +710,11 @@ function hideSearchFilter() {
     var filter = document.getElementById("filter");
     search.style.display = "none";
     filter.style.display = "none";
+}
+
+function showSearchFilter() {
+    var search = document.getElementById("myInput");
+    var filter = document.getElementById("filter");
+    search.style.display = "inline-block";
+    filter.style.display = "inline-block";
 }
