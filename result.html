@@ -353,6 +353,9 @@
             outline: none !important;
             box-shadow: none !important;
          }
+         .search-bar::placeholder {
+            color: #fff;
+         }
       </style>
    </head>
    <body class="container-fluid p-3">
@@ -382,12 +385,11 @@
                </div>
             </div>
             <div class="right-controls">
-          
                <!-- Search Bar -->
-
-               
-
-                 <input type="text" class="search-bar" placeholder="Search...">
+               <div class="search-input">
+                 <input type="text" class="search-bar" id="myInput" onkeyup="searchByName()" placeholder="Search...">
+                   <i class="bi bi-search search-icon"></i>
+               </div>
                  <select class="dropdown" id="filter" onchange="filterTable()">
                     <option selected value="">Filter by (Division)</option>
                     <option>AFD</option>
