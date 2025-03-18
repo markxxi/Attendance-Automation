@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DHSUD Region IV-A DTR Monitoring</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.ripples@0.6.3/dist/jquery.ripples-min.js"></script>
+  <style>
+    /* ===== Responsive Ellipses Background ===== */
+    .TV {
+      position: fixed;
+      top: 0;
+      left: 0;
+      max-width: 1350px;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1; /* Ensures it stays behind main content */
+    }
+    .TV .group {
+      width: 100vw;
+      height: 100vh;
+    }
+    .TV .overlap-group {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+    }
+    .TV .ellipse,
+    .TV .ellipse-1,
+    .TV .ellipse-2,
+    .TV .ellipse-3 {
+      position: fixed;
+      border-radius: 50%;
+      overflow: hidden;
+      transform: translate(-50%, 50%);
+    }
+    /* Main Ellipse */
+    .TV .ellipse {
+      width: clamp(80vw, 100vw, 190vw);
+      height: clamp(70vw, 120vw, 190vw);
+      left: 40vw;
+      bottom: 0vh;
+      background: radial-gradient(circle, rgb(131, 175, 245) 0%, rgb(36, 82, 193) 57.62%);
+    }
+    /* Large Background Ellipse */
+    .TV .ellipse-1 {
+      width: clamp(70vw, 120vw, 190vw);
+      height: clamp(75vw, 125vw, 195vw);
+      left: -5vw;
+      bottom: 0vh;
+      background: radial-gradient(circle, #83aff5 0%, #2452c1 80%);
+    }
+    /* Mid-sized Ellipse */
+    .TV .ellipse-2 {
+      width: clamp(60vw, 100vw, 150vw);
+      height: clamp(60vw, 95vw, 175vw);
+      left: -5vw;
+      bottom: 0vh;
+      background: radial-gradient(circle, rgb(131, 175, 245) 0%, rgb(36, 82, 193) 80%);
+    }
+    /* Smallest Ellipse */
+    .TV .ellipse-3 {
+      width: clamp(40vw, 60vw, 70vw);
+      height: clamp(40vw, 55vw, 70vw);
+      left: 0vw;
+      bottom: 0vh;
+      background: radial-gradient(circle, rgb(131, 175, 245) 0%, rgb(36, 82, 193) 80%);
+    }
+
+    /* ===== Reset & Global Styles ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat';
+    }
+    body {
+      background-color: #2452C1;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      min-height: 100vh;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    /* ===== HEADER SECTION ===== */
+    .header-container {
+            margin-bottom: clamp(5px, 1.5vw, 10px);
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0);
+            padding: clamp(10px, 2vw, 20px);
+            border-radius: 10px;
+            color: #ffffff;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            gap: clamp(10px, 3vw, 20px);
+        }
+
+        .header img {
+            width: clamp(40px, 10vw, 80px);
+            height: auto;
+        }
+
+        .header h2 {
+            font-size: clamp(1.2em, 4vw, 2em);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .header h3 {
+            font-size: clamp(0.9em, 2.5vw, 1.2em);
+            font-weight: normal;
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 1350px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: clamp(10px, 3vw, 20px);
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(177, 39, 39, 0.1),
+                        0 0 10px rgba(0, 0, 255, 0.4);
+            color: #fff;
+            position: relative;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.27);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+            border-radius: 10px;
+        }
+
+        /* ===== CONTROLS ===== */
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: clamp(5px, 1.5vw, 10px);
+            padding: clamp(5px, 2vw, 10px) 0;
+            flex-wrap: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: inherit;
+        }
+
+        .left-controls, .right-controls {
+            display: flex;
+            align-items: center;
+            gap: clamp(4px, 1.5vw, 8px);
+            flex-wrap: nowrap;
+            flex-shrink: 0.5;
+            min-width: 0;
+        }
+
+    .right-controls {
+      margin-left: auto;
+    }
+    .controls input,
+    .controls select,
+    .controls button {
+      padding: 3px 8px;
+      border-radius: 9px;
+      font-size: clamp(0.4rem, 1vw, 1rem);
+      flex-shrink: 0.5;
+      white-space: nowrap;
+      transition: all 0s ease-in-out;
+      border: none;
+    }
+    .red {
+            width: clamp(60px, 8vw, 135px);
+            height: clamp(20px, 5vh, 50px);
+            background-color: #e74c3c;
+            color: white;
+            box-shadow: 0 0 10px #ff2600;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn-group {
+            display: flex;
+        }
+
+        .btn-group .btn {
+            width: clamp(60px, 8vw, 135px);
+            height: clamp(20px, 5vh, 50px);
+            border: none;
+            margin: 0;
+            font-size: clamp(0.7rem, 1vw, 1rem);
+        }
+
+        .btn-default {
+            background-color: #466A9F;
+            box-shadow: -2px 0px 10px rgb(130, 209, 255);
+            border-radius: 10px 0 0 10px;
+            color: white;
+        }
+
+        .btn-table {
+            background-color: #F5A623;
+            box-shadow: 2px 0px 10px rgb(255, 201, 100);
+            border-radius: 0 10px 10px 0;
+            color: white;
+        }
+
+        .btn-group .btn.active-shadow {
+            box-shadow: 0px 0px 10px rgb(255, 0, 0);
+        }
+
+        .dropdown, .export {
+            width: clamp(60px, 8vw, 135px);
+            height: clamp(20px, 5vh, 50px);
+            color: #020202;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* ===== SEARCH BAR ===== */
+        .search-bar {
+            width: clamp(60px, 200px, 25em);
+            height: clamp(20px, 5vh, 50px);
+            color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: clamp(5px, 1vw, 10px);
+        }
+
+    /* ===== TABLE SECTION ===== */
+    .table-container {
+            margin-top: clamp(10px, 2vw, 20px);
+            max-height: clamp(250px, 60vh, 400px);
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 320px;
+            border-collapse: collapse;
+            text-align: center;
+            table-layout: auto;
+            color: #030303;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        th, td {
+            padding: clamp(2px, 1.2vw, 15px);
+            border: 1px solid #ccc;
+            word-wrap: break-word;
+            font-size: clamp(0.2rem, 1vw, 1rem);
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            color: #000;
+        }
+
+/* ===== MEDIA QUERIES ===== */
+@media (max-width: 1024px) {
+   .controls {
+      gap: 6px;
+   }
+   .controls input,
+   .controls select,
+   .controls button {
+      padding: 6px;
+   }
+   th, td {
+      padding: 10px;
+   }
+}
+
+@media (max-width: 768px) {
+   .controls {
+      gap: 4px;
+   }
+   .controls input,
+   .controls select,
+   .controls button {
+      padding: 5px;
+   }
+   th, td {
+      padding: 8px;
+   }
+}
+
+@media (max-width: 480px) {  
+   .controls {
+      gap: 2px;
+   }
+   .controls input,
+   .controls select,
+   .controls button {
+      padding: 3px;
+   }
+   th, td {
+      padding: 6px;
+   }
+}
+
+/* For smaller mobile screens (375px and below) */
+@media (max-width: 375px) {
+   .controls {
+      gap: 1px;
+   }
+   .controls input,
+   .controls select,
+   .controls button {
+      padding: 2px;
+      font-size: 14px; /* Reduce font size for better fit */
+   }
+   th, td {
+      padding: 5px;
+      font-size: 12px; /* Adjust text size for readability */
+   }
+}
+
+/* For ultra-small screens (320px and below) */
+@media (max-width: 320px) {
+   .controls {
+      gap: 0px; /* Remove gaps for very tight layouts */
+   }
+   .controls input,
+   .controls select,
+   .controls button {
+      padding: 2px;
+      font-size: 12px; /* Reduce font size further */
+   }
+   th, td {
+      padding: 4px;
+      font-size: 10px; /* Adjust text size for better fit */
+   }
+}
+
+/* Optional: Ensure box-sizing consistency */
+* {
+   box-sizing: border-box;
+}
+  </style>
+</head>
+<body>
+  <!-- Background Responsive Ellipses -->
+  <div class="TV">
+    <div class="group">
+      <div class="overlap-group">
+        <div class="ellipse"></div>
+        <div class="ellipse-1"></div>
+        <div class="ellipse-2"></div>
+        <div class="ellipse-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-container">
+    <div class="header">
+      <img src="logo.png" alt="DHSUD Logo">
+      <div>
+        <h2>DHSUD REGION IV-A</h2>
+        <h3>Automated DTR Monitoring System</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <div class="container">
+    <!-- CONTROLS (sticky) -->
+    <div class="controls">
+      <div class="left-controls">
+        <input type="date" class="red" value="2025-02-01">
+        <div class="btn-group" role="group">
+          <button class="btn btn-default" onclick="swapColors(this)">Default View</button>
+          <button class="btn btn-table" onclick="swapColors(this)">Table View</button>
+        </div>
+      </div>
+      <div class="right-controls">
+        <input type="text" class="search-bar" placeholder="Search...">
+        <select class="dropdown">
+          <option>Sort by</option>
+          <option>Name</option>
+          <option>Time In</option>
+          <option>Time Out</option>
+        </select>
+        <button class="export">Export</button>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>DIV.</th>
+            <th>TIME IN</th>
+            <th>TIME OUT</th>
+            <th>OVERTIME</th>
+            <th>UNDER-TIME</th>
+            <th>TOTAL RENDERED TIME</th>
+            <th>CONVERSION OF HOURS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>01</td>
+            <td>Dela Cruz P.D.</td>
+            <td>HRED</td>
+            <td>5:00 A.M.</td>
+            <td>5:00 P.M.</td>
+            <td>5 HOURS, 10 MINS</td>
+            <td>30 MINS</td>
+            <td>8</td>
+            <td>.584</td>
+          </tr>
+          <tr>
+            <td>02</td>
+            <td>Mamiit T.</td>
+            <td>ADMIN</td>
+            <td>8:30 A.M.</td>
+            <td>5:30 P.M.</td>
+            <td>8 HOURS</td>
+            <td>0 HOUR</td>
+            <td>0</td>
+            <td>.000</td>
+          </tr>
+          <!-- Additional rows to enable scrolling -->
+          <tr>
+            <td>03</td>
+            <td>Juan Dela Cruz</td>
+            <td>OPS</td>
+            <td>9:00 A.M.</td>
+            <td>6:00 P.M.</td>
+            <td>1 HOUR</td>
+            <td>15 MINS</td>
+            <td>9</td>
+            <td>.750</td>
+          </tr>
+          <tr>
+            <td>04</td>
+            <td>Maria Clara</td>
+            <td>HR</td>
+            <td>9:15 A.M.</td>
+            <td>6:15 P.M.</td>
+            <td>45 MINS</td>
+            <td>10 MINS</td>
+            <td>8.5</td>
+            <td>.710</td>
+          </tr>
+          <tr>
+            <td>05</td>
+            <td>Pedro Penduko</td>
+            <td>FIN</td>
+            <td>8:45 A.M.</td>
+            <td>5:45 P.M.</td>
+            <td>1 HOUR 5 MINS</td>
+            <td>20 MINS</td>
+            <td>9</td>
+            <td>.800</td>
+          </tr>
+          <tr>
+            <td>06</td>
+            <td>Linda Lopez</td>
+            <td>SALES</td>
+            <td>9:30 A.M.</td>
+            <td>6:30 P.M.</td>
+            <td>50 MINS</td>
+            <td>0</td>
+            <td>8.75</td>
+            <td>.780</td>
+          </tr>
+          <tr>
+            <td>07</td>
+            <td>Carlos Santos</td>
+            <td>OPS</td>
+            <td>8:55 A.M.</td>
+            <td>5:55 P.M.</td>
+            <td>1 HOUR</td>
+            <td>5 MINS</td>
+            <td>9</td>
+            <td>.820</td>
+          </tr>
+          <tr>
+            <td>08</td>
+            <td>Ana Reyes</td>
+            <td>ADMIN</td>
+            <td>8:30 A.M.</td>
+            <td>5:30 P.M.</td>
+            <td>55 MINS</td>
+            <td>0</td>
+            <td>8.9</td>
+            <td>.790</td>
+          </tr>
+          <tr>
+            <td>01</td>
+            <td>Dela Cruz P.D.</td>
+            <td>HRED</td>
+            <td>5:00 A.M.</td>
+            <td>5:00 P.M.</td>
+            <td>5 HOURS, 10 MINS</td>
+            <td>30 MINS</td>
+            <td>8</td>
+            <td>.584</td>
+          </tr>
+          <tr>
+            <td>02</td>
+            <td>Mamiit T.</td>
+            <td>ADMIN</td>
+            <td>8:30 A.M.</td>
+            <td>5:30 P.M.</td>
+            <td>8 HOURS</td>
+            <td>0 HOUR</td>
+            <td>0</td>
+            <td>.000</td>
+          </tr>
+          <!-- Additional rows to enable scrolling -->
+          <tr>
+            <td>03</td>
+            <td>Juan Dela Cruz</td>
+            <td>OPS</td>
+            <td>9:00 A.M.</td>
+            <td>6:00 P.M.</td>
+            <td>1 HOUR</td>
+            <td>15 MINS</td>
+            <td>9</td>
+            <td>.750</td>
+          </tr>
+          <tr>
+            <td>04</td>
+            <td>Maria Clara</td>
+            <td>HR</td>
+            <td>9:15 A.M.</td>
+            <td>6:15 P.M.</td>
+            <td>45 MINS</td>
+            <td>10 MINS</td>
+            <td>8.5</td>
+            <td>.710</td>
+          </tr>
+          <tr>
+            <td>05</td>
+            <td>Pedro Penduko</td>
+            <td>FIN</td>
+            <td>8:45 A.M.</td>
+            <td>5:45 P.M.</td>
+            <td>1 HOUR 5 MINS</td>
+            <td>20 MINS</td>
+            <td>9</td>
+            <td>.800</td>
+          </tr>
+          <tr>
+            <td>06</td>
+            <td>Linda Lopez</td>
+            <td>SALES</td>
+            <td>9:30 A.M.</td>
+            <td>6:30 P.M.</td>
+            <td>50 MINS</td>
+            <td>0</td>
+            <td>8.75</td>
+            <td>.780</td>
+          </tr>
+          <tr>
+            <td>07</td>
+            <td>Carlos Santos</td>
+            <td>OPS</td>
+            <td>8:55 A.M.</td>
+            <td>5:55 P.M.</td>
+            <td>1 HOUR</td>
+            <td>5 MINS</td>
+            <td>9</td>
+            <td>.820</td>
+          </tr>
+          <tr>
+            <td>08</td>
+            <td>Ana Reyes</td>
+            <td>ADMIN</td>
+            <td>8:30 A.M.</td>
+            <td>5:30 P.M.</td>
+            <td>55 MINS</td>
+            <td>0</td>
+            <td>8.9</td>
+            <td>.790</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+ 
+  
+  <!-- Button Toggle Script -->
+  <script>
+    function updateButtonClickability() {
+      const btns = document.querySelectorAll('.btn-group .btn');
+      btns.forEach(btn => {
+        if (btn.classList.contains('btn-table')) {
+          btn.style.pointerEvents = "none";
+        } else {
+          btn.style.pointerEvents = "auto";
+        }
+      });
+    }
+    
+    // swapColors() swaps the classes of the two buttons.
+    // After swapping, updateButtonClickability() is called so that the button with the table style is disabled.
+    function swapColors(clickedBtn) {
+      // If the clicked button is already unclickable (table view style), do nothing.
+      if (clickedBtn.style.pointerEvents === "none") return;
+      
+      const btns = document.querySelectorAll('.btn-group .btn');
+      if (btns.length < 2) return;
+      
+      const btn1 = btns[0];
+      const btn2 = btns[1];
+      
+      // If btn1 is blue (default view), swap: btn1 becomes yellow and btn2 becomes blue.
+      if (btn1.classList.contains("btn-default")) {
+        btn1.classList.remove("btn-default");
+        btn1.classList.add("btn-table");
+        btn2.classList.remove("btn-table");
+        btn2.classList.add("btn-default");
+      } else {
+        // Otherwise, swap back: btn1 becomes blue and btn2 becomes yellow.
+        btn1.classList.remove("btn-table");
+        btn1.classList.add("btn-default");
+        btn2.classList.remove("btn-default");
+        btn2.classList.add("btn-table");
+      }
+      
+      updateButtonClickability();
+    }
+    
+    // On page load, set the initial clickability:
+    window.onload = updateButtonClickability;
+  </script>
+</body>
+</html>

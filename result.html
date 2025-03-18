@@ -1,583 +1,450 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DTR</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-    body {
-      background-image: url("content/bg.png");
-      min-height: 100vh;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-   
-    }
-    /* ===== Reset & Global Styles ===== */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Montserrat';
-      }
+   <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>DTR</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+      <style>
+         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-      /* ===== HEADER SECTION ===== */
-      .header-container {
-        margin-bottom: 10px;
-        
-      }
-      .header {
-        background: rgba(255, 255, 255, 0);
-        padding: 20px;
-        border-radius: 10px;
-        color: #ffffff;
-        text-align: center;
-        display: inline-flex;
-        align-items: center;
-        gap: 20px;
-      }
-      .header img {
-        width: 80px;
-        height: auto;
-      }
-      .header h2 {
-        font-size: 1.5em;
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
-      .header h3 {
-        font-size: 1em;
-        font-weight: normal;
-      }
+         body {
+            background-image: url("content/bg.png");
+            min-height: 100vh;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+         }
 
-      /* ===== MAIN CONTAINER ===== */
-      .container {
-        max-width: 1350px;
-        margin: 0 auto;
-        background: #f4f4f4(255, 255, 255, 0.1);
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 6px rgba(177, 39, 39, 0.1),
-                    0 0 10px rgba(0, 0, 255, 0.4);
-        color: #fff;
-        position: relative;
-      }
-      .container::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.27);
-        backdrop-filter: blur(10px);
-        z-index: -1;
-        border-radius: 10px;
-        
-      }
+         /* ===== Reset & Global Styles ===== */
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat';
+         }
 
-      /* ===== CONTROLS ===== */
-      .controls {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        padding: 10px 0;
-        flex-wrap: nowrap;
-        overflow: visible;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background: inherit;
-        border: 1px solid black;
-        
-      }
-      .left-controls, .right-controls {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: nowrap;
-        flex-shrink: 0.5;
-        min-width: 0;
-      }
-      .right-controls {
-        margin-left: auto;
-      }
-      .controls input,
-      .controls select,
-      .controls button {
-        padding: 3px 8px;
-        border-radius: 9px;
-        font-size: clamp(0.4rem, 1vw, 1rem);
-        flex-shrink: 0.5;
-        white-space: nowrap;
-        transition: all 0.1s ease-in-out;
-        border: none;
-      }
-      .red {
-        width: clamp(80px, 8vw, 135px);
-        height: clamp(20px, 4vh, 50px);
-        background-color: #e74c3c;
-        filter: drop-shadow(0px 0px 10px #ff2600);
-        color: white;
-      }
-      .blue {
-        width: clamp(80px, 8vw, 135px);
-        height: clamp(20px, 4vh, 50px);
-        background-color: #3498db;
-        filter: drop-shadow(0px 0px 10px #3498db);
-        color: white;
-      }
-      .yellow {
-        width: clamp(80px, 8vw, 135px);
-        height: clamp(20px, 4vh, 50px);
-        background-color: #f39c12;
-        filter: drop-shadow(0px 0px 10px #f39c12);
-        color: white;
-      }
-      .dropdown {
-         width: clamp(80px, 8vw, 135px); 
-        height: clamp(20px, 5vh, 35px);
-        color: #020202;
-        border-radius: 9px;
-        background: rgba(255, 255, 255, 0.33);
-        box-shadow: 0px 0px 20px 0px #87A2DE;
-      }
-      .export {
-        /* width: clamp(80px, 8vw, 135px); */
-        height: clamp(20px, 5vh, 35px);
-        color: #020202;
-        border-radius: 9px;
-        background: rgba(255, 255, 255, 0.33);
-        box-shadow: 0px 0px 20px 0px #87A2DE;
-      }
-      .search-bar {
-        /* width: clamp(80px, 8vw, 135px); */
-        height: clamp(20px, 5vh, 35px);
-        border-radius: 9px;
-        background: rgba(255, 255, 255, 0.33);
-        box-shadow: 0px 0px 20px 0px #87A2DE;
-        display: flex;
-        width: 136px;
-        height: 37px;
-        padding: 10px 24px 10px 22px;
-        justify-content: center;
-        align-items: center;
-        gap: 9px;
-      }
+         /* ===== HEADER SECTION ===== */
+         .header-container {
+            margin-bottom: 10px;
+         }
 
-      /* ===== TABLE SECTION ===== */
-      .table-container {
-        margin-top: 20px;
-        max-height: 400px;
-        overflow-y: auto;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: center;
-        table-layout: auto;
-        color: #030303;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 5px;
-      }
-      th, td {
-        padding: 15px;
-        border: 1px solid #ccc;
-        word-wrap: break-word;
-        font-size: clamp(0.4rem, 1vw, 1rem);
-      }
-      th {
-        background-color: rgba(0, 0, 0, 0.3);
-        font-weight: bold;
-        color: #000;
-      }
+         .header {
+            background: rgba(255, 255, 255, 0);
+            padding: 20px;
+            border-radius: 10px;
+            color: #ffffff;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+         }
 
-      /* ===== MEDIA QUERIES ===== */
-      @media (max-width: 1024px) {
-        .controls {
-           gap: 6px;
-        }
-        .controls input,
-        .controls select,
-        .controls button {
-           padding: 5px;
-        }
-        th, td {
-           padding: 10px;
-        }
-      }
-      @media (max-width: 768px) {
-        .controls {
-           gap: 4px;
-        }
-        .controls input,
-        .controls select,
-        .controls button {
-           padding: 4px;
-        }
-        th, td {
-           padding: 8px;
-        }
-      }
-      @media (max-width: 512px) {
-        .controls {
-           gap: 2px;
-        }
-        .controls input,
-        .controls select,
-        .controls button {
-           padding: 2px;
-        }
-        th, td {
-           padding: 6px;
-        }
-      }
-    .center-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    /* === DESIGN NI JULIA === */
+         .header img {
+            width: 80px;
+            height: auto;
+         }
 
-    .date-red {
-        background-color: #e74c3c; /* Red background */
-        color: #fff; /* White text */
-        font-weight: bold;
-        font-size: clamp(1.1rem, 1vw, 1.5rem);
-        position: relative;
-        padding-left: clamp(10px, 2.2vw, 50px) !important;
-        display: flex;
-        border: none;
-        border-radius: 12px; /* Rounded corners */
-        
-        outline: none;
-        height: clamp(20px, 5vh, 35px);
-        width: clamp(80px, 15vw, 135px);
-        box-shadow : 0px 0px 10px #ff2600;
-        overflow: visible;
-    }
-    .date-red:focus,
-    .date-red:active {
-        color: #fff !important; /* Ensures text stays white */
-        background-color: #e74c3c;
-        outline: none !important;
-        box-shadow : 0px 0px 10px #ff2600;
-    }
-    
-    .date-red::-webkit-calendar-picker-indicator {
-        color: white;
-        cursor: pointer;
-    }
+         .header h2 {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+         }
 
-    .date-red:hover {
-        background-color: #e74c3c; /* Darker red on hover */
-    }
+         .header h3 {
+            font-size: 1em;
+            font-weight: normal;
+         }
 
-    .date-container {
-      position: relative;
-      display: inline-block;
-    }
+         /* ===== MAIN CONTAINER ===== */
+         .container1 {
+            max-width: 1350px;
+            margin: 0 auto;
+            background: #f4f4f4(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(177, 39, 39, 0.1),
+               0 0 10px rgba(0, 0, 255, 0.4);
+            color: #fff;
+            position: relative;
+         }
 
-    .calendar-icon, .search-icon {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: white; /* Ensure icon is white */
-        font-size: clamp(0.8rem, 1.2vw, 1.2rem);
-        pointer-events: none;
-    }
-    .search-input {
-      position: relative;
-      display: inline-block;
-    }
-    .search-bar:focus,
-    .search-bar:active {
-      background: rgba(255, 255, 255, 0.33);
-      outline: none !important;
-      box-shadow: none !important;
-    }
-  </style>
-</head>
-<body class="container-fluid p-3">
+         .container1::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.27);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+            border-radius: 10px;
+         }
 
-  <div class="header-container center-container">
-    <div class="header">
-      <img src="content/Logo.png" alt="DHSUD Logo">
-      <div>
-        <h2>DHSUD REGION IV-A</h2>
-        <h3>Automated DTR Monitoring System</h3>
-      </div>
-    </div>
-  </div>
+         /* ===== CONTROLS ===== */
+         .controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 0;
+            flex-wrap: nowrap;
+            overflow: visible;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: inherit;
+         }
 
-  <!-- MAIN CONTENT CONTAINER -->
-  <div class="container">
-    <!-- CONTROLS (sticky) -->
-    <div class="controls">
-      <div class="left-controls">
-        <!-- <button class="red">Feb 01, 2025 ▼</button> -->
-        <div class="date-container">
-          <input id="startDate" class=" form-control date-red" type="date" />
-          <i class="bi bi-calendar3 calendar-icon"></i>
-        </div>
+         .left-controls,
+         .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
+            flex-shrink: 0.5;
+            min-width: 0;
+         }
 
-        <!-- <button class="blue">05 Default</button>
-        <button class="yellow">05 Table</button> -->
-        <div class="btn-group" role="group">
-            <button id="tableView" class="btn btn-outline-dark active">Table View</button>
-            <button id="tabView" class="btn btn-outline-dark">Excel View</button>
+         .right-controls {
+            margin-left: auto;
+         }
+
+         .controls input,
+         .controls select,
+         .controls button {
+            padding: 3px 8px;
+            border-radius: 9px;
+            font-size: clamp(0.4rem, 1vw, 1rem);
+            flex-shrink: 0.5;
+            white-space: nowrap;
+            transition: all 0.1s ease-in-out;
+            border: none;
+         }
+
+         .red {
+            width: clamp(80px, 8vw, 135px);
+            height: clamp(20px, 4vh, 50px);
+            background-color: #e74c3c;
+            filter: drop-shadow(0px 0px 10px #ff2600);
+            color: white;
+         }
+
+         .blue {
+            width: clamp(80px, 8vw, 135px);
+            height: clamp(20px, 4vh, 50px);
+            background-color: #3498db;
+            filter: drop-shadow(0px 0px 10px #3498db);
+            color: white;
+         }
+
+         .yellow {
+            width: clamp(80px, 8vw, 135px);
+            height: clamp(20px, 4vh, 50px);
+            background-color: #f39c12;
+            filter: drop-shadow(0px 0px 10px #f39c12);
+            color: white;
+         }
+
+         .dropdown {
+            /* width: clamp(80px, 25vw, 135px); */
+            width: 13vw;
+            height: clamp(20px, 5vh, 35px);
+            color: #020202;
+            border-radius: 9px;
+            background: rgba(255, 255, 255, 0.33);
+            box-shadow: 0px 0px 20px 0px #87A2DE;
+            text-indent: 4px;
+            color: #fff;
+         }
+
+         .export {
+            /* width: clamp(80px, 8vw, 135px); */
+            width: clamp(80px, 8vw, 135px);
+            height: clamp(20px, 5vh, 35px);
+            color: #020202;
+            border-radius: 9px;
+            background: rgba(255, 255, 255, 0.33);
+            box-shadow: 0px 0px 20px 0px #87A2DE;
+         }
+
+         .search-bar {
+            width: clamp(80px, 8vw, 135px);
+            height: clamp(20px, 5vh, 35px);
+            border-radius: 9px;
+            background: rgba(255, 255, 255, 0.33);
+            box-shadow: 0px 0px 20px 0px #87A2DE;
+            display: flex;
+            width: 136px;
+            height: 37px;
+            padding: 10px 24px 10px 22px;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            text-indent: 25px;
+            color: #fff;
+         }
+
+         /* ===== TABLE SECTION ===== */
+         .table-container {
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+         }
+
+         table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            table-layout: auto;
+            color: #030303;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+         }
+
+         th,
+         td {
+            padding: 15px;
+            border: 1px solid #ccc;
+            word-wrap: break-word;
+            font-size: clamp(0.4rem, 1vw, 1rem);
+         }
+
+         th {
+            background-color: rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            color: #000;
+         }
+
+         /* ===== MEDIA QUERIES ===== */
+         @media (max-width: 1024px) {
+            .controls {
+               gap: 6px;
+            }
+
+            .controls input,
+            .controls select,
+            .controls button {
+               padding: 5px;
+            }
+
+            th,
+            td {
+               padding: 10px;
+            }
+         }
+
+         @media (max-width: 768px) {
+            .controls {
+               gap: 4px;
+            }
+
+            .controls input,
+            .controls select,
+            .controls button {
+               padding: 4px;
+            }
+
+            th,
+            td {
+               padding: 8px;
+            }
+         }
+
+         @media (max-width: 512px) {
+            .controls {
+               gap: 2px;
+            }
+
+            .controls input,
+            .controls select,
+            .controls button {
+               padding: 2px;
+            }
+
+            th,
+            td {
+               padding: 6px;
+            }
+         }
+
+         .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+         }
+
+         /* === DESIGN NI JULIA === */
+         .date-red {
+            background-color: #e74c3c;
+            /* Red background */
+            color: #fff;
+            /* White text */
+            font-weight: bold;
+            font-size: clamp(1.1rem, 1vw, 1.5rem);
+            position: relative;
+            padding-left: clamp(10px, 2.2vw, 50px) !important;
+            display: flex;
+            border: none;
+            border-radius: 12px;
+            /* Rounded corners */
+            outline: none;
+            height: clamp(20px, 5vh, 35px);
+            width: clamp(80px, 15vw, 135px);
+            box-shadow: 0px 0px 10px #ff2600;
+            overflow: visible;
+         }
+
+         .date-red:focus,
+         .date-red:active {
+            color: #fff !important;
+            /* Ensures text stays white */
+            background-color: #e74c3c;
+            outline: none !important;
+            box-shadow: 0px 0px 10px #ff2600;
+         }
+
+         .date-red::-webkit-calendar-picker-indicator {
+            color: white;
+            cursor: pointer;
+         }
+
+         .date-red:hover {
+            background-color: #e74c3c;
+            /* Darker red on hover */
+         }
+
+         .date-container {
+            position: relative;
+            display: inline-block;
+         }
+
+         .calendar-icon,
+         .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: clamp(0.8rem, 1.2vw, 1.2rem);
+            pointer-events: none;
+         }
+
+         .search-input {
+            position: relative;
+            display: inline-block;
+         }
+
+         .search-bar:focus,
+         .search-bar:active {
+            background: rgba(255, 255, 255, 0.33);
+            outline: none !important;
+            box-shadow: none !important;
+         }
+
+         .dropdown:focus,
+         .dropdown:active {
+            background: rgba(255, 255, 255, 0.33);
+            outline: none !important;
+            box-shadow: none !important;
+         }
+      </style>
+   </head>
+   <body class="container-fluid p-3">
+      <div class="header-container center-container">
+         <div class="header">
+            <img src="content/Logo.png" alt="DHSUD Logo">
+            <div>
+               <h2>DHSUD REGION IV-A</h2>
+               <h3>Automated DTR Monitoring System</h3>
+            </div>
          </div>
       </div>
-      <div class="right-controls">
-        <!-- <input type="text" class="search-bar" placeholder="Search...">
+      <!-- MAIN CONTENT CONTAINER -->
+      <div class="container1">
+         <!-- CONTROLS (sticky) -->
+         <div class="controls">
+            <div class="left-controls">
+           
+               <div class="date-container">
+                  <input id="startDate" class="date-red" type="date" />
+                  <i class="bi bi-calendar3 calendar-icon"></i>
+               </div>
+          
+               <div class="btn-group" role="group">
+                  <button id="tableView" class="btn btn-outline-dark active">Table View</button>
+                  <button id="tabView" class="btn btn-outline-dark">Excel View</button>
+               </div>
+            </div>
+            <div class="right-controls">
+          
+               <!-- Search Bar -->
 
-          <select class="dropdown">
-            <option>Sort by</option>
-            <option>Name</option>
-            <option>Time In</option>
-            <option>Time Out</option>
-          </select>
-          <button class="export">Export</button>
-          <select class="dropdown">
-            <option>Filter by</option>
-            <option>Overtime</option>
-            <option>Under-time</option>
-            <option>Division</option>
-          </select>
-        </div> -->
+               
 
-          <!-- Search Bar -->
-<div class="search-input"> 
-  <input type="text" id="myInput" onkeyup="searchByName()" class="search-bar form-control" placeholder="Search by Name/Div" >
-  <i class="bi bi-search search-icon"></i>
-</div>
+                 <input type="text" class="search-bar" placeholder="Search...">
+                 <select class="dropdown" id="filter" onchange="filterTable()">
+                    <option selected value="">Filter by (Division)</option>
+                    <option>AFD</option>
+                    <option>ELUPDD</option>
+                    <option>EMES</option>
+                    <option>HREDRD</option>
+                    <option>HOACDD</option>
+                    <option>ORD</option>
+                    <option>PLS</option>
+                    <option>PHSD</option>
+                    <option>RECORDS</option>
+                 </select>
+                 <button class="export">Export</button>
+<!--
+               <div class="search-input">
+                  <input type="text" id="myInput" onkeyup="searchByName()" class="search-bar form-control" placeholder="Search">
+                  <i class="bi bi-search search-icon"></i>
+               </div>
 
-
-          <!-- Filter Dropdown -->
-          <select id="filter" onchange="filterTable()" class="form-select dropdown">
-             <option selected value="">Filter by (Division)</option>
-             <option>AFD</option>
-             <option>ELUPDD</option>
-             <option>EMES</option>
-             <option>HREDRD</option>
-             <option>HOACDD</option>
-             <option>ORD</option>
-             <option>PLS</option>
-             <option>PHSD</option>
-             <option>RECORDS</option>
-          </select>
-          <!-- Export Button -->
-          <button class="export">Export</button>
-        </div>
-
-    </div>
-
-    <!-- TABLE -->
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>NAME</th>
-            <th>DIV.</th>
-            <th>TIME IN</th>
-            <th>TIME OUT</th>
-            <th>OVERTIME</th>
-            <th>UNDER-TIME</th>
-            <th>TOTAL RENDERED TIME</th>
-            <th>CONVERSION OF HOURS</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>01</td>
-            <td>Dela Cruz P.D.</td>
-            <td>HRED</td>
-            <td>5:00 A.M.</td>
-            <td>5:00 P.M.</td>
-            <td>5 HOURS, 10 MINS</td>
-            <td>30 MINS</td>
-            <td>8</td>
-            <td>.584</td>
-          </tr>
-          <tr>
-            <td>02</td>
-            <td>Mamiit T.</td>
-            <td>ADMIN</td>
-            <td>8:30 A.M.</td>
-            <td>5:30 P.M.</td>
-            <td>8 HOURS</td>
-            <td>0 HOUR</td>
-            <td>0</td>
-            <td>.000</td>
-          </tr>
-          <!-- Additional rows to enable scrolling -->
-          <tr>
-            <td>03</td>
-            <td>Juan Dela Cruz</td>
-            <td>OPS</td>
-            <td>9:00 A.M.</td>
-            <td>6:00 P.M.</td>
-            <td>1 HOUR</td>
-            <td>15 MINS</td>
-            <td>9</td>
-            <td>.750</td>
-          </tr>
-          <tr>
-            <td>04</td>
-            <td>Maria Clara</td>
-            <td>HR</td>
-            <td>9:15 A.M.</td>
-            <td>6:15 P.M.</td>
-            <td>45 MINS</td>
-            <td>10 MINS</td>
-            <td>8.5</td>
-            <td>.710</td>
-          </tr>
-          <tr>
-            <td>05</td>
-            <td>Pedro Penduko</td>
-            <td>FIN</td>
-            <td>8:45 A.M.</td>
-            <td>5:45 P.M.</td>
-            <td>1 HOUR 5 MINS</td>
-            <td>20 MINS</td>
-            <td>9</td>
-            <td>.800</td>
-          </tr>
-          <tr>
-            <td>06</td>
-            <td>Linda Lopez</td>
-            <td>SALES</td>
-            <td>9:30 A.M.</td>
-            <td>6:30 P.M.</td>
-            <td>50 MINS</td>
-            <td>0</td>
-            <td>8.75</td>
-            <td>.780</td>
-          </tr>
-          <tr>
-            <td>07</td>
-            <td>Carlos Santos</td>
-            <td>OPS</td>
-            <td>8:55 A.M.</td>
-            <td>5:55 P.M.</td>
-            <td>1 HOUR</td>
-            <td>5 MINS</td>
-            <td>9</td>
-            <td>.820</td>
-          </tr>
-          <tr>
-            <td>08</td>
-            <td>Ana Reyes</td>
-            <td>ADMIN</td>
-            <td>8:30 A.M.</td>
-            <td>5:30 P.M.</td>
-            <td>55 MINS</td>
-            <td>0</td>
-            <td>8.9</td>
-            <td>.790</td>
-          </tr>
-          <tr>
-            <td>01</td>
-            <td>Dela Cruz P.D.</td>
-            <td>HRED</td>
-            <td>5:00 A.M.</td>
-            <td>5:00 P.M.</td>
-            <td>5 HOURS, 10 MINS</td>
-            <td>30 MINS</td>
-            <td>8</td>
-            <td>.584</td>
-          </tr>
-          <tr>
-            <td>02</td>
-            <td>Mamiit T.</td>
-            <td>ADMIN</td>
-            <td>8:30 A.M.</td>
-            <td>5:30 P.M.</td>
-            <td>8 HOURS</td>
-            <td>0 HOUR</td>
-            <td>0</td>
-            <td>.000</td>
-          </tr>
-          <!-- Additional rows to enable scrolling -->
-          <tr>
-            <td>03</td>
-            <td>Juan Dela Cruz</td>
-            <td>OPS</td>
-            <td>9:00 A.M.</td>
-            <td>6:00 P.M.</td>
-            <td>1 HOUR</td>
-            <td>15 MINS</td>
-            <td>9</td>
-            <td>.750</td>
-          </tr>
-          <tr>
-            <td>04</td>
-            <td>Maria Clara</td>
-            <td>HR</td>
-            <td>9:15 A.M.</td>
-            <td>6:15 P.M.</td>
-            <td>45 MINS</td>
-            <td>10 MINS</td>
-            <td>8.5</td>
-            <td>.710</td>
-          </tr>
-          <tr>
-            <td>05</td>
-            <td>Pedro Penduko</td>
-            <td>FIN</td>
-            <td>8:45 A.M.</td>
-            <td>5:45 P.M.</td>
-            <td>1 HOUR 5 MINS</td>
-            <td>20 MINS</td>
-            <td>9</td>
-            <td>.800</td>
-          </tr>
-          <tr>
-            <td>06</td>
-            <td>Linda Lopez</td>
-            <td>SALES</td>
-            <td>9:30 A.M.</td>
-            <td>6:30 P.M.</td>
-            <td>50 MINS</td>
-            <td>0</td>
-            <td>8.75</td>
-            <td>.780</td>
-          </tr>
-          <tr>
-            <td>07</td>
-            <td>Carlos Santos</td>
-            <td>OPS</td>
-            <td>8:55 A.M.</td>
-            <td>5:55 P.M.</td>
-            <td>1 HOUR</td>
-            <td>5 MINS</td>
-            <td>9</td>
-            <td>.820</td>
-          </tr>
-          <tr>
-            <td>08</td>
-            <td>Ana Reyes</td>
-            <td>ADMIN</td>
-            <td>8:30 A.M.</td>
-            <td>5:30 P.M.</td>
-            <td>55 MINS</td>
-            <td>0</td>
-            <td>8.9</td>
-            <td>.790</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</body>
+               <div class="position-relative">
+                  <select id="filter" onchange="filterTable()" class="form-select dropdown pe-2">
+                     <option selected value="">Filter by (Division)</option>
+                     <option>AFD</option>
+                     <option>ELUPDD</option>
+                     <option>EMES</option>
+                     <option>HREDRD</option>
+                     <option>HOACDD</option>
+                     <option>ORD</option>
+                     <option>PLS</option>
+                     <option>PHSD</option>
+                     <option>RECORDS</option>
+                  </select>
+               </div> -->
+               <!-- Export Button
+               <button class="export">Export</button> -->
+            </div>
+         </div>
+         <div class="container-fluid p-0 m-0 border" id="displayBox">
+            <table class="" id="tableResult">
+               <thead>
+                  <tr>
+                     <th scope="col">ID</th>
+                     <th scope="col">NAME</th>
+                     <th scope="col">DIV.</th>
+                     <th scope="col">TIME IN</th>
+                     <th scope="col">TIME OUT</th>
+                     <th scope="col">OVERTIME</th>
+                     <th scope="col">UNDERTIME</th>
+                     <th scope="col">TOTAL RENDERED TIME</th>
+                     <th scope="col">CONVERSION</th>
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody></tbody>
+            </table>
+            
+         </div>
+         <script src="function2.js"></script>
+   </body>
 </html>
