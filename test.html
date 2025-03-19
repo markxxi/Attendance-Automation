@@ -6,9 +6,6 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
@@ -16,15 +13,17 @@
     <link rel="stylesheet" href="/CSS/SpinnerStyle.css">
 </head>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Montserrat';
+      
     }
     body {    
       background-image: url("content/bg.png");
-      color: #fff;
+      font-family: 'Montserrat';
+      /* color: #fff; */
       text-align: center;
       background-position: center;
       background-repeat: no-repeat;
@@ -149,11 +148,13 @@
     background: #555;
   }
   .header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-align: left;
     gap: 20px;
     margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    align-self: stretch;
   }
  .container2 {
    padding: 35px;
@@ -169,7 +170,26 @@
      align-items: center;
      z-index: 9999;
   }
-  
+  .custom-modal {
+    width: 442px;
+    padding: 20px;
+    
+    
+text-align: left;
+    border-radius: 8px;
+    border: 1px solid #CA383A;
+    background: #FFF;
+    
+  }
+  .itd {
+    color: #CA383A;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+
 </style>
 
 <body>
@@ -209,9 +229,12 @@
   
 <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-md">
-    <div class="modal-content">
+    <div class="modal-content custom-modal">
       <div class="header">
-        <h5>Incomplete Time Data</h5>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M8.4845 2.49499C9.15808 1.32833 10.842 1.32833 11.5156 2.495L17.7943 13.37C18.4678 14.5367 17.6259 15.995 16.2787 15.995H3.72136C2.37421 15.995 1.53224 14.5367 2.20582 13.37L8.4845 2.49499ZM10 5C10.4142 5 10.75 5.33579 10.75 5.75V9.25C10.75 9.66421 10.4142 10 10 10C9.58579 10 9.25 9.66421 9.25 9.25L9.25 5.75C9.25 5.33579 9.58579 5 10 5ZM10 14C10.5523 14 11 13.5523 11 13C11 12.4477 10.5523 12 10 12C9.44772 12 9 12.4477 9 13C9 13.5523 9.44772 14 10 14Z" fill="#CA383A"/>
+        </svg>
+        <p class="itd">Incomplete Time Data</p>
       </div>
       <div class="modal-body">
       <p id="errorMessage"></p>

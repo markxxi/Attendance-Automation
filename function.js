@@ -246,7 +246,7 @@ function handleJsonString() {
         console.log("Invalid format.");
     }
 }
-
+ $("#errorModal").modal("show");
 function validateTimeRecords() {
     const jsonData = JSON.parse(localStorage.getItem("jsonData"));
     let errorRecords = {};
@@ -272,6 +272,7 @@ function validateTimeRecords() {
             ([name, days]) =>
                 ` • Invalid record for ${name} on ${days.join(", ")}. Expected 4 time entries.`,
         );
+        console.log(errorMessages.join("\n"));
 
         $("#errorMessage").html(errorMessages.join("<br>"));
         $("#errorModal").modal("show");
