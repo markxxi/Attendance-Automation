@@ -208,6 +208,50 @@
 .modal-body {
   padding-left: 20px;
 }
+  .modal-footer {
+    display: flex;
+    padding-top: 16px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2px;
+    align-self: stretch;
+  }
+  .btn-cancel {
+    border-radius: var(--Space-4, 4px);
+    border: 1px solid var(--grey-4-border, #E9E9E9);
+    background: var(--White, #FFF);
+    display: flex;
+    padding: var(--Space-8, 8px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--Space-2, 2px);
+    color: var(--black-1-primary-text, #313131);
+
+    /* p-sm */
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px; /* 133.333% */
+  }
+  .btn-okay {
+    display: flex;
+    padding-inline: var(--Space-13, 15px);
+    padding-block: var(--Space-9, 8px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--Space-2, 2px);
+    border-radius: var(--Space-4, 4px);
+    background: var(--Red-1, #CA383A);
+    color: var(--White, #FFF);
+
+    /* p-sm-bold */
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 16px; /* 133.333% */
+  }
 </style>
 
 <body>
@@ -255,8 +299,12 @@
         <p class="itd">Incomplete Time Data</p>
       </div>
       <div class="modal-body pt-0 pe-0 pb-0 mt-0">
-        <p id="errorMessage" class=""></p>
-        <p class="note p-0">Note:  Please complete the missing time entries in the table cells before proceeding.</p>
+        <p id="errorMessage" class="mb-3"></p>
+        <p class="note p-0 mt-0">Note:  Please complete the missing time entries in the table cells before proceeding.</p>
+      </div>
+      <div class="modal-footer border-0 p-0">
+       <button class=" btn-cancel">Cancel</input>
+        <button class=" btn-okay">Okay</input>
       </div>
     </div>
   </div>

@@ -246,6 +246,7 @@ function handleJsonString() {
         console.log("Invalid format.");
     }
 }
+ 
 function validateTimeRecords() {
     const jsonData = JSON.parse(localStorage.getItem("jsonData"));
     let errorRecords = {};
