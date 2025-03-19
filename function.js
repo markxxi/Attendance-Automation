@@ -1,3 +1,21 @@
+
+    window.addEventListener("load", function () {
+          setTimeout(() => { // Timeout for smooth transition
+              let loadingScreen = document.getElementById("loading-screen");
+              if (loadingScreen) {
+                  loadingScreen.style.display = "none";
+                  fileInput.addEventListener("change", (event) => {
+                      const file = event.target.files[0];
+                      if (file) {
+                          // console.log('Selected file name testing:', file.name);
+                          displayContainer();
+                          previewExcelFile(file);
+                      }
+                  });
+              }
+          }, 800);
+    }); 
+
 const uploadButton = document.getElementById("uploadBtn");
 const fileInput = document.getElementById("fileInput");
 const filePreview = document.getElementById("previewExcelFile");
@@ -6,19 +24,11 @@ const submitButton = document.getElementById("submitFileBtn");
 const hideFirstContainer = document.getElementById("hideFirstContainer");
 const previewScreen = document.getElementById("previewScreen");
 
-fileInput.addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        // console.log('Selected file name testing:', file.name);
-        displayContainer();
-        previewExcelFile(file);
-    }
-});
+
 
 function displayContainer(){
     hideFirstContainer.style.display = "none";
     previewScreen.style.display = "block";
-    
 }
 
 var json;
