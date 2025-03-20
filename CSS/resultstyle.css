@@ -193,7 +193,7 @@
     text-align: center;
     table-layout: auto;
     color: #030303;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1); 
     
      overflow: hidden;
  }
@@ -201,7 +201,7 @@
  th,
  td {
     padding: 6px;
-
+     /* border: 1px solid rgba(255, 255, 255, 0.1) !important; */
     word-wrap: break-word;
     font-size: clamp(0.4rem, 1vw, 1rem);
  }
@@ -212,7 +212,7 @@
  th {
      
     padding: 15px;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.3); 
     font-weight: bold;
     color: #000;
  }
@@ -279,6 +279,7 @@
      height: clamp(20px, 5vh, 35px);
     border: none;
     margin: 0;
+     
   }
   .btn-default {
     background-color: #466A9F !important;
@@ -374,3 +375,7 @@
  .search-bar::placeholder {
     color: #fff;
  }
+
+.custom-table thead tr {
+    background-color: #f8d7da !important; /* Light red for rows */
+}

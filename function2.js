@@ -162,7 +162,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
 
     let jsonData = JSON.parse(file);
     let tableHTML =
-        "<table class='table table-bordered table-striped table-hover custom-tb-colp'>";
+        "<table class='table'>";
     let currentUser = null;
     let maxColumns = 0;
     let isMatchingUSID = false;
@@ -556,7 +556,10 @@ function displayTable(data) {
             tableHTML += `<tr><td colspan="100%"><b>${row.join(" ")}</b></td></tr>`;
         } else if (row[0]?.toString().startsWith("Month")) {
             tableHTML += `<tr><td colspan="100%"><b>${row.join(" ")}</b></td></tr>`;
-        } else if (row[0]?.toString().startsWith("US")) {
+        } else if (row[0]?.toString == null) {
+            tableHTML += `<tr><td colspan="100%"></td></tr>`;
+        } 
+        else if (row[0]?.toString().startsWith("US")) {
             if (currentUser) {
                 tableHTML += "</tbody>";
             }
