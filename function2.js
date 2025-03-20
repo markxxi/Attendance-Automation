@@ -38,10 +38,17 @@ function firstNonEmptyKey(data) {
 }
 
 var jsonObject;
+window.addEventListener("load", function () {
+      setTimeout(() => { // Timeout for smooth transition
+          let loadingScreen = document.getElementById("loading-screen");
+          if (loadingScreen) {
+              loadingScreen.style.display = "none";
+              displayJsonDataToTable();
+          }
+      }, 800);
+}); 
 
-window.onload = function () {
-    displayJsonDataToTable();
-};
+
 
 function displayJsonDataToTable() {
     var jsonData = localStorage.getItem("jsonData");
