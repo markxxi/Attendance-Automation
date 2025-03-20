@@ -205,10 +205,13 @@
     word-wrap: break-word;
     font-size: clamp(0.4rem, 1vw, 1rem);
  }
-
+.td-clp {
+    font-size: clamp(0.4rem, 0.8vw, 1rem);
+    
+}
  th {
      
-     padding: 15px;
+    padding: 15px;
     background-color: rgba(0, 0, 0, 0.3);
     font-weight: bold;
     color: #000;

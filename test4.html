@@ -23,10 +23,7 @@
     </head>
     <style>
    
-        p {
-            line-height: 0.7rem;
-            font-size: 1rem;
-        }
+          @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
         .counter-box,
         .counter-box1 {
             display: inline-block;
@@ -38,7 +35,12 @@
         }
         .counter-box {
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            height: 35px;
+            background: #fff;
+            display: flex;
+            width: 130px;
+            padding-left: 15px;
+            justify-content: center;
+            align-items: center;
         }
         .counter-box1 {
             box-shadow: 0px 10px 20px rgba(135, 162, 222, 0.2);
@@ -53,15 +55,16 @@
             background: #83aff5;
             font-size: 14px;
             cursor: pointer;
-            height: 35px;
+            height: 30px;
             color: white;
+            
         }
         .btn-counter1 {
             border: none;
             background: #3764cb;
             font-size: 14px;
             cursor: pointer;
-            height: 35px;
+            height: 30px;
             color: white;
             border-radius: 0px 9px 9px 0px;
         }
@@ -76,11 +79,67 @@
             font-size: 11px;
             height: 35px;
         }
+        .leftpanel {
+            text-align: left;
+            color: #000;
+            font-feature-settings: 'case' on;
+            font-family: 'inter';
+            font-size: 13px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 40%; /* 15.861px */
+        
+            
+            flex: 1 0 0;
+            align-self: stretch;
+        }
+        .col-left {
+          
+          overflow: hidden;
+          margin-right: 10px;
+          background: rgba(255, 255, 255, 0.30);
+          backdrop-filter: blur(10px);
+          border-radius: 7px;
+          text-align: center;
+          color: white;
+            display: flex;
+            
+            padding: 28px 20px 20px 20px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 5px;
+            flex: 1 0 0;
+        }
+
+        .col-right {
+            height: 251px;
+            padding-top: 8.5px;
+              background: rgba(255, 255, 255, 0.30);
+              backdrop-filter: blur(10px);
+              border-radius: 7px;
+            
+        }
+
+        .bottom-btn-grp {
+            width: 100%;
+            
+            flex-shrink: 0;
+            bottom: 5px;
+        }
+
+        .custom-row {
+        
+            overflow: hidden;
+        }
+
+        
     </style>
     <body>
         <div class="container-fluid">
-            <div class="row">
-                <div class="col">
+            <div class="row  custom-row">
+                <div class="col col-left">
+                    <div class="leftpanel">
                     <p>TOTAL COMPUTATION</p>
                     <p>Late:</p>
                     <p>Overtime:</p>
@@ -91,7 +150,9 @@
                         <span class="text-muted">{ placeholder }</span> to
                         <span class="text-muted">{ placeholder }</span> :
                     </p>
-                    <div class="d-flex align-items-center p-0">
+                        </div>
+                    <div class="bottom-btn-grp ">
+                    <div class="d-flex align-items-center   p-0">
                         <!-- Left side: counter boxes -->
                         <div class="d-flex">
                             <!-- First counter box -->
@@ -102,7 +163,7 @@
                                     value="0"
                                     readonly
                                 />
-                                <div class="btn-group" role="group">
+                                <div class="btn-group ms-3" role="group">
                                     <button class="btn-counter px-2">
                                         <i class="bi bi-dash"></i>
                                     </button>
@@ -120,7 +181,7 @@
                                     value="0"
                                     readonly
                                 />
-                                <div class="btn-group" role="group">
+                                <div class="btn-group ms-3" role="group">
                                     <button class="btn-counter px-2">
                                         <i class="bi bi-dash"></i>
                                     </button>
@@ -137,9 +198,10 @@
                                 COMPUTE
                             </button>
                         </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col border" id="mamKeysi">
+                <div class="col col-right" id="mamKeysi">
                     <div id="excelView"></div>
                 </div>
             </div>

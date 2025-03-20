@@ -230,7 +230,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                 });
                 //console.log(timeio);
                 for (let i = 1; i < maxColumns; i++) {
-                    tableHTML += `<td>${calculatedtimeio[i - 1] !== undefined ? calculatedtimeio[i - 1] : ""} </td>`;
+                    tableHTML += `<td class="td-clp">${calculatedtimeio[i - 1] !== undefined ? calculatedtimeio[i - 1] : ""} </td>`;
                     //${calculatedtimeio[i-1]}
                     // console.log(calculatedtimeio[i-1]);
                 }
