@@ -120,7 +120,7 @@
     width: clamp(80px, 8vw, 135px);
     height: clamp(20px, 4vh, 50px);
     background-color: #e74c3c;
-    filter: drop-shadow(0px 0px 10px #ff2600);
+    filter: drop-shadow(0px 0px 10px #ff4015);
     color: white;
  }
 
@@ -282,16 +282,16 @@
   }
   .btn-default {
     background-color: #466A9F !important;
-    box-shadow: -2px 0px 10px rgb(130, 209, 255);
+    /* box-shadow: -2px 0px 10px rgb(130, 209, 255); */
     border-radius: 10px 0 0 10px;
-    
+    color: #93B1DD !important;
     height: clamp(20px, 5vh, 35px);
   }
   .btn-table {
     background-color: #F5A623 !important;
-    box-shadow:  2px 0px 10px rgb(255, 201, 100);
+    box-shadow:  2px 0px 20px rgb(255, 201, 100);
     border-radius: 0 10px 10px 0;
-    
+    font-weight: bold !important;
     height: clamp(20px, 5vh, 35px);
   }
   .btn-group .btn.active-shadow {
