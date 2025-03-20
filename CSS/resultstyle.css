@@ -276,7 +276,7 @@
  }
  .btn-group .btn {
     width: clamp(60px, 8vw, 135px);
-    height: clamp(20px, 4.6vh, 50px);
+     height: clamp(20px, 5vh, 35px);
     border: none;
     margin: 0;
   }
@@ -285,14 +285,14 @@
     /* box-shadow: -2px 0px 10px rgb(130, 209, 255); */
     border-radius: 10px 0 0 10px;
     color: #93B1DD !important;
-    height: clamp(20px, 5vh, 35px);
+    
   }
   .btn-table {
     background-color: #F5A623 !important;
     box-shadow:  2px 0px 20px rgb(255, 201, 100);
     border-radius: 0 10px 10px 0;
     font-weight: bold !important;
-    height: clamp(20px, 5vh, 35px);
+    
   }
   .btn-group .btn.active-shadow {
     box-shadow: 0px 0px 10px rgb(255, 0, 0);
