@@ -78,13 +78,13 @@ document
         updateTable(selectedDate);
         //console.log(selectedDate);
     });
-
+var key, detailsCell, tableBody;
 function updateTable(date) {
     
-    var tableBody = document.querySelector("#tableResult tbody");
+     tableBody = document.querySelector("#tableResult tbody");
     tableBody.innerHTML = ""; // Clear previous rows
 
-    for(var key in jsonObject) {
+    for(key in jsonObject) {
         if (jsonObject.hasOwnProperty(key)) {
             var row = tableBody.insertRow();
             var cell1 = row.insertCell(0);
@@ -98,10 +98,10 @@ function updateTable(date) {
             var cell9 = row.insertCell(8);
             var cell10 = row.insertCell(9);
 
-            cell10.innerHTML = `<button id="collapsibleArrow" class="btn custom-arrow"><i class="bi bi-chevron-right"></i></button>`;
+            cell10.innerHTML = `<button class="btn custom-arrow"><i class="bi bi-chevron-right"></i></button>`;
 
             cell1.textContent = jsonObject[key].id;
-           console.log(jsonObject[key].id);
+           
             cell2.textContent = jsonObject[key].name;
             cell3.textContent = jsonObject[key].department;
 
@@ -111,14 +111,14 @@ function updateTable(date) {
             calculateTimeDifference(key, cell8, cell5, date);
 
             overtime(key, cell6, cell9, cell7);
+
             var detailsRow = tableBody.insertRow();
             detailsRow.classList.add("collapsible-content", "d-none");
-            var detailsCell = detailsRow.insertCell(0);
+            detailsCell = detailsRow.insertCell(0);
             detailsCell.colSpan = 10;
- 
-        //    fetchDetailsContent(detailsCell, jsonObject[key].id);
+
             fetchDetailsContent(detailsCell, jsonObject[key].id);
-            collapsibleArrowFunction(row, detailsRow);
+            
         }
    } //getMonth();
 }
@@ -145,20 +145,28 @@ function fetchDetailsContent(detailsCell, selectedID) {
             detailsCell.innerHTML = `<div class="table-responsive text-danger">Error loading details.</div>`;
         });
 }
-const collapsibleArrowFunction = (row, detailsRow) => {
-    const collBt = row.querySelector(".custom-arrow");
 
-    collBt.addEventListener("click", function () {
-        const icon = collBt.querySelector("i");
-        if (icon) {
-            icon.classList.toggle("bi-chevron-right");
-            icon.classList.toggle("bi-chevron-down");
+document.querySelector("#tableResult tbody").addEventListener("click", function (e) {
+    // Check if a collapsible button was clicked
+    if (e.target.closest(".custom-arrow")) {
+        const collBt = e.target.closest(".custom-arrow");
+        const row = collBt.closest("tr");
+        const detailsRow = row.nextElementSibling;
+
+        if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
+            detailsRow.classList.toggle("d-none");
+
+            // Toggle the icon inside the button
+            const icon = collBt.querySelector("i");
+            if (icon) {
+                icon.classList.toggle("bi-chevron-right");
+                icon.classList.toggle("bi-chevron-down");
+            }
         }
+    }
+});
 
-        // toggle visibility
-        detailsRow.classList.toggle("d-none");
-    });
-};
+
 
 function ExcelViewForCollapsible(excelView, selectedUSID) {
     let file = localStorage.getItem("rawJsondata");
@@ -186,7 +194,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
             var splits = rowUSID.split("  ");
             // console.log(splits);
             var splitsGet0 = splits[0];
-            console.log(splitsGet0);
+            
             var regex = splitsGet0.match(/\d+/g);
             isMatchingUSID = parseInt(regex ? regex.join("") : "0", 10) === parseInt(selectedUSID, 10);
             //console.log(selectedUSID + ":" + regex);
@@ -205,7 +213,8 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                 currentUser = row.join(" ");
                 //userDetails = `<tr><th colspan="100%" style="text-align: left;">${currentUser}</th></tr>`;
                 // tableHTML += `<thead>${userDetails}</thead><tbody>`;
-            } else if (row[0] === "DD") {
+            } 
+            else if (row[0] === "DD") {
                 tableHTML += "<tr><th>DD</th>";
                 for (let i = 1; i < maxColumns; i++) {
                     tableHTML += `<th>${row[i] || ""}</th>`;
@@ -448,7 +457,12 @@ function hourValues(h) {
     }
     return valuesForHours[h];
 }
+
+
 function getMonth() {
+
+
+    
     const cal = document.getElementById("startDate");
     const getMonth = localStorage.getItem("monthOfFile");
     //const getMonth = "Month : JANUARY 2025";
@@ -490,7 +504,7 @@ function getMonth() {
         const date = new Date(getYear, monthNumber - 1, selectedDate + 1);
         const formattedDate = date.toISOString().split("T")[0];
         cal.value = formattedDate;
-        console.log("Extracted:", formattedDate); // Output: "02"
+        // console.log("Extracted:", formattedDate); // Output: "02"
     } else {
         console.log("No match found");
     }
@@ -667,7 +681,7 @@ function calc2(start, end) {
         return totalRenderedTime;
     }
 }
-
+/*
 //search input
 function searchByName() {
     var input = document.getElementById("myInput");
@@ -679,6 +693,46 @@ function searchByName() {
         var td1 = tr[i].getElementsByTagName("td")[1];
         var td2 = tr[i].getElementsByTagName("td")[2];
 
+         if (td1 && td2) {
+             var txtValue1 = td1.textContent || td1.innerText;
+             var txtValue2 = td2.textContent || td2.innerText;
+
+             if (
+                 txtValue1.toUpperCase().indexOf(filter) > -1 ||
+                 txtValue2.toUpperCase().indexOf(filter) > -1
+             ) {
+                 tr[i].style.display = "";
+                 
+             } else {
+                 tr[i].style.display = "none";
+             }
+        }
+    }
+} */
+function searchByName() {
+    var input = document.getElementById("myInput");
+    var filter = input.value.toUpperCase();
+    var table = document.getElementById("tableResult");
+    var tr = table.getElementsByTagName("tr");
+
+    for (var i = 0; i < tr.length; i++) {
+        var mainRow = tr[i];
+        var detailsRow = tr[i + 1]; // The next row is the details row
+        
+        
+        if (mainRow.classList.contains("collapsible-content")) {
+            continue; // Skip the details rows in the loop
+        }
+
+        document.querySelectorAll("tr").forEach(row => {
+            if (row.querySelector("th")?.innerText.trim() === "CK") {
+                row.style.display = "table-row";
+            }
+        });
+        
+        var td1 = mainRow.getElementsByTagName("td")[1]; // Name column
+        var td2 = mainRow.getElementsByTagName("td")[2]; // Department column
+
         if (td1 && td2) {
             var txtValue1 = td1.textContent || td1.innerText;
             var txtValue2 = td2.textContent || td2.innerText;
@@ -687,9 +741,15 @@ function searchByName() {
                 txtValue1.toUpperCase().indexOf(filter) > -1 ||
                 txtValue2.toUpperCase().indexOf(filter) > -1
             ) {
-                tr[i].style.display = "";
+                mainRow.style.display = "";
+                if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
+                    detailsRow.style.display = "?";
+                }
             } else {
-                tr[i].style.display = "none";
+                mainRow.style.display = "none";
+                if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
+                    detailsRow.style.display = "none";
+                }
             }
         }
     }
@@ -704,6 +764,7 @@ function filterTable() {
     for (var i = 1; i < tr.length; i++) {
         // Start at 1 to skip table header
         var td = tr[i].getElementsByTagName("td")[2]; // 3rd column (Department)
+        
         if (td) {
             var val = td.textContent || td.innerText;
             if (filterValue === "" || val.indexOf(filterValue) > -1) {
@@ -729,3 +790,4 @@ function showSearchFilter() {
     search.style.display = "inline-block";
     filter.style.display = "inline-block";
 }
+
