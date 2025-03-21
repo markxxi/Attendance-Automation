@@ -717,11 +717,11 @@ function searchByName() {
 
     for (var i = 0; i < tr.length; i++) {
         var mainRow = tr[i];
-        var detailsRow = tr[i + 1]; // The next row is the details row
+        var detailsRow = tr[i + 1]; 
         
         
         if (mainRow.classList.contains("collapsible-content")) {
-            continue; // Skip the details rows in the loop
+            continue;
         }
 
         document.querySelectorAll("tr").forEach(row => {
@@ -730,8 +730,8 @@ function searchByName() {
             }
         });
         
-        var td1 = mainRow.getElementsByTagName("td")[1]; // Name column
-        var td2 = mainRow.getElementsByTagName("td")[2]; // Department column
+        var td1 = mainRow.getElementsByTagName("td")[1]; 
+        var td2 = mainRow.getElementsByTagName("td")[2]; 
 
         if (td1 && td2) {
             var txtValue1 = td1.textContent || td1.innerText;
@@ -763,14 +763,34 @@ function filterTable() {
 
     for (var i = 1; i < tr.length; i++) {
         // Start at 1 to skip table header
+        var mainRow = tr[i];
+        var detailsRow = tr[i + 1]; 
+
+
+        if (mainRow.classList.contains("collapsible-content")) {
+            continue;
+        }
+
+        document.querySelectorAll("tr").forEach(row => {
+            if (row.querySelector("th")?.innerText.trim() === "CK") {
+                row.style.display = "table-row";
+            }
+        });
+        
         var td = tr[i].getElementsByTagName("td")[2]; // 3rd column (Department)
         
         if (td) {
             var val = td.textContent || td.innerText;
             if (filterValue === "" || val.indexOf(filterValue) > -1) {
-                tr[i].style.display = "";
+                mainRow.style.display = "";
+                if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
+                    detailsRow.style.display = "?";
+                }
             } else {
-                tr[i].style.display = "none";
+                mainRow.style.display = "none";
+                if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
+                    detailsRow.style.display = "none";
+                }
             }
         }
     }
