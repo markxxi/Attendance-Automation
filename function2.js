@@ -122,6 +122,7 @@ function updateTable(date) {
         }
    } //getMonth();
 }
+/*
 function fetchDetailsContent(detailsCell, selectedID) {
  //   detailsCell.innerHTML = `<div class="table-responsive">Loading...</div>`; // Placeholder text
 
@@ -144,7 +145,29 @@ function fetchDetailsContent(detailsCell, selectedID) {
             console.error("Error fetching test4.html:", error);
             detailsCell.innerHTML = `<div class="table-responsive text-danger">Error loading details.</div>`;
         });
+} */
+
+function fetchDetailsContent(detailsCell, selectedID) {
+    fetch("test4.html")
+        .then((response) => response.text())
+        .then((data) => {
+            detailsCell.innerHTML = `<div class="table-responsive p-2">${data}</div>`;
+
+            let excelViewElements = detailsCell.querySelectorAll("#excelView");
+            excelViewElements.forEach((element) => {
+                ExcelViewForCollapsible(element, selectedID);
+
+                // Make sure all rows inside the collapsible content are visible
+                let ckRows = element.querySelectorAll("tr");
+                ckRows.forEach(ck => ck.style.display = "");
+            });
+        })
+        .catch((error) => {
+            console.error("Error fetching test4.html:", error);
+            detailsCell.innerHTML = `<div class="table-responsive text-danger">Error loading details.</div>`;
+        });
 }
+
 
 document.querySelector("#tableResult tbody").addEventListener("click", function (e) {
     // Check if a collapsible button was clicked
@@ -220,8 +243,9 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                     tableHTML += `<th>${row[i] || ""}</th>`;
                 }
                 tableHTML += "</tr>";
-            } else if (row[0] === "CK") {
-                tableHTML += "<tr><th>CK</th>";
+            } 
+            else if (row[0] === "CK") {
+                tableHTML += "<tr class='ck-row' ><th>CK</th>";
                 let timeResults = [];
                 var timeio = [];
                 var calculatedtimeio = [];
@@ -240,19 +264,16 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                     const splitTimes =
                         times.length >= 4 ? times[0] + " " + times[3] : timeString;
 
-                    // console.log(calc2("08:16","18:40"));
                     timeio.push(splitTimes);
                     calculatedtimeio.push(calc2(times[0], times[3]));
                 });
-                //console.log(timeio);
                 for (let i = 1; i < maxColumns; i++) {
                     tableHTML += `<td class="td-clp">${calculatedtimeio[i - 1] !== undefined ? calculatedtimeio[i - 1] : ""} </td>`;
-                    //${calculatedtimeio[i-1]}
-                    // console.log(calculatedtimeio[i-1]);
                 }
 
                 tableHTML += "</tr>";
-            } else {
+            } 
+            else {
 
                 tableHTML += "<tr>";
                 row.forEach((cell, idx) => {
@@ -709,6 +730,7 @@ function searchByName() {
         }
     }
 } */
+
 function searchByName() {
     var input = document.getElementById("myInput");
     var filter = input.value.toUpperCase();
@@ -717,19 +739,20 @@ function searchByName() {
 
     for (var i = 0; i < tr.length; i++) {
         var mainRow = tr[i];
-        var detailsRow = tr[i + 1]; 
-        
-        
+       
+
         if (mainRow.classList.contains("collapsible-content")) {
-            continue;
+            continue; 
         }
 
         document.querySelectorAll("tr").forEach(row => {
-            if (row.querySelector("th")?.innerText.trim() === "CK") {
-                row.style.display = "table-row";
+            let th = row.querySelector("th"); // Select the first <th> in the row
+            if (th && th.innerText.trim() === "CK") {
+                row.style.display = "table-row";   
             }
         });
-        
+
+
         var td1 = mainRow.getElementsByTagName("td")[1]; 
         var td2 = mainRow.getElementsByTagName("td")[2]; 
 
@@ -742,18 +765,15 @@ function searchByName() {
                 txtValue2.toUpperCase().indexOf(filter) > -1
             ) {
                 mainRow.style.display = "";
-                if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
-                    detailsRow.style.display = "?";
-                }
+               
             } else {
                 mainRow.style.display = "none";
-                if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
-                    detailsRow.style.display = "none";
-                }
+              
             }
         }
     }
 }
+
 
 // dropdown for filter by division
 function filterTable() {
@@ -771,11 +791,7 @@ function filterTable() {
             continue;
         }
 
-        document.querySelectorAll("tr").forEach(row => {
-            if (row.querySelector("th")?.innerText.trim() === "CK") {
-                row.style.display = "table-row";
-            }
-        });
+        
         
         var td = tr[i].getElementsByTagName("td")[2]; // 3rd column (Department)
         
