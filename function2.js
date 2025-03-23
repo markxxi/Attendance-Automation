@@ -762,11 +762,8 @@ function searchByName() {
                 // Find and show all ck-rows within this collapsible content
                 nextRow.querySelectorAll('tr').forEach(row => {
                     if (row.classList.contains('ck-row') || !row.getAttribute('class')) {
-                        if (isMatch) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
+                        row.style.display = isMatch ? "" : "none";
+                        row.removeAttribute('style');
                     }
                 });
             }
