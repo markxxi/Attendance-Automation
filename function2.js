@@ -80,7 +80,7 @@ document
     });
 var key, detailsCell, tableBody;
 function updateTable(date) {
-    
+
      tableBody = document.querySelector("#tableResult tbody");
     tableBody.innerHTML = ""; // Clear previous rows
 
@@ -101,7 +101,7 @@ function updateTable(date) {
             cell10.innerHTML = `<button class="btn custom-arrow"><i class="bi bi-chevron-right"></i></button>`;
 
             cell1.textContent = jsonObject[key].id;
-           
+
             cell2.textContent = jsonObject[key].name;
             cell3.textContent = jsonObject[key].department;
 
@@ -118,7 +118,7 @@ function updateTable(date) {
             detailsCell.colSpan = 10;
 
             fetchDetailsContent(detailsCell, jsonObject[key].id);
-            
+
         }
    } //getMonth();
 }
@@ -139,7 +139,7 @@ function fetchDetailsContent(detailsCell, selectedID) {
                 ExcelViewForCollapsible(element, selectedID);
             });
 
-        
+
         })
         .catch((error) => {
             console.error("Error fetching test4.html:", error);
@@ -217,7 +217,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
             var splits = rowUSID.split("  ");
             // console.log(splits);
             var splitsGet0 = splits[0];
-            
+
             var regex = splitsGet0.match(/\d+/g);
             isMatchingUSID = parseInt(regex ? regex.join("") : "0", 10) === parseInt(selectedUSID, 10);
             //console.log(selectedUSID + ":" + regex);
@@ -245,7 +245,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                 tableHTML += "</tr>";
             } 
             else if (row[0] === "CK") {
-                tableHTML += "<tr style='display: table-row'><th>CK</th>";
+                tableHTML += "<tr class='ck-row' style='display: table-row'><th>CK</th>";
                 let timeResults = [];
                 var timeio = [];
                 var calculatedtimeio = [];
@@ -294,7 +294,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
 
     tableHTML += "</tbody></table>";
     excelView.innerHTML = tableHTML;
-    
+
 }
 
 // Main funct
@@ -483,7 +483,7 @@ function hourValues(h) {
 function getMonth() {
 
 
-    
+
     const cal = document.getElementById("startDate");
     const getMonth = localStorage.getItem("monthOfFile");
     //const getMonth = "Month : JANUARY 2025";
@@ -540,7 +540,7 @@ function ExcelView() {
         excelView.classList.remove("btn-default");
         tableView.classList.add("btn-default");
         excelView.classList.add("btn-table");
-        
+
         fetch("test2.html")
             .then((response) => response.text())
             .then((data) => {
@@ -564,7 +564,7 @@ function TableViewDefault() {
     const tableView = document.getElementById("tableView");
     tableView.addEventListener("click", function () {
         // window.location.href = "result.html";
-        
+
         tableView.classList.remove("btn-default");
         tableView.classList.add("btn-table");
         excelView.classList.remove("btn-table");
@@ -723,7 +723,7 @@ function searchByName() {
                  txtValue2.toUpperCase().indexOf(filter) > -1
              ) {
                  tr[i].style.display = "";
-                 
+
              } else {
                  tr[i].style.display = "none";
              }
@@ -740,11 +740,11 @@ function searchByName() {
     for (var i = 0; i < tr.length; i++) {
         var mainRow = tr[i];
         var nextRow = tr[i + 1];
-        
+
         if (mainRow.classList.contains("collapsible-content")) {
             continue;
         }
-        
+
         var td1 = mainRow.getElementsByTagName("td")[1]; 
         var td2 = mainRow.getElementsByTagName("td")[2]; 
 
@@ -755,7 +755,7 @@ function searchByName() {
                          txtValue2.toUpperCase().indexOf(filter) > -1;
 
             mainRow.style.display = isMatch ? "" : "none";
-            
+
             // Handle collapsible content and ck-rows
             if (nextRow && nextRow.classList.contains("collapsible-content")) {
                 nextRow.style.display = isMatch ? "" : "none";
@@ -791,10 +791,10 @@ function filterTable() {
             continue;
         }
 
-        
-        
+
+
         var td = tr[i].getElementsByTagName("td")[2]; // 3rd column (Department)
-        
+
         if (td) {
             var val = td.textContent || td.innerText;
             if (filterValue === "" || val.indexOf(filterValue) > -1) {
@@ -817,7 +817,7 @@ function hideSearchFilter() {
     var filter = document.getElementById("filter");
     search.style.display = "none";
     filter.style.display = "none";
-    
+
 }
 
 function showSearchFilter() {
@@ -826,4 +826,3 @@ function showSearchFilter() {
     search.style.display = "inline-block";
     filter.style.display = "inline-block";
 }
-
