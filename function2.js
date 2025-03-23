@@ -245,7 +245,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                 tableHTML += "</tr>";
             } 
             else if (row[0] === "CK") {
-                tableHTML += "<tr class='ck-row' ><th>CK</th>";
+                tableHTML += "<tr style='display: table-row'><th>CK</th>";
                 let timeResults = [];
                 var timeio = [];
                 var calculatedtimeio = [];
