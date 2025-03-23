@@ -380,6 +380,6 @@
     background-color: #f8d7da !important; /* Light red for rows */
 }
 
-.ck-row {
-    display: table-row;
+.collapsible-content {
+    display: table-row !important; /* Override inline style */
 }

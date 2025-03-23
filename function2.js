@@ -79,6 +79,7 @@ document
         //console.log(selectedDate);
     });
 var key, detailsCell, tableBody;
+
 function updateTable(date) {
     
      tableBody = document.querySelector("#tableResult tbody");
@@ -730,7 +731,6 @@ function searchByName() {
         }
     }
 } */
-
 function searchByName() {
     var input = document.getElementById("myInput");
     var filter = input.value.toUpperCase();
@@ -739,22 +739,15 @@ function searchByName() {
 
     for (var i = 0; i < tr.length; i++) {
         var mainRow = tr[i];
-       
 
         if (mainRow.classList.contains("collapsible-content")) {
-            continue; 
+            continue; // Skip collapsible rows for now
         }
-
-        document.querySelectorAll("tr").forEach(row => {
-            let th = row.querySelector("th"); // Select the first <th> in the row
-            if (th && th.innerText.trim() === "CK") {
-                row.style.display = "table-row";   
-            }
-        });
-
 
         var td1 = mainRow.getElementsByTagName("td")[1]; 
         var td2 = mainRow.getElementsByTagName("td")[2]; 
+
+        var isMatch = false;
 
         if (td1 && td2) {
             var txtValue1 = td1.textContent || td1.innerText;
@@ -764,15 +757,44 @@ function searchByName() {
                 txtValue1.toUpperCase().indexOf(filter) > -1 ||
                 txtValue2.toUpperCase().indexOf(filter) > -1
             ) {
-                mainRow.style.display = "";
-               
-            } else {
-                mainRow.style.display = "none";
-              
+                isMatch = true;
+            }
+        }
+
+        // Check inside the collapsible content (nested table)
+        var nextRow = mainRow.nextElementSibling;
+        if (nextRow && nextRow.classList.contains("collapsible-content")) {
+            console.log("Collapsible row detected:", nextRow); // DEBUGGING LINE
+            var nestedTable = nextRow.querySelector("table");
+            if (nestedTable) {
+                var nestedCells = nestedTable.getElementsByTagName("th"); // Searching in <th>
+                for (var j = 0; j < nestedCells.length; j++) {
+                    console.log("Checking nested cell:", nestedCells[j].textContent); // DEBUGGING LINE
+                    if (nestedCells[j].textContent.toUpperCase().indexOf(filter) > -1) {
+                        isMatch = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Show the row if it matches
+        if (isMatch) {
+            mainRow.style.display = "";
+            if (nextRow && nextRow.classList.contains("collapsible-content")) {
+                nextRow.style.display = "table-row"; // Ensure collapsible row is visible
+                nextRow.querySelector("div").style.display = "block"; // Show nested content
+                console.log("Showing collapsible content for:", mainRow);
+            }
+        } else {
+            mainRow.style.display = "none";
+            if (nextRow && nextRow.classList.contains("collapsible-content")) {
+                nextRow.style.display = "none";
             }
         }
     }
 }
+
 
 
 // dropdown for filter by division
