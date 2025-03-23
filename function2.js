@@ -760,9 +760,11 @@ function searchByName() {
             if (nextRow && nextRow.classList.contains("collapsible-content")) {
                 nextRow.style.display = isMatch ? "" : "none";
                 // Find and show all ck-rows within this collapsible content
-                let ckRows = nextRow.querySelectorAll('.ck-row');
-                ckRows.forEach(row => {
-                    row.style.display = isMatch ? "" : "none";
+                nextRow.querySelectorAll('tr').forEach(row => {
+                    if (row.classList.contains('ck-row') || !row.getAttribute('class')) {
+                        row.style.display = isMatch ? "" : "none";
+                        row.removeAttribute('style');
+                    }
                 });
             }
         }
