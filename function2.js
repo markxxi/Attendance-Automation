@@ -79,7 +79,6 @@ document
         //console.log(selectedDate);
     });
 var key, detailsCell, tableBody;
-
 function updateTable(date) {
     
      tableBody = document.querySelector("#tableResult tbody");
@@ -731,6 +730,7 @@ function searchByName() {
         }
     }
 } */
+
 function searchByName() {
     var input = document.getElementById("myInput");
     var filter = input.value.toUpperCase();
@@ -739,42 +739,30 @@ function searchByName() {
 
     for (var i = 0; i < tr.length; i++) {
         var mainRow = tr[i];
-        var nextRow = tr[i + 1];
-
+       
         if (mainRow.classList.contains("collapsible-content")) {
-            continue;
+            continue; 
         }
-
-        var td1 = mainRow.getElementsByTagName("td")[1];
-        var td2 = mainRow.getElementsByTagName("td")[2];
-        var isMatch = false;
+        var td1 = mainRow.getElementsByTagName("td")[1]; 
+        var td2 = mainRow.getElementsByTagName("td")[2]; 
 
         if (td1 && td2) {
             var txtValue1 = td1.textContent || td1.innerText;
             var txtValue2 = td2.textContent || td2.innerText;
 
-            if (txtValue1.toUpperCase().indexOf(filter) > -1 || 
-                txtValue2.toUpperCase().indexOf(filter) > -1) {
-                isMatch = true;
-            }
-        }
-
-        if (isMatch) {
-            mainRow.style.display = "";
-            if (nextRow && nextRow.classList.contains("collapsible-content")) {
-                if (!nextRow.classList.contains("d-none")) {
-                    nextRow.style.display = "";
-                }
-            }
-        } else {
-            mainRow.style.display = "none";
-            if (nextRow && nextRow.classList.contains("collapsible-content")) {
-                nextRow.style.display = "none";
+            if (
+                txtValue1.toUpperCase().indexOf(filter) > -1 ||
+                txtValue2.toUpperCase().indexOf(filter) > -1
+            ) {
+                mainRow.style.display = "";
+               
+            } else {
+                mainRow.style.display = "none";
+              
             }
         }
     }
 }
-
 
 
 // dropdown for filter by division
