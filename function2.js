@@ -763,8 +763,10 @@ function searchByName() {
                 nextRow.querySelectorAll('tr').forEach(row => {
                     if (row.classList.contains('ck-row') || !row.getAttribute('class')) {
                         if (isMatch) {
-                            row.style.display = "";
+                            row.style.removeProperty('display');
+                            row.classList.add('show-row');
                         } else {
+                            row.classList.remove('show-row');
                             row.style.display = "none";
                         }
                     }
