@@ -756,11 +756,14 @@ function searchByName() {
 
             mainRow.style.display = isMatch ? "" : "none";
             
-            // Handle collapsible content
+            // Handle collapsible content and ck-rows
             if (nextRow && nextRow.classList.contains("collapsible-content")) {
-                if (nextRow.style.display !== "none") {
-                    nextRow.style.display = isMatch ? "" : "none";
-                }
+                nextRow.style.display = isMatch ? "" : "none";
+                // Find and show all ck-rows within this collapsible content
+                let ckRows = nextRow.querySelectorAll('.ck-row');
+                ckRows.forEach(row => {
+                    row.style.display = isMatch ? "" : "none";
+                });
             }
         }
     }
