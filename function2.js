@@ -739,26 +739,28 @@ function searchByName() {
 
     for (var i = 0; i < tr.length; i++) {
         var mainRow = tr[i];
-       
+        var nextRow = tr[i + 1];
+        
         if (mainRow.classList.contains("collapsible-content")) {
-            continue; 
+            continue;
         }
+        
         var td1 = mainRow.getElementsByTagName("td")[1]; 
         var td2 = mainRow.getElementsByTagName("td")[2]; 
 
         if (td1 && td2) {
             var txtValue1 = td1.textContent || td1.innerText;
             var txtValue2 = td2.textContent || td2.innerText;
+            var isMatch = txtValue1.toUpperCase().indexOf(filter) > -1 || 
+                         txtValue2.toUpperCase().indexOf(filter) > -1;
 
-            if (
-                txtValue1.toUpperCase().indexOf(filter) > -1 ||
-                txtValue2.toUpperCase().indexOf(filter) > -1
-            ) {
-                mainRow.style.display = "";
-               
-            } else {
-                mainRow.style.display = "none";
-              
+            mainRow.style.display = isMatch ? "" : "none";
+            
+            // Handle collapsible content
+            if (nextRow && nextRow.classList.contains("collapsible-content")) {
+                if (!nextRow.classList.contains("d-none")) {
+                    nextRow.style.display = isMatch ? "" : "none";
+                }
             }
         }
     }
