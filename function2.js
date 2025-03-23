@@ -758,7 +758,7 @@ function searchByName() {
             
             // Handle collapsible content
             if (nextRow && nextRow.classList.contains("collapsible-content")) {
-                if (!nextRow.classList.contains("d-none")) {
+                if (nextRow.style.display !== "none") {
                     nextRow.style.display = isMatch ? "" : "none";
                 }
             }
