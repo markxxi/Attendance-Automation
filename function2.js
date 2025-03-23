@@ -739,52 +739,32 @@ function searchByName() {
 
     for (var i = 0; i < tr.length; i++) {
         var mainRow = tr[i];
+        var nextRow = tr[i + 1];
 
         if (mainRow.classList.contains("collapsible-content")) {
-            continue; // Skip collapsible rows for now
+            continue;
         }
 
-        var td1 = mainRow.getElementsByTagName("td")[1]; 
-        var td2 = mainRow.getElementsByTagName("td")[2]; 
-
+        var td1 = mainRow.getElementsByTagName("td")[1];
+        var td2 = mainRow.getElementsByTagName("td")[2];
         var isMatch = false;
 
         if (td1 && td2) {
             var txtValue1 = td1.textContent || td1.innerText;
             var txtValue2 = td2.textContent || td2.innerText;
 
-            if (
-                txtValue1.toUpperCase().indexOf(filter) > -1 ||
-                txtValue2.toUpperCase().indexOf(filter) > -1
-            ) {
+            if (txtValue1.toUpperCase().indexOf(filter) > -1 || 
+                txtValue2.toUpperCase().indexOf(filter) > -1) {
                 isMatch = true;
             }
         }
 
-        // Check inside the collapsible content (nested table)
-        var nextRow = mainRow.nextElementSibling;
-        if (nextRow && nextRow.classList.contains("collapsible-content")) {
-            console.log("Collapsible row detected:", nextRow); // DEBUGGING LINE
-            var nestedTable = nextRow.querySelector("table");
-            if (nestedTable) {
-                var nestedCells = nestedTable.getElementsByTagName("th"); // Searching in <th>
-                for (var j = 0; j < nestedCells.length; j++) {
-                    console.log("Checking nested cell:", nestedCells[j].textContent); // DEBUGGING LINE
-                    if (nestedCells[j].textContent.toUpperCase().indexOf(filter) > -1) {
-                        isMatch = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        // Show the row if it matches
         if (isMatch) {
             mainRow.style.display = "";
             if (nextRow && nextRow.classList.contains("collapsible-content")) {
-                nextRow.style.display = "table-row"; // Ensure collapsible row is visible
-                nextRow.querySelector("div").style.display = "block"; // Show nested content
-                console.log("Showing collapsible content for:", mainRow);
+                if (!nextRow.classList.contains("d-none")) {
+                    nextRow.style.display = "";
+                }
             }
         } else {
             mainRow.style.display = "none";
