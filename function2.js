@@ -737,6 +737,15 @@ function searchByName() {
     var table = document.getElementById("tableResult");
     var tr = table.getElementsByTagName("tr");
 
+    // Close all open collapsibles first
+    document.querySelectorAll(".collapsible-content").forEach(row => {
+        row.classList.add("d-none");
+    });
+    document.querySelectorAll(".custom-arrow i").forEach(icon => {
+        icon.classList.remove("bi-chevron-down");
+        icon.classList.add("bi-chevron-right");
+    });
+
     for (var i = 0; i < tr.length; i++) {
         var mainRow = tr[i];
         var nextRow = tr[i + 1];
