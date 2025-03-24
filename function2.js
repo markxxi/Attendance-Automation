@@ -43,6 +43,7 @@ window.addEventListener("load", function () {
           let loadingScreen = document.getElementById("loading-screen");
           if (loadingScreen) {
               loadingScreen.style.display = "none";
+            
               displayJsonDataToTable();
           }
       }, 800);
@@ -58,6 +59,25 @@ function displayJsonDataToTable() {
         updateTable(selectedDate);
         getMonth();
     }
+    document.querySelector("#tableResult tbody").addEventListener("click", function (e) {
+        console.log("clicked!");
+        if (e.target.closest(".custom-arrow")) {
+            const collBt = e.target.closest(".custom-arrow");
+            const row = collBt.closest("tr");
+            const detailsRow = row.nextElementSibling;
+
+            if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
+                detailsRow.classList.toggle("d-none");
+
+                // Toggle the icon inside the button
+                const icon = collBt.querySelector("i");
+                if (icon) {
+                    icon.classList.toggle("bi-chevron-right");
+                    icon.classList.toggle("bi-chevron-down");
+                }
+            }
+        }
+    });
 }
 
 document
@@ -169,25 +189,7 @@ function fetchDetailsContent(detailsCell, selectedID) {
 }
 
 
-document.querySelector("#tableResult tbody").addEventListener("click", function (e) {
-    // Check if a collapsible button was clicked
-    if (e.target.closest(".custom-arrow")) {
-        const collBt = e.target.closest(".custom-arrow");
-        const row = collBt.closest("tr");
-        const detailsRow = row.nextElementSibling;
 
-        if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
-            detailsRow.classList.toggle("d-none");
-
-            // Toggle the icon inside the button
-            const icon = collBt.querySelector("i");
-            if (icon) {
-                icon.classList.toggle("bi-chevron-right");
-                icon.classList.toggle("bi-chevron-down");
-            }
-        }
-    }
-});
 
 
 
@@ -559,7 +561,6 @@ function ExcelView() {
 
 ExcelView();
 
-function TableViewDefault() {
     const excelView = document.getElementById("tabView");
     const tableView = document.getElementById("tableView");
     tableView.addEventListener("click", function () {
@@ -576,9 +577,9 @@ function TableViewDefault() {
             document.getElementById("displayBox").innerHTML = data;
             displayJsonDataToTable();
         });
+      
     });
-}
-TableViewDefault();
+
 
 function displayTable(data) {
     //console.log(data);
@@ -646,7 +647,7 @@ function displayTable(data) {
                 }
                 const times = timeString.split(" ");
                 const splitTimes =
-                    times.length >= 4 ? times[0] + " " + times[3] : timeString;
+                    times.length >= 4 ? times[0] + "<br>" + times[3] : timeString;
 
                 // console.log(calc2("08:16","18:40"));
                 timeio.push(splitTimes);
