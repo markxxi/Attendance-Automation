@@ -1,13 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 
 .show-row {
     display: table-row !important;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-
  body {
     background-image: url("../content/bg.png");
-    min-height: 100vh;
+    
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -56,7 +56,7 @@
 
  /* ===== MAIN CONTAINER ===== */
  .container1 {
-    max-width: 1350px;
+    max-width: auto;
     margin: 0 auto;
     background: #f4f4f4(255, 255, 255, 0.1);
     padding: 20px;
@@ -66,7 +66,9 @@
     color: #fff;
     position: relative;
  }
-
+.table-container::-webkit-scrollbar {
+    display: none;
+}
  .container1::before {
     content: "";
     position: absolute;
@@ -208,7 +210,7 @@
     padding: 6px;
      /* border: 1px solid rgba(255, 255, 255, 0.1) !important; */
     word-wrap: break-word;
-    font-size: clamp(0.4rem, 1vw, 1rem);
+    font-size: clamp(0.4rem, 1vw, 0.8rem);
  }
 .td-clp {
     font-size: clamp(0.4rem, 0.8vw, 1rem);
@@ -312,16 +314,16 @@
     font-weight: bold;
     font-size: clamp(1.1rem, 1vw, 1.5rem);
     position: relative;
-    text-align: right !important;
+
     border: none;
     border-radius: 12px;
     /* Rounded corners */
     outline: none;
     height: clamp(20px, 5vh, 35px);
-    width: clamp(80px, 11vw, 135px);
- 
+  
+   
     overflow: visible;
-    text-indent: 19px;
+ 
  }
 
  .date-red:focus,
@@ -352,6 +354,7 @@
  .search-icon {
     position: absolute;
     left: 12px;
+   
     top: 50%;
     transform: translateY(-50%);
     color: white;
@@ -387,4 +390,9 @@
 
 .collapsible-content {
     display: table-row !important; /* Override inline style */
+}
+
+hr {
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
 }
