@@ -153,17 +153,20 @@ function fetchDetailsContent(detailsCell, selectedID) {
                 let mergedEmployeeData = ExcelViewForCollapsible(element, selectedID);
 
                 
-                let hoursRenderedField = detailsCell.querySelector(".totaltime"); 
-                if (hoursRenderedField) {
-                    let employeeData = mergedEmployeeData[selectedID]; 
+                let hoursRenderedField = detailsCell.querySelectorAll(".totaltime"); 
+                let employeeKeys = Object.keys(mergedEmployeeData); // Get all employee IDs
+
+                hoursRenderedField.forEach((field, index) => {
+                    let employeeData = mergedEmployeeData[employeeKeys[index]]; // Get employee by order
 
                     if (employeeData) {
-                        hoursRenderedField.textContent = employeeData.totalRenderedTime; // Update text
+                        field.textContent = employeeData.totalRenderedTime;
                     } else {
-                        hoursRenderedField.textContent = "No Data";
+                        field.textContent = "No Data";
                     }
-                }
-                detailsCell.querySelector(".firstday").textContent = selectedDate;
+                });
+                //detailsCell.querySelector(".firstday").textContent = selectedDate;
+                
             });
         })
         .catch((error) => {
