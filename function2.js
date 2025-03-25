@@ -1,15 +1,18 @@
-//view function
-document.querySelectorAll(".btn-group .btn").forEach((button) => {
-    button.addEventListener("click", function () {
-        document
-            .querySelectorAll(".btn-group .btn")
-            .forEach((btn) => btn.classList.remove("active"));
-        this.classList.add("active");
-    });
-});
+window.addEventListener("load", function () {
+      setTimeout(() => { // Timeout for smooth transition
+          let loadingScreen = document.getElementById("loading-screen");
+          if (loadingScreen) {
+              loadingScreen.style.display = "none";
+
+              displayJsonDataToTable();
+          }
+      }, 800);
+}); 
+
+
 
 var selectedDate;
-
+//find the lowest date with data of days in the month 
 function findLowestNumber(numbers) {
     numbers = numbers.filter((num) => num !== null); // Remove null values
     if (numbers.length === 0) return null; // Return null if the array is empty
@@ -22,7 +25,7 @@ function findLowestNumber(numbers) {
     }
     return lowest;
 }
-
+//find first date with data
 function firstNonEmptyKey(data) {
     return data
         .map((entry) => {
@@ -36,68 +39,36 @@ function firstNonEmptyKey(data) {
         })
         .filter((value) => value !== null); // Remove null values (previously undefined ones)
 }
+//which start date should it display a data 
+document.getElementById("startDate").addEventListener("change", function (event) {
+    selectedDate = event.target.value;
+    //console.log(selectedDate);
+    //updateTable(selectedDate);
+    let lastCharDate = selectedDate.slice(-2);
+    //console.log(lastCharDate);
+    if (lastCharDate[0] == "0") {
+        lastCharDate = lastCharDate.replace("0", ""); // Remove '0'
+        selectedDate = lastCharDate;
+    } else {
+        selectedDate = lastCharDate;
+    }
+    selectedDate = lastCharDate;
+    updateTable(selectedDate);
+    //console.log(selectedDate);
+});
+
+//table view and excel view
+document.querySelectorAll(".btn-group .btn").forEach((button) => {
+    button.addEventListener("click", function () {
+        document
+            .querySelectorAll(".btn-group .btn")
+            .forEach((btn) => btn.classList.remove("active"));
+        this.classList.add("active");
+    });
+});
 
 var jsonObject;
-window.addEventListener("load", function () {
-      setTimeout(() => { // Timeout for smooth transition
-          let loadingScreen = document.getElementById("loading-screen");
-          if (loadingScreen) {
-              loadingScreen.style.display = "none";
-            
-              displayJsonDataToTable();
-          }
-      }, 800);
-}); 
-
-
-
-function displayJsonDataToTable() {
-    var jsonData = localStorage.getItem("jsonData");
-    if (jsonData) {
-        jsonObject = JSON.parse(jsonData);
-        selectedDate = findLowestNumber(firstNonEmptyKey(jsonObject));
-        updateTable(selectedDate);
-        getMonth();
-    }
-    document.querySelector("#tableResult tbody").addEventListener("click", function (e) {
-        console.log("clicked!");
-        if (e.target.closest(".custom-arrow")) {
-            const collBt = e.target.closest(".custom-arrow");
-            const row = collBt.closest("tr");
-            const detailsRow = row.nextElementSibling;
-
-            if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
-                detailsRow.classList.toggle("d-none");
-
-                // Toggle the icon inside the button
-                const icon = collBt.querySelector("i");
-                if (icon) {
-                    icon.classList.toggle("bi-chevron-right");
-                    icon.classList.toggle("bi-chevron-down");
-                }
-            }
-        }
-    });
-}
-
-document
-    .getElementById("startDate")
-    .addEventListener("change", function (event) {
-        selectedDate = event.target.value;
-        //console.log(selectedDate);
-        //updateTable(selectedDate);
-        let lastCharDate = selectedDate.slice(-2);
-        //console.log(lastCharDate);
-        if (lastCharDate[0] == "0") {
-            lastCharDate = lastCharDate.replace("0", ""); // Remove '0'
-            selectedDate = lastCharDate;
-        } else {
-            selectedDate = lastCharDate;
-        }
-        selectedDate = lastCharDate;
-        updateTable(selectedDate);
-        //console.log(selectedDate);
-    });
+//display the acquired data to table
 var key, detailsCell, tableBody;
 function updateTable(date) {
     tableBody = document.querySelector("#tableResult tbody");
@@ -142,6 +113,36 @@ function updateTable(date) {
    } //getMonth();
 }
 
+//the arrow function to inflate collapsible
+function displayJsonDataToTable() {
+    var jsonData = localStorage.getItem("jsonData");
+    if (jsonData) {
+        jsonObject = JSON.parse(jsonData);
+        selectedDate = findLowestNumber(firstNonEmptyKey(jsonObject));
+        updateTable(selectedDate);
+        getMonth();
+    }
+    document.querySelector("#tableResult tbody").addEventListener("click", function (e) {
+        if (e.target.closest(".custom-arrow")) {
+            const collBt = e.target.closest(".custom-arrow");
+            const row = collBt.closest("tr");
+            const detailsRow = row.nextElementSibling;
+
+            if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
+                detailsRow.classList.toggle("d-none");
+
+                // Toggle the icon inside the button
+                const icon = collBt.querySelector("i");
+                if (icon) {
+                    icon.classList.toggle("bi-chevron-right");
+                    icon.classList.toggle("bi-chevron-down");
+                }
+            }
+        }
+    });
+}
+
+//fetch the html file that will appear in the collapsible
 function fetchDetailsContent(detailsCell, selectedID) {
     fetch("test4.html")
         .then((response) => response.text())
@@ -151,9 +152,8 @@ function fetchDetailsContent(detailsCell, selectedID) {
             let excelViewElements = detailsCell.querySelectorAll("#excelView");
             excelViewElements.forEach((element) => {
                 let mergedEmployeeData = ExcelViewForCollapsible(element, selectedID);
-
-                
                 let hoursRenderedField = detailsCell.querySelectorAll(".totaltime"); 
+                 let OTRenderedField = detailsCell.querySelectorAll(".totalot"); 
                 let employeeKeys = Object.keys(mergedEmployeeData); // Get all employee IDs
 
                 hoursRenderedField.forEach((field, index) => {
@@ -165,7 +165,16 @@ function fetchDetailsContent(detailsCell, selectedID) {
                         field.textContent = "No Data";
                     }
                 });
-                //detailsCell.querySelector(".firstday").textContent = selectedDate;
+                    OTRenderedField.forEach((field, index) => {
+                    let employeeData = mergedEmployeeData[employeeKeys[index]]; // Get employee by order
+
+                    if (employeeData) {
+                        field.textContent = employeeData.overtimeRenderedTime;
+                    } else {
+                        field.textContent = "No Data";
+                    }
+                });
+               //console.log(mergedEmployeeData);
                 
             });
         })
@@ -175,6 +184,7 @@ function fetchDetailsContent(detailsCell, selectedID) {
         });
 }
 
+//the excel table inside the collapsible
 function ExcelViewForCollapsible(excelView, selectedUSID) {
     let file = localStorage.getItem("rawJsondata");
     if (!file) {
@@ -284,7 +294,11 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
     });
 
     Object.keys(mergedEmployeeData).forEach(empID => {
-        mergedEmployeeData[empID].totalRenderedTime = calculateTotalRenderedTime(mergedEmployeeData[empID].renderedTimes);
+        let employee = mergedEmployeeData[empID];
+        employee.totalRenderedTime = calculateTotalRenderedTime(mergedEmployeeData[empID].renderedTimes);
+        employee.overtimeRenderedTime = calculateOvertimeRenderedTime(employee.renderedTimes);
+        employee.undertimeRenderedTime = calculateUndertimeRenderedTime(employee.renderedTimes);
+        console.log(`Employee ID: ${empID}, Overtime Rendered: ${employee.overtimeRenderedTime}`);
     });
 
     if (!foundData) {
@@ -297,12 +311,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
     return mergedEmployeeData;
 }
 
-function updateTotalRenderedTime(selectedUSID) {
-    document.querySelectorAll(".totaltime").forEach(row => {
-        row.textContent = "hi";
-    });
-}
-
+//calculation of overall renderend time inside the collapsible
 function calculateTotalRenderedTime(calculatedTimeIO) {
     let totalMinutes = 0;
 
@@ -317,15 +326,67 @@ function calculateTotalRenderedTime(calculatedTimeIO) {
         }
     });
 
-
     let totalHours = Math.floor(totalMinutes / 60);
     let remainingMinutes = totalMinutes % 60;
 
     return `${totalHours} HR ${remainingMinutes} MIN`;
 }
 
+function calculateOvertimeRenderedTime(calculatedTimeIO) {
+    let totalOvertimeMinutes = 0;
+    let regularWorkMinutes = 8 * 60; // 8 hours in minutes
+
+    calculatedTimeIO.forEach(time => {
+        if (time) {
+            let match = time.match(/(\d+) HR (\d+) MIN/);
+            if (match) {
+                let hours = parseInt(match[1]);
+                let minutes = parseInt(match[2]);
+                let totalMinutes = hours * 60 + minutes;
+
+                if (totalMinutes > regularWorkMinutes) {
+                    totalOvertimeMinutes += (totalMinutes - regularWorkMinutes);
+                }
+            }
+        }
+    });
+
+    let overtimeHours = Math.floor(totalOvertimeMinutes / 60);
+    let overtimeMinutes = totalOvertimeMinutes % 60;
+
+    return `${overtimeHours} HR ${overtimeMinutes} MIN`;
+}
+
+function calculateUndertimeRenderedTime(calculatedTimeIO) {
+    let totalUndertimeMinutes = 0;
+    let regularWorkMinutes = 8 * 60; // 8 hours in minutes
+
+    calculatedTimeIO.forEach(time => {
+        if (time) {
+            let match = time.match(/(\d+) HR (\d+) MIN/);
+            if (match) {
+                let hours = parseInt(match[1]);
+                let minutes = parseInt(match[2]);
+                let totalMinutes = hours * 60 + minutes;
+
+                if (totalMinutes < regularWorkMinutes) {
+                    totalUndertimeMinutes += (regularWorkMinutes - totalMinutes);
+                }
+            }
+        }
+    });
+
+    let undertimeHours = Math.floor(totalUndertimeMinutes / 60);
+    let undertimeMinutes = totalUndertimeMinutes % 60;
+
+    return `${undertimeHours} HR ${undertimeMinutes} MIN`;
+}
+
+
+
 var timeRecordForDate;
 var getFirstTimeIndex;
+
 function splitTime(key, cell4, index) {
     //array records[3] is related to calendar: change
     timeRecordForDate =
@@ -504,7 +565,6 @@ function hourValues(h) {
     }
     return valuesForHours[h];
 }
-
 
 function getMonth() {
     const cal = document.getElementById("startDate");
