@@ -308,7 +308,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
         employee.totalRenderedTime = calculateTotalRenderedTime(mergedEmployeeData[empID].renderedTimes);
         employee.overtimeRenderedTime = calculateOvertimeRenderedTime(employee.renderedTimes);
         employee.undertimeRenderedTime = calculateUndertimeRenderedTime(employee.renderedTimes);
-        console.log(`Employee ID: ${empID}, Overtime Rendered: ${employee.overtimeRenderedTime}`);
+        //console.log(`Employee ID: ${empID}, Overtime Rendered: ${employee.overtimeRenderedTime}`);
     });
 
     if (!foundData) {
@@ -421,9 +421,15 @@ function calculateTimeDifference(key, cell8, cell5) {
     } else {
         var timeToString = timeRecordForDate.toString();
         var splitString = timeToString.split(" ");
+        
         var getFirstTime = splitString[0];
-        var getLastTime = splitString[3];
+        var [hours, minutes] = getFirstTime.split(":").map(Number);
+        if (hours < 7) {
+            getFirstTime = "07:00";
+        }
 
+        var getLastTime = splitString[3];
+        console.log(getFirstTime);
         calc(getFirstTime, getLastTime, cell8, cell5);
     }
 }
