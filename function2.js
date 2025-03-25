@@ -100,8 +100,7 @@ document
     });
 var key, detailsCell, tableBody;
 function updateTable(date) {
-
-     tableBody = document.querySelector("#tableResult tbody");
+    tableBody = document.querySelector("#tableResult tbody");
     tableBody.innerHTML = ""; // Clear previous rows
 
     for(key in jsonObject) {
@@ -142,30 +141,6 @@ function updateTable(date) {
         }
    } //getMonth();
 }
-/*
-function fetchDetailsContent(detailsCell, selectedID) {
- //   detailsCell.innerHTML = `<div class="table-responsive">Loading...</div>`; // Placeholder text
-
-    fetch("test4.html")
-        .then((response) => response.text())
-        .then((data) => {
-            detailsCell.innerHTML = `<div class="table-responsive p-2">${data}</div>`;
-           // let excelView = document.getElementById("excelView");
-            let excelViewElements = detailsCell.querySelectorAll("#excelView");
-
-            // Loop through each found element and insert "hello"
-            excelViewElements.forEach((element) => {
-              //  element.innerHTML = "hello";
-                ExcelViewForCollapsible(element, selectedID);
-            });
-
-
-        })
-        .catch((error) => {
-            console.error("Error fetching test4.html:", error);
-            detailsCell.innerHTML = `<div class="table-responsive text-danger">Error loading details.</div>`;
-        });
-} */
 
 function fetchDetailsContent(detailsCell, selectedID) {
     fetch("test4.html")
@@ -175,11 +150,20 @@ function fetchDetailsContent(detailsCell, selectedID) {
 
             let excelViewElements = detailsCell.querySelectorAll("#excelView");
             excelViewElements.forEach((element) => {
-                ExcelViewForCollapsible(element, selectedID);
+                let mergedEmployeeData = ExcelViewForCollapsible(element, selectedID);
 
-                // Make sure all rows inside the collapsible content are visible
-                let ckRows = element.querySelectorAll("tr");
-                ckRows.forEach(ck => ck.style.display = "");
+                
+                let hoursRenderedField = detailsCell.querySelector(".totaltime"); 
+                if (hoursRenderedField) {
+                    let employeeData = mergedEmployeeData[selectedID]; 
+
+                    if (employeeData) {
+                        hoursRenderedField.textContent = employeeData.totalRenderedTime; // Update text
+                    } else {
+                        hoursRenderedField.textContent = "No Data";
+                    }
+                }
+                detailsCell.querySelector(".firstday").textContent = selectedDate;
             });
         })
         .catch((error) => {
@@ -187,11 +171,6 @@ function fetchDetailsContent(detailsCell, selectedID) {
             detailsCell.innerHTML = `<div class="table-responsive text-danger">Error loading details.</div>`;
         });
 }
-
-
-
-
-
 
 function ExcelViewForCollapsible(excelView, selectedUSID) {
     let file = localStorage.getItem("rawJsondata");
@@ -207,7 +186,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
     let maxColumns = 0;
     let isMatchingUSID = false;
     let foundData = false; //
-
+    let mergedEmployeeData = {}; 
     //console.log("Selected US ID:", selectedUSID); // Debugging
 
     jsonData.forEach((row) => {
@@ -215,21 +194,14 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
 
         if (row[0]?.toString().startsWith("US")) {
             let rowUSID = row.join(" "); // 
-            //isMatchingUSID = rowUSID.startsWith(selectedUSID); //
             var splits = rowUSID.split("  ");
-            // console.log(splits);
             var splitsGet0 = splits[0];
-
             var regex = splitsGet0.match(/\d+/g);
             isMatchingUSID = parseInt(regex ? regex.join("") : "0", 10) === parseInt(selectedUSID, 10);
-            //console.log(selectedUSID + ":" + regex);
-            //console.log("Extracted ID from regex:", regex ? regex.join("") : "No Match");
-
         }
 
-
         if (isMatchingUSID) {
-            foundData = true; // 
+            foundData = true; 
 
             if (row[0]?.toString().startsWith("US")) {
                 if (currentUser) {
@@ -238,19 +210,18 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                 currentUser = row.join(" ");
                 //userDetails = `<tr><th colspan="100%" style="text-align: left;">${currentUser}</th></tr>`;
                 // tableHTML += `<thead>${userDetails}</thead><tbody>`;
-            } 
-            else if (row[0] === "DD") {
+            } else if (row[0] === "DD") {
                 tableHTML += "<tr><th>DD</th>";
                 for (let i = 1; i < maxColumns; i++) {
                     tableHTML += `<th>${row[i] || ""}</th>`;
                 }
                 tableHTML += "</tr>";
-            } 
-            else if (row[0] === "CK") {
+            } else if (row[0] === "CK") {
                 tableHTML += "<tr class='ck-row' style='display: table-row'><th>CK</th>";
                 let timeResults = [];
                 var timeio = [];
                 var calculatedtimeio = [];
+
                 for (let i = 1; i < row.length; i++) {
                     if (row[i] && typeof row[i] === "string") {
                         timeResults.push(row[i]);
@@ -258,6 +229,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                         timeResults.push("");
                     }
                 }
+
                 timeResults.forEach((timeString, index) => {
                     if (timeString === undefined) {
                         timeString = " ";
@@ -269,12 +241,29 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                     timeio.push(splitTimes);
                     calculatedtimeio.push(calc2(times[0], times[3]));
                 });
+    
+                
+                for (var employeekey in jsonObject) {
+                    if (jsonObject.hasOwnProperty(employeekey)) {
+                        
+                        if (!mergedEmployeeData[employeekey]) {
+                            mergedEmployeeData[employeekey] = {
+                                name: jsonObject[employeekey].name,         
+                                department: jsonObject[employeekey].department, // use the employee's department
+                                renderedTimes: []
+                            };
+                        }
+                        // Append the calculated times for this row based on its length
+                        mergedEmployeeData[employeekey].renderedTimes.push(...calculatedtimeio);
+                    }
+                }
+                
                 for (let i = 1; i < maxColumns; i++) {
                     tableHTML += `<td class="td-clp">${calculatedtimeio[i - 1] !== undefined ? calculatedtimeio[i - 1] : ""} </td>`;
                 }
 
                 tableHTML += "</tr>";
-            } 
+            }
             else {
 
                 tableHTML += "<tr>";
@@ -285,8 +274,14 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                     tableHTML += `<td></td>`;
                 }
                 tableHTML += "</tr>";
-            }
+            } 
+        
         }
+        
+    });
+
+    Object.keys(mergedEmployeeData).forEach(empID => {
+        mergedEmployeeData[empID].totalRenderedTime = calculateTotalRenderedTime(mergedEmployeeData[empID].renderedTimes);
     });
 
     if (!foundData) {
@@ -296,10 +291,36 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
 
     tableHTML += "</tbody></table>";
     excelView.innerHTML = tableHTML;
-
+    return mergedEmployeeData;
 }
 
-// Main funct
+function updateTotalRenderedTime(selectedUSID) {
+    document.querySelectorAll(".totaltime").forEach(row => {
+        row.textContent = "hi";
+    });
+}
+
+function calculateTotalRenderedTime(calculatedTimeIO) {
+    let totalMinutes = 0;
+
+    calculatedTimeIO.forEach(time => {
+        if (time) { 
+            let match = time.match(/(\d+) HR (\d+) MIN/);
+            if (match) {
+                let hours = parseInt(match[1]);
+                let minutes = parseInt(match[2]);
+                totalMinutes += hours * 60 + minutes;
+            }
+        }
+    });
+
+
+    let totalHours = Math.floor(totalMinutes / 60);
+    let remainingMinutes = totalMinutes % 60;
+
+    return `${totalHours} HR ${remainingMinutes} MIN`;
+}
+
 var timeRecordForDate;
 var getFirstTimeIndex;
 function splitTime(key, cell4, index) {
@@ -483,9 +504,6 @@ function hourValues(h) {
 
 
 function getMonth() {
-
-
-
     const cal = document.getElementById("startDate");
     const getMonth = localStorage.getItem("monthOfFile");
     //const getMonth = "Month : JANUARY 2025";
@@ -703,34 +721,6 @@ function calc2(start, end) {
         return totalRenderedTime;
     }
 }
-/*
-//search input
-function searchByName() {
-    var input = document.getElementById("myInput");
-    var filter = input.value.toUpperCase();
-    var table = document.getElementById("tableResult");
-    var tr = table.getElementsByTagName("tr");
-
-    for (var i = 1; i < tr.length; i++) {
-        var td1 = tr[i].getElementsByTagName("td")[1];
-        var td2 = tr[i].getElementsByTagName("td")[2];
-
-         if (td1 && td2) {
-             var txtValue1 = td1.textContent || td1.innerText;
-             var txtValue2 = td2.textContent || td2.innerText;
-
-             if (
-                 txtValue1.toUpperCase().indexOf(filter) > -1 ||
-                 txtValue2.toUpperCase().indexOf(filter) > -1
-             ) {
-                 tr[i].style.display = "";
-
-             } else {
-                 tr[i].style.display = "none";
-             }
-        }
-    }
-} */
 
 function searchByName() {
     var input = document.getElementById("myInput");
@@ -798,12 +788,9 @@ function filterTable() {
         var mainRow = tr[i];
         var detailsRow = tr[i + 1]; 
 
-
         if (mainRow.classList.contains("collapsible-content")) {
             continue;
         }
-
-
 
         var td = tr[i].getElementsByTagName("td")[2]; // 3rd column (Department)
 
@@ -838,3 +825,4 @@ function showSearchFilter() {
     search.style.display = "inline-block";
     filter.style.display = "inline-block";
 }
+
