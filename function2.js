@@ -153,7 +153,8 @@ function fetchDetailsContent(detailsCell, selectedID) {
             excelViewElements.forEach((element) => {
                 let mergedEmployeeData = ExcelViewForCollapsible(element, selectedID);
                 let hoursRenderedField = detailsCell.querySelectorAll(".totaltime"); 
-                 let OTRenderedField = detailsCell.querySelectorAll(".totalot"); 
+                let OTRenderedField = detailsCell.querySelectorAll(".totalot"); 
+                let UTRenderedField = detailsCell.querySelectorAll(".totalut"); 
                 let employeeKeys = Object.keys(mergedEmployeeData); // Get all employee IDs
 
                 hoursRenderedField.forEach((field, index) => {
@@ -170,6 +171,15 @@ function fetchDetailsContent(detailsCell, selectedID) {
 
                     if (employeeData) {
                         field.textContent = employeeData.overtimeRenderedTime;
+                    } else {
+                        field.textContent = "No Data";
+                    }
+                });
+                    UTRenderedField.forEach((field, index) => {
+                    let employeeData = mergedEmployeeData[employeeKeys[index]]; // Get employee by order
+
+                    if (employeeData) {
+                        field.textContent = employeeData.undertimeRenderedTime;
                     } else {
                         field.textContent = "No Data";
                     }
