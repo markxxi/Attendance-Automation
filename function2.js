@@ -42,6 +42,7 @@ function firstNonEmptyKey(data) {
 //which start date should it display a data 
 document.getElementById("startDate").addEventListener("change", function (event) {
     selectedDate = event.target.value;
+    console.log(selectedDate);
     //console.log(selectedDate);
     //updateTable(selectedDate);
     let lastCharDate = selectedDate.slice(-2);
@@ -54,7 +55,7 @@ document.getElementById("startDate").addEventListener("change", function (event)
     }
     selectedDate = lastCharDate;
     updateTable(selectedDate);
-    //console.log(selectedDate);
+   // console.log(selectedDate);
 });
 
 //table view and excel view
@@ -323,31 +324,35 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
 }
 
 function extractAndLogDayValues(jsonData) {
+    const cal = document.getElementById("startDate");
     let dayData = {};
     let ddRows = [];
     let ckRows = [];
 
-    jsonData.forEach((row, rowIndex) => {
-
+    jsonData.forEach((row) => {
         if (row[0] === "DD") {
-            let values = row.slice(1); 
-            ddRows.push(...values);
+            let values = row.slice(1).map(value => value === null ? "-" : value); 
+            ddRows.push(values);
         } else if (row[0] === "CK") {
-            let values = row.slice(1);
-            ckRows.push(...values);
+            let values = row.slice(1).map(value => value === null ? "-" : value);
+            ckRows.push(values);
         }
     });
-    
+
     while (ckRows.length < ddRows.length) {
-        ckRows.push(null); 
+        ckRows.push(new Array(ddRows[0].length).fill("-")); 
     }
-    
-    ddRows.forEach((num, index) => {
-        let ckValue = ckRows[index];
 
-        console.log(`🔍 Mapping: DD ${num} -> CK ${ckValue}`);
+    ddRows.forEach((ddRow, rowIndex) => {
+        let ckRow = ckRows[rowIndex] || new Array(ddRow.length).fill("-");
+
+        ddRow.forEach((num, colIndex) => {
+            let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
+            console.log(`🔍 Mapping: DD ${num} -> CK ${ckValue}`);
+            dayData[num] = ckValue;
+        });
     });
-
+    console.log(cal.value);
     return dayData;
 }
 
@@ -615,7 +620,8 @@ function hourValues(h) {
 function getMonth() {
     const cal = document.getElementById("startDate");
     const getMonth = localStorage.getItem("monthOfFile");
-    //const getMonth = "Month : JANUARY 2025";
+    //const getMonth = "Month : Mar 05 2024";
+    //console.log(getMonth);
     var months = [
         "january",
         "february",
@@ -631,9 +637,14 @@ function getMonth() {
         "december",
     ];
 
+    const monthMap = {
+        jan: "january", feb: "february", mar: "march", apr: "april", may: "may", jun: "june",
+        jul: "july", aug: "august", sep: "september", oct: "october", nov: "november", dec: "december"
+    };
+
     const regex1 = /Month\s*:\s*(\w+)\s*(\d{4})/;
     const regex2 = /\s*:\s*(\d{2})/;
-
+    const regex3 =  /Month\s*:\s*(\w{3})\s*(\d{2})\s*(\d{4})/i;
     let match;
 
     if (regex1.test(getMonth)) {
@@ -641,10 +652,10 @@ function getMonth() {
         let monthLC = match[1].toLowerCase();
         //let test = "february";
         let monthIndex = months.indexOf(monthLC);
-        //console.log("Extracted:", monthIndex+1);
         const date = new Date(match[2], monthIndex, selectedDate + 1);
         const formattedDate = date.toISOString().split("T")[0];
         cal.value = formattedDate;
+        console.log(formattedDate);
     } else if (regex2.test(getMonth)) {
         match = getMonth.match(regex2);
         let monthNumber = parseInt(match[1], 10);
@@ -655,10 +666,26 @@ function getMonth() {
         const formattedDate = date.toISOString().split("T")[0];
         cal.value = formattedDate;
         // console.log("Extracted:", formattedDate); // Output: "02"
-    } else {
+    } else if (regex3.test(getMonth)) {
+        match = getMonth.match(regex3);
+        let shortMonth = match[1].toLowerCase();
+        let mapMonth = monthMap[shortMonth];
+        let monthIndex = months.indexOf(mapMonth);
+        const date = new Date(match[3], monthIndex, selectedDate + 1);
+        const formattedDate = date.toISOString().split("T")[0];
+        cal.value = formattedDate;
+       // console.log(match[3], mapMonth, shortMonth, date);
+    }
+    else {
+        //console.log(regex3.test(getMonth));
         console.log("No match found");
     }
+    
 }
+function extractDate(text) {
+    return text.replace(/^Month: /i, ""); // Removes "Month: " (case-insensitive)
+}
+
 
 function ExcelView() {
     const excelView = document.getElementById("tabView");

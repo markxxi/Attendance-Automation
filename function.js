@@ -24,8 +24,6 @@ const submitButton = document.getElementById("submitFileBtn");
 const hideFirstContainer = document.getElementById("hideFirstContainer");
 const previewScreen = document.getElementById("previewScreen");
 
-
-
 function displayContainer(){
     hideFirstContainer.style.display = "none";
     previewScreen.style.display = "block";
@@ -41,6 +39,11 @@ function previewExcelFile(file) {
         const workbook = XLSX.read(data, {
             type: "binary",
         });
+        
+        const properties = workbook.Props; 
+
+        // Print properties
+        console.log("Excel File Properties:", properties);
 
         const sheetNames = workbook.SheetNames;
         // console.log('Sheet Names:', sheetNames);
