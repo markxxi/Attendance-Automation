@@ -328,37 +328,26 @@ function extractAndLogDayValues(jsonData) {
     let ckRows = [];
 
     jsonData.forEach((row, rowIndex) => {
-        //console.log(`Processing row ${rowIndex}:`, row);
 
         if (row[0] === "DD") {
-            let values = row.slice(1); // Keep all values
-          //  console.log("✅ Extracted DD values:", values);
+            let values = row.slice(1); 
             ddRows.push(...values);
         } else if (row[0] === "CK") {
             let values = row.slice(1);
-          //  console.log("✅ Extracted CK values:", values);
             ckRows.push(...values);
         }
     });
-
-    //console.log("🔹 Final DD Rows:", ddRows.length, ddRows);
-    //console.log("🔹 Final CK Rows:", ckRows.length, ckRows);
-
-    // Ensure CK length matches DD length
+    
     while (ckRows.length < ddRows.length) {
-        ckRows.push(null); // Fill missing CK slots with null
+        ckRows.push(null); 
     }
-
-    // Map DD values to CK values
+    
     ddRows.forEach((num, index) => {
         let ckValue = ckRows[index];
 
         console.log(`🔍 Mapping: DD ${num} -> CK ${ckValue}`);
-
-        //dayData[num] = ckValue !== undefined ? ckValue : "null"; // Keep null if present
     });
 
-    //console.log("✅ Final Data Mapping:", dayData);
     return dayData;
 }
 
