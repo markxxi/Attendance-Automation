@@ -348,11 +348,14 @@ function extractAndLogDayValues(jsonData) {
 
         ddRow.forEach((num, colIndex) => {
             let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
-            console.log(`🔍 Mapping: DD ${num} -> CK ${ckValue}`);
+            //console.log(`🔍 Mapping: DD ${num} -> CK ${ckValue}`);
             dayData[num] = ckValue;
         });
     });
-    console.log(cal.value);
+    var datevalue = cal.value.toString();
+    let [year, month] = datevalue.split("-").map(Number);
+    
+    console.log(getMondays(year, month));
     return dayData;
 }
 
@@ -682,9 +685,22 @@ function getMonth() {
     }
     
 }
-function extractDate(text) {
-    return text.replace(/^Month: /i, ""); // Removes "Month: " (case-insensitive)
+
+function getMondays(year, month) {
+    let date = new Date(year, month - 1, 1); // Month is zero-based in JS Date
+    let mondays = [];
+
+    while (date.getMonth() === month - 1) {
+        if (date.getDay() === 1) { // 1 represents Monday
+            mondays.push(`${date.getDate()}: Monday`);
+        }
+        date.setDate(date.getDate() + 1); // Move to the next day
+    }
+
+    return mondays;
 }
+
+
 
 
 function ExcelView() {
