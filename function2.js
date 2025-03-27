@@ -32,12 +32,12 @@ function firstNonEmptyKey(data) {
             const firstNonEmptyKey = Object.keys(entry.records).find(
                 (key) => entry.records[key].length > 0,
             );
-            // console.log(firstNonEmptyKey);
+          
             return firstNonEmptyKey !== undefined
                 ? parseInt(firstNonEmptyKey)
                 : null;
         })
-        .filter((value) => value !== null); // Remove null values (previously undefined ones)
+        .filter((value) => value !== null);
 }
 //which start date should it display a data 
 document.getElementById("startDate").addEventListener("change", function (event) {
@@ -159,7 +159,7 @@ function fetchDetailsContent(detailsCell, selectedID) {
                 let employeeKeys = Object.keys(mergedEmployeeData); // Get all employee IDs
 
                 hoursRenderedField.forEach((field, index) => {
-                    let employeeData = mergedEmployeeData[employeeKeys[index]]; // Get employee by order
+                    let employeeData = mergedEmployeeData[employeeKeys[index]]; 
 
                     if (employeeData) {
                         field.textContent = employeeData.totalRenderedTime;
@@ -168,7 +168,7 @@ function fetchDetailsContent(detailsCell, selectedID) {
                     }
                 });
                     OTRenderedField.forEach((field, index) => {
-                    let employeeData = mergedEmployeeData[employeeKeys[index]]; // Get employee by order
+                    let employeeData = mergedEmployeeData[employeeKeys[index]]; 
 
                     if (employeeData) {
                         field.textContent = employeeData.overtimeRenderedTime;
@@ -177,7 +177,7 @@ function fetchDetailsContent(detailsCell, selectedID) {
                     }
                 });
                     UTRenderedField.forEach((field, index) => {
-                    let employeeData = mergedEmployeeData[employeeKeys[index]]; // Get employee by order
+                    let employeeData = mergedEmployeeData[employeeKeys[index]];
 
                     if (employeeData) {
                         field.textContent = employeeData.undertimeRenderedTime;
@@ -245,6 +245,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                 let timeResults = [];
                 var timeio = [];
                 var calculatedtimeio = [];
+                var timein = [];
 
                 for (let i = 1; i < row.length; i++) {
                     if (row[i] && typeof row[i] === "string") {
@@ -263,7 +264,11 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                         times.length >= 4 ? times[0] + " " + times[3] : timeString;
 
                     timeio.push(splitTimes);
+                    
                     calculatedtimeio.push(calc2(times[0], times[3]));
+                    timein.push(times[0]);
+                   // console.log(timein);
+                   //console.log(calculateLateRenderedTime(timein));
                 });
     
                 
@@ -274,11 +279,14 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                             mergedEmployeeData[employeekey] = {
                                 name: jsonObject[employeekey].name,         
                                 department: jsonObject[employeekey].department, // use the employee's department
-                                renderedTimes: []
+                                renderedTimes: [],
+                                firstTimeIn: []
                             };
                         }
                         // Append the calculated times for this row based on its length
                         mergedEmployeeData[employeekey].renderedTimes.push(...calculatedtimeio);
+                        mergedEmployeeData[employeekey].firstTimeIn.push(...timein);
+                        //console.log(mergedEmployeeData[employeekey].firstTimeIn.push(...timein));
                     }
                 }
                 
@@ -309,7 +317,8 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
         employee.totalRenderedTime = calculateTotalRenderedTime(mergedEmployeeData[empID].renderedTimes);
         employee.overtimeRenderedTime = calculateOvertimeRenderedTime(employee.renderedTimes);
         employee.undertimeRenderedTime = calculateUndertimeRenderedTime(employee.renderedTimes);
-        //console.log(`Employee ID: ${empID}, Overtime Rendered: ${employee.overtimeRenderedTime}`);
+        //employee.lateRenderedTime = calculateLateRenderedTime(employee.firstTimeIn);
+        //console.log(`Employee ID: ${empID}, Overtime Rendered: ${employee.lateRenderedTime}`);
     });
 
     if (!foundData) {
@@ -342,41 +351,24 @@ function extractAndLogDayValues(jsonData) {
     while (ckRows.length < ddRows.length) {
         ckRows.push(new Array(ddRows[0].length).fill("-")); 
     }
-    
-    // var datevalue = cal.value.toString();
-    // let [year1, month1] = datevalue.split("-").map(Number);
-
-    // var mondays;
-    // mondays = getMondays(year1, month1);
-    // let matchedMondays = {};
-    // ddRows.forEach((ddRow, rowIndex) => {
-    //     let ckRow = ckRows[rowIndex] || new Array(ddRow.length).fill("-");
-
-    //     ddRow.forEach((num, colIndex) => {
-    //         let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
-    //         matchedMondays[num] = ckValue;
-    //         //console.log(`🔍 Mapping: DD ${num} -> CK ${ckValue}`);
-    //         //dayData[num] = ckValue;
-    //     });
-    // });
 
     var datevalue = cal.value.toString();
     let [year1, month1] = datevalue.split("-").map(Number);
 
-    var mondays = getMondays(year1, month1).map(String); // Convert Mondays to strings
+    var mondays = getMondays(year1, month1).map(String); 
 
-    let matchedMondays = {}; // Store only matched Mondays
+    let matchedMondays = {}; 
 
     ddRows.forEach((ddRow, rowIndex) => {
         let ckRow = ckRows[rowIndex] || new Array(ddRow.length).fill("-");
 
         ddRow.forEach((num, colIndex) => {
-            let numValue = String(num); // Convert num to a string for comparison
+            let numValue = String(num);
 
-            if (mondays.includes(numValue)) { // Check if numValue is in the Mondays array
+            if (mondays.includes(numValue)) { 
                 let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
                 matchedMondays[numValue] = ckValue;
-                console.log(`✅ Matched Monday ${numValue} -> ${ckValue}`);
+               // console.log(`✅ Matched Monday ${numValue} -> ${ckValue}`);
             }
         });
     });
@@ -457,7 +449,26 @@ function calculateUndertimeRenderedTime(calculatedTimeIO) {
     return `${undertimeHours} HR ${undertimeMinutes} MIN`;
 }
 
+function calculateLateRenderedTime(firstTime) {
+    
+        const thresholdMinutes = 7 * 60; 
+        let lateTimes = {};
 
+            firstTime.forEach(time => {
+            let [hours, minutes] = time.split(":").map(Number);
+            let totalMinutes = hours * 60 + minutes;
+
+            if (totalMinutes > thresholdMinutes) {
+                let lateBy = totalMinutes - thresholdMinutes;
+                lateTimes[time] = `${lateBy} minutes late`;
+            } else {
+                lateTimes[time] = "On time";
+            }
+        });
+
+        return lateTimes;
+
+}
 
 var timeRecordForDate;
 var getFirstTimeIndex;
@@ -472,6 +483,7 @@ function splitTime(key, cell4, index) {
         cell4.textContent = "-";
     } else {
         var timeToString = timeRecordForDate.toString();
+      //  console.log(timeToString);
         var splitString = timeToString.split(" ");
         getFirstTimeIndex = splitString[index];
         cell4.textContent = getFirstTimeIndex;
@@ -490,6 +502,7 @@ function calculateTimeDifference(key, cell8, cell5) {
         var getFirstTime = splitString[0];
         var getLastTime = splitString[3];
         var [hours, minutes] = getFirstTime.split(":").map(Number);
+        //console.log(hours);
         var [hoursLast, minutesLast] = getLastTime.split(":").map(Number);
         if (hours < 7) {
             getFirstTime = "07:00";
@@ -497,7 +510,7 @@ function calculateTimeDifference(key, cell8, cell5) {
             getLastTime = "18:00";
         }
         
-        console.log(getLastTime);
+        //console.log(getLastTime);
         calc(getFirstTime, getLastTime, cell8, cell5);
     }
 }
