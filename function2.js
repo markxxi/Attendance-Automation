@@ -329,7 +329,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
         employee.overtimeRenderedTime = calculateOvertimeRenderedTime(employee.renderedTimes);
         employee.undertimeRenderedTime = calculateUndertimeRenderedTime(employee.renderedTimes);
        employee.lateTotal = calculateLateRenderedTime(employee.firstTimeIn);
-       console.log(employee.lateTotal);
+       //console.log(employee.lateTotal);
     });
 
     if (!foundData) {
@@ -339,13 +339,13 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
 
     tableHTML += "</tbody></table>";
     excelView.innerHTML = tableHTML;
-    extractAndLogDayValues(jsonData);
+   extractAndLogDayValues(jsonData);
     return mergedEmployeeData;
 }
 
 function extractAndLogDayValues(jsonData) {
     const cal = document.getElementById("startDate");
-    let dayData = {};
+    let dayData = [];
     let ddRows = [];
     let ckRows = [];
 
@@ -375,17 +375,17 @@ function extractAndLogDayValues(jsonData) {
 
         ddRow.forEach((num, colIndex) => {
             let numValue = String(num);
-
-            if (mondays.includes(numValue)) { 
                 let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
-                matchedMondays[numValue] = ckValue;
-               // console.log(`✅ Matched Monday ${numValue} -> ${ckValue}`);
-            }
+                let ckvalue1 = typeof ckValue === "string" ? ckValue.split(" ") : [ckValue];
+                dayData.push({ index: colIndex + 1, num, ckValue: ckvalue1[0] }); 
         });
+       // console.log(ddRow);
     });
+    let matchingCkValues = dayData
+        .filter(item => mondays.includes(String(item.num)))
+        .map(item => item.ckValue);
 
-   // console.log("Matched Mondays:", matchedMondays);
-    
+    console.log(matchingCkValues);
     return dayData;
 }
 
