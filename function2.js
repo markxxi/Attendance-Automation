@@ -342,20 +342,47 @@ function extractAndLogDayValues(jsonData) {
     while (ckRows.length < ddRows.length) {
         ckRows.push(new Array(ddRows[0].length).fill("-")); 
     }
+    
+    // var datevalue = cal.value.toString();
+    // let [year1, month1] = datevalue.split("-").map(Number);
+
+    // var mondays;
+    // mondays = getMondays(year1, month1);
+    // let matchedMondays = {};
+    // ddRows.forEach((ddRow, rowIndex) => {
+    //     let ckRow = ckRows[rowIndex] || new Array(ddRow.length).fill("-");
+
+    //     ddRow.forEach((num, colIndex) => {
+    //         let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
+    //         matchedMondays[num] = ckValue;
+    //         //console.log(`🔍 Mapping: DD ${num} -> CK ${ckValue}`);
+    //         //dayData[num] = ckValue;
+    //     });
+    // });
+
+    var datevalue = cal.value.toString();
+    let [year1, month1] = datevalue.split("-").map(Number);
+
+    var mondays = getMondays(year1, month1).map(String); // Convert Mondays to strings
+
+    let matchedMondays = {}; // Store only matched Mondays
 
     ddRows.forEach((ddRow, rowIndex) => {
         let ckRow = ckRows[rowIndex] || new Array(ddRow.length).fill("-");
 
         ddRow.forEach((num, colIndex) => {
-            let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
-            //console.log(`🔍 Mapping: DD ${num} -> CK ${ckValue}`);
-            dayData[num] = ckValue;
+            let numValue = String(num); // Convert num to a string for comparison
+
+            if (mondays.includes(numValue)) { // Check if numValue is in the Mondays array
+                let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
+                matchedMondays[numValue] = ckValue;
+                console.log(`✅ Matched Monday ${numValue} -> ${ckValue}`);
+            }
         });
     });
-    var datevalue = cal.value.toString();
-    let [year, month] = datevalue.split("-").map(Number);
+
+   // console.log("Matched Mondays:", matchedMondays);
     
-    console.log(getMondays(year, month));
     return dayData;
 }
 
@@ -692,7 +719,7 @@ function getMondays(year, month) {
 
     while (date.getMonth() === month - 1) {
         if (date.getDay() === 1) { // 1 represents Monday
-            mondays.push(`${date.getDate()}: Monday`);
+            mondays.push(`${date.getDate()}`);
         }
         date.setDate(date.getDate() + 1); // Move to the next day
     }
