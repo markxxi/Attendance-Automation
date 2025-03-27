@@ -156,7 +156,9 @@ function fetchDetailsContent(detailsCell, selectedID) {
                 let hoursRenderedField = detailsCell.querySelectorAll(".totaltime"); 
                 let OTRenderedField = detailsCell.querySelectorAll(".totalot"); 
                 let UTRenderedField = detailsCell.querySelectorAll(".totalut"); 
+                let LateRenderedField = detailsCell.querySelectorAll(".totallate");
                 let employeeKeys = Object.keys(mergedEmployeeData); // Get all employee IDs
+                
 
                 hoursRenderedField.forEach((field, index) => {
                     let employeeData = mergedEmployeeData[employeeKeys[index]]; 
@@ -181,6 +183,15 @@ function fetchDetailsContent(detailsCell, selectedID) {
 
                     if (employeeData) {
                         field.textContent = employeeData.undertimeRenderedTime;
+                    } else {
+                        field.textContent = "No Data";
+                    }
+                });
+                    LateRenderedField.forEach((field, index) => {
+                    let employeeData = mergedEmployeeData[employeeKeys[index]];
+
+                    if (employeeData) {
+                        field.textContent = employeeData.lateTotal;
                     } else {
                         field.textContent = "No Data";
                     }
@@ -267,7 +278,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                     
                     calculatedtimeio.push(calc2(times[0], times[3]));
                     timein.push(times[0]);
-                   // console.log(timein);
+                    //console.log(calculatedtimeio);
                    //console.log(calculateLateRenderedTime(timein));
                 });
     
@@ -286,7 +297,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                         // Append the calculated times for this row based on its length
                         mergedEmployeeData[employeekey].renderedTimes.push(...calculatedtimeio);
                         mergedEmployeeData[employeekey].firstTimeIn.push(...timein);
-                        //console.log(mergedEmployeeData[employeekey].firstTimeIn.push(...timein));
+                        //console.log();
                     }
                 }
                 
@@ -317,8 +328,8 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
         employee.totalRenderedTime = calculateTotalRenderedTime(mergedEmployeeData[empID].renderedTimes);
         employee.overtimeRenderedTime = calculateOvertimeRenderedTime(employee.renderedTimes);
         employee.undertimeRenderedTime = calculateUndertimeRenderedTime(employee.renderedTimes);
-        //employee.lateRenderedTime = calculateLateRenderedTime(employee.firstTimeIn);
-        //console.log(`Employee ID: ${empID}, Overtime Rendered: ${employee.lateRenderedTime}`);
+       employee.lateTotal = calculateLateRenderedTime(employee.firstTimeIn);
+       console.log(employee.lateTotal);
     });
 
     if (!foundData) {
@@ -450,25 +461,22 @@ function calculateUndertimeRenderedTime(calculatedTimeIO) {
 }
 
 function calculateLateRenderedTime(firstTime) {
-    
-        const thresholdMinutes = 7 * 60; 
-        let lateTimes = {};
+    const thresholdMinutes = 9 * 60; // 7:00 AM in minutes
+    let totalLateMinutes = 0;
 
-            firstTime.forEach(time => {
-            let [hours, minutes] = time.split(":").map(Number);
-            let totalMinutes = hours * 60 + minutes;
+    firstTime.forEach(time => {
+        let [hours, minutes] = time.split(":").map(Number);
+        let totalMinutes = hours * 60 + minutes;
 
-            if (totalMinutes > thresholdMinutes) {
-                let lateBy = totalMinutes - thresholdMinutes;
-                lateTimes[time] = `${lateBy} minutes late`;
-            } else {
-                lateTimes[time] = "On time";
-            }
-        });
+        if (totalMinutes > thresholdMinutes) {
+            totalLateMinutes += totalMinutes - thresholdMinutes;
+        }
+    });
 
-        return lateTimes;
-
+    return totalLateMinutes; // Return total accumulated late minutes
 }
+
+
 
 var timeRecordForDate;
 var getFirstTimeIndex;
