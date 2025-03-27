@@ -488,13 +488,16 @@ function calculateTimeDifference(key, cell8, cell5) {
         var splitString = timeToString.split(" ");
         
         var getFirstTime = splitString[0];
+        var getLastTime = splitString[3];
         var [hours, minutes] = getFirstTime.split(":").map(Number);
+        var [hoursLast, minutesLast] = getLastTime.split(":").map(Number);
         if (hours < 7) {
             getFirstTime = "07:00";
+        } else if (hoursLast > 18 || minutesLast > 0 || hoursLast < 7) {
+            getLastTime = "18:00";
         }
-
-        var getLastTime = splitString[3];
-        //console.log(getFirstTime);
+        
+        console.log(getLastTime);
         calc(getFirstTime, getLastTime, cell8, cell5);
     }
 }
