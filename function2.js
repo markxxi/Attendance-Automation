@@ -222,6 +222,9 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
     let isMatchingUSID = false;
     let foundData = false; //
     let mergedEmployeeData = {}; 
+    var timein = [];
+    var ckRows = [];
+    var ddRows = [];
     //console.log("Selected US ID:", selectedUSID); // Debugging
 
     jsonData.forEach((row) => {
@@ -250,13 +253,16 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                 for (let i = 1; i < maxColumns; i++) {
                     tableHTML += `<th>${row[i] || ""}</th>`;
                 }
+                //for computation
+                let values = row.slice(1).map(value => value === null ? "-" : value); 
+                ddRows.push(values);
                 tableHTML += "</tr>";
             } else if (row[0] === "CK") {
                 tableHTML += "<tr class='ck-row' style='display: table-row'><th>CK</th>";
                 let timeResults = [];
                 var timeio = [];
                 var calculatedtimeio = [];
-                var timein = [];
+                
 
                 for (let i = 1; i < row.length; i++) {
                     if (row[i] && typeof row[i] === "string") {
@@ -278,7 +284,10 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                     
                     calculatedtimeio.push(calc2(times[0], times[3]));
                     timein.push(times[0]);
-                    //console.log(calculatedtimeio);
+                    //for computation
+                    let values = row.slice(1).map(value => value === null ? "-" : value);
+                    ckRows.push(values);
+                    //console.log("TIMEIN",timein);
                    //console.log(calculateLateRenderedTime(timein));
                 });
     
@@ -339,54 +348,100 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
 
     tableHTML += "</tbody></table>";
     excelView.innerHTML = tableHTML;
-   extractAndLogDayValues(jsonData);
+   console.log(extractAndLogDayValues(ddRows, ckRows));
     return mergedEmployeeData;
 }
+let dayData = [];
+// function extractAndLogDayValues(jsonData) {
+//     const cal = document.getElementById("startDate");
+    
+//     let ddRows = [];
+//     let ckRows = [];
 
-function extractAndLogDayValues(jsonData) {
+//     jsonData.forEach((row) => {
+//         if (row[0] === "DD") {
+//             let values = row.slice(1).map(value => value === null ? "-" : value); 
+//             ddRows.push(values);
+//         } else if (row[0] === "CK") {
+//             let values = row.slice(1).map(value => value === null ? "-" : value);
+//             ckRows.push(values);
+//         }
+//     });
+
+//     while (ckRows.length < ddRows.length) {
+//         ckRows.push(new Array(ddRows[0].length).fill("-")); 
+//     }
+
+//     var datevalue = cal.value.toString();
+//     let [year1, month1] = datevalue.split("-").map(Number);
+
+//     var mondays = getMondays(year1, month1).map(String); 
+
+//     let matchedMondays = {}; 
+
+//     ddRows.forEach((ddRow, rowIndex) => {
+//         let ckRow = ckRows[rowIndex] || new Array(ddRow.length).fill("-");
+
+//         ddRow.forEach((num, colIndex) => {
+//             let numValue = String(num);
+//                 let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
+//                 let ckvalue1 = typeof ckValue === "string" ? ckValue.split(" ") : [ckValue];
+//                 dayData.push({ index: colIndex + 1, num, ckValue: ckvalue1[0] }); 
+//         });
+//        // console.log(ddRow);
+//     });
+//     let matchingCkValues = dayData
+//         .filter(item => mondays.includes(String(item.num)))
+//         .map(item => ({
+//             num: item.num,
+//             ckValue: item.ckValue
+//         }));
+
+//     console.log(matchingCkValues);
+//     console.log(dayData);
+//     return dayData;
+// }
+function extractAndLogDayValues(ddRows, ckRows) {
     const cal = document.getElementById("startDate");
-    let dayData = [];
-    let ddRows = [];
-    let ckRows = [];
-
-    jsonData.forEach((row) => {
-        if (row[0] === "DD") {
-            let values = row.slice(1).map(value => value === null ? "-" : value); 
-            ddRows.push(values);
-        } else if (row[0] === "CK") {
-            let values = row.slice(1).map(value => value === null ? "-" : value);
-            ckRows.push(values);
-        }
-    });
-
-    while (ckRows.length < ddRows.length) {
-        ckRows.push(new Array(ddRows[0].length).fill("-")); 
-    }
-
-    var datevalue = cal.value.toString();
+    let datevalue = cal.value.toString();
     let [year1, month1] = datevalue.split("-").map(Number);
+    let mondays = getMondays(year1, month1).map(String); // Get Mondays as strings
 
-    var mondays = getMondays(year1, month1).map(String); 
+    dayData = []; // Reset to avoid stacking across multiple calls
+    
+    ddRows.forEach((row, rowIndex) => {
+        let ckRow = ckRows[rowIndex] || new Array(row.length).fill("-");
 
-    let matchedMondays = {}; 
-
-    ddRows.forEach((ddRow, rowIndex) => {
-        let ckRow = ckRows[rowIndex] || new Array(ddRow.length).fill("-");
-
-        ddRow.forEach((num, colIndex) => {
+        row.forEach((num, colIndex) => {
             let numValue = String(num);
-                let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
-                let ckvalue1 = typeof ckValue === "string" ? ckValue.split(" ") : [ckValue];
-                dayData.push({ index: colIndex + 1, num, ckValue: ckvalue1[0] }); 
-        });
-       // console.log(ddRow);
-    });
-    let matchingCkValues = dayData
-        .filter(item => mondays.includes(String(item.num)))
-        .map(item => item.ckValue);
+            let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
 
-    console.log(matchingCkValues);
-    return dayData;
+            
+            let ckValueClean = typeof ckValue === "string" ? ckValue.split(" ")[0] : ckValue;
+
+            dayData.push({
+                index: colIndex + 1,
+                num: numValue,
+                ckValue: ckValueClean
+            });
+        });
+    });
+    let storedAllPairs = dayData.map(item => ({
+        num: item.num,
+        ckValue: item.ckValue
+    }));
+
+    
+
+    // let matchingCkValues = dayData
+    //     .filter(item => mondays.includes(item.num))
+    //     .map(item => ({
+    //         num: item.num,
+    //         ckValue: item.ckValue
+    //     }));
+
+    //console.log(storedAllPairs);
+    return storedAllPairs;
 }
 
 //calculation of overall renderend time inside the collapsible
@@ -473,7 +528,7 @@ function calculateLateRenderedTime(firstTime) {
         }
     });
 
-    return totalLateMinutes; // Return total accumulated late minutes
+    return totalLateMinutes; 
 }
 
 
