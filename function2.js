@@ -222,7 +222,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
     let isMatchingUSID = false;
     let foundData = false; //
     let mergedEmployeeData = {}; 
-    var timein = [];
+    
     var ckRows = [];
     var ddRows = [];
     //console.log("Selected US ID:", selectedUSID); // Debugging
@@ -262,7 +262,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                 let timeResults = [];
                 var timeio = [];
                 var calculatedtimeio = [];
-                
+                var timein = [];
 
                 for (let i = 1; i < row.length; i++) {
                     if (row[i] && typeof row[i] === "string") {
@@ -271,7 +271,8 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                         timeResults.push("");
                     }
                 }
-
+                let timeDayMap = {};
+                const latestDDRow = ddRows[ddRows.length - 1];
                 timeResults.forEach((timeString, index) => {
                     if (timeString === undefined) {
                         timeString = " ";
@@ -281,20 +282,19 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                         times.length >= 4 ? times[0] + " " + times[3] : timeString;
 
                     timeio.push(splitTimes);
-                    
                     calculatedtimeio.push(calc2(times[0], times[3]));
+                    
                     timein.push(times[0]);
-                    //for computation
-                    let values = row.slice(1).map(value => value === null ? "-" : value);
-                    ckRows.push(values);
-                    //console.log("TIMEIN",timein);
-                   //console.log(calculateLateRenderedTime(timein));
+                    const day = latestDDRow[index]; 
+                    timeDayMap[day] = times[0];
                 });
-    
-                
+                 const mapString = Object.entries(timeDayMap)
+                     .map(([day, time]) => `${day}: (${time})`)
+                     .join(", ");
+
+                console.log("Mapped Timeins by Day:", mapString);
                 for (var employeekey in jsonObject) {
                     if (jsonObject.hasOwnProperty(employeekey)) {
-                        
                         if (!mergedEmployeeData[employeekey]) {
                             mergedEmployeeData[employeekey] = {
                                 name: jsonObject[employeekey].name,         
@@ -303,7 +303,7 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                                 firstTimeIn: []
                             };
                         }
-                        // Append the calculated times for this row based on its length
+                      
                         mergedEmployeeData[employeekey].renderedTimes.push(...calculatedtimeio);
                         mergedEmployeeData[employeekey].firstTimeIn.push(...timein);
                         //console.log();
@@ -312,9 +312,10 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                 
                 for (let i = 1; i < maxColumns; i++) {
                     tableHTML += `<td class="td-clp">${calculatedtimeio[i - 1] !== undefined ? calculatedtimeio[i - 1] : ""} </td>`;
-                }
+                }    
 
                 tableHTML += "</tr>";
+                
             }
             else {
 
@@ -348,10 +349,12 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
 
     tableHTML += "</tbody></table>";
     excelView.innerHTML = tableHTML;
-   console.log(extractAndLogDayValues(ddRows, ckRows));
+    //console.log(extractAndLogDayValues(ddRows, ckRows));
     return mergedEmployeeData;
 }
 let dayData = [];
+let storedAllPairs;
+
 // function extractAndLogDayValues(jsonData) {
 //     const cal = document.getElementById("startDate");
     
@@ -401,38 +404,38 @@ let dayData = [];
 //     console.log(dayData);
 //     return dayData;
 // }
+
+
 function extractAndLogDayValues(ddRows, ckRows) {
     const cal = document.getElementById("startDate");
     let datevalue = cal.value.toString();
     let [year1, month1] = datevalue.split("-").map(Number);
-    let mondays = getMondays(year1, month1).map(String); // Get Mondays as strings
+    let mondays = getMondays(year1, month1).map(String); 
 
-    dayData = []; // Reset to avoid stacking across multiple calls
+    dayData = []; 
     
     ddRows.forEach((row, rowIndex) => {
-        let ckRow = ckRows[rowIndex] || new Array(row.length).fill("-");
+       let ckRow = ckRows[rowIndex] || new Array(row.length).fill("");
 
         row.forEach((num, colIndex) => {
             let numValue = String(num);
-            let ckValue = ckRow[colIndex] !== undefined ? ckRow[colIndex] : "-";
+            let ckValue = ckRows[colIndex] !== undefined ? ckRows[colIndex] : "";
 
-            
-            let ckValueClean = typeof ckValue === "string" ? ckValue.split(" ")[0] : ckValue;
-
+            //let ckValueClean = typeof ckValue === "string" ? ckValue[0] : ckValue;
+            //console.log(ckValue);
             dayData.push({
                 index: colIndex + 1,
                 num: numValue,
-                ckValue: ckValueClean
+                ckValue: ckValue
             });
         });
     });
-    let storedAllPairs = dayData.map(item => ({
+        
+    storedAllPairs = dayData.map(item => ({
         num: item.num,
         ckValue: item.ckValue
     }));
-
     
-
     // let matchingCkValues = dayData
     //     .filter(item => mondays.includes(item.num))
     //     .map(item => ({
@@ -530,7 +533,6 @@ function calculateLateRenderedTime(firstTime) {
 
     return totalLateMinutes; 
 }
-
 
 
 var timeRecordForDate;
