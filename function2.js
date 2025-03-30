@@ -56,6 +56,8 @@ document.getElementById("startDate").addEventListener("change", function (event)
     selectedDate = lastCharDate;
     updateTable(selectedDate);
    // console.log(selectedDate);
+   
+   
 });
 
 //table view and excel view
@@ -120,8 +122,10 @@ function displayJsonDataToTable() {
     if (jsonData) {
         jsonObject = JSON.parse(jsonData);
         selectedDate = findLowestNumber(firstNonEmptyKey(jsonObject));
-        updateTable(selectedDate);
         getMonth();
+        updateTable(selectedDate);
+        
+        
     }
     document.querySelector("#tableResult tbody").addEventListener("click", function (e) {
         if (e.target.closest(".custom-arrow")) {
@@ -293,8 +297,8 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                      .map(([day, time]) => `${day}: (${time})`)
                      .join(", ");
                 
-                console.log("Mapped Timeins by Day:", timein);
-                console.log(calculateLateRenderedTime(timein)); 
+                //console.log("Mapped Timeins by Day:", timein);
+                //console.log(calculateLateRenderedTime(timein)); 
                 for (var employeekey in jsonObject) {
                     if (jsonObject.hasOwnProperty(employeekey)) {
                         if (!mergedEmployeeData[employeekey]) {
@@ -525,19 +529,19 @@ function calculateLateRenderedTime(firstTime) {
     let datevalue = cal.value.toString();
     let [year1, month1] = datevalue.split("-").map(Number);
     let mondays = getMondays(year1, month1).map(String); 
-    console.log(mondays);
-    const thresholdMinutes = 9 * 60; // 7:00 AM in minutes
+    //console.log(cal);
+    const thresholdMinutes = 9 * 60; 
     let totalLateMinutes = 0;
 
     firstTime.forEach(entry => {
-        let dayMatch = entry.match(/^\d+/); // Extracts day number (e.g., "3" from "3: 08:16")
-        let timeMatch = entry.match(/\b\d{1,2}:\d{2}\b/); // Extracts time in HH:MM format
+        let dayMatch = entry.match(/^\d+/);
+        let timeMatch = entry.match(/\b\d{1,2}:\d{2}\b/); 
         
         if (timeMatch) {
             let [hours, minutes] = timeMatch[0].split(":").map(Number);
             let totalMinutes = hours * 60 + minutes;
 
-            // Determine the correct threshold: 8:00 AM for Mondays, 7:00 AM otherwise
+          
             let thresholdMinutes = mondays.includes(dayMatch?.[0]) ? 8 * 60 : 9 * 60;
 
             if (totalMinutes > thresholdMinutes) {
@@ -551,13 +555,19 @@ function calculateLateRenderedTime(firstTime) {
 
 var timeRecordForDate;
 var getFirstTimeIndex;
-
+/*
 function splitTime(key, cell4, index) {
     //array records[3] is related to calendar: change
+    const cal = document.getElementById("startDate");
+    let datevalue = cal.value.toString();
+    let [year1, month1, day1] = datevalue.split("-").map(Number);
+    let mondays = getMondays(year1, month1).map(String); 
+
     timeRecordForDate =
         jsonObject[key].records && jsonObject[key].records[3]
             ? jsonObject[key].records[selectedDate][0]
             : undefined;
+          // console.log(timeRecordForDate, selectedDate);
     if (typeof timeRecordForDate === "undefined") {
         cell4.textContent = "-";
     } else {
@@ -565,9 +575,68 @@ function splitTime(key, cell4, index) {
       //  console.log(timeToString);
         var splitString = timeToString.split(" ");
         getFirstTimeIndex = splitString[index];
+
+        getFirstTimeIndexLate = splitString[0];
+        let timeMatch = getFirstTimeIndexLate.match(/\b\d{1,2}:\d{2}\b/); 
+        if (timeMatch) {
+            let [hours, minutes] = timeMatch[0].split(":").map(Number);
+            let totalMinutes = hours * 60 + minutes;
+
+            // Check if selected day is a Monday and adjust threshold
+            let thresholdMinutes = mondays.includes(day1.toString()) ? 8 * 60 : 9 * 60;
+
+            if (totalMinutes > thresholdMinutes) {
+                let lateMinutes = totalMinutes - thresholdMinutes;
+                console.log(`Late by ${lateMinutes} minutes`);
+            }
+        }
+
+        cell4.textContent = getFirstTimeIndex;
+    }
+} */
+
+    let totalLateMinutes = 0; // Global variable to store total late minutes
+
+function splitTime(key, cell4, index) {
+    const cal = document.getElementById("startDate");
+    let datevalue = cal.value.toString();
+    let [year1, month1, day1] = datevalue.split("-").map(Number);
+    let mondays = getMondays(year1, month1).map(String); 
+
+    timeRecordForDate =
+        jsonObject[key].records && jsonObject[key].records[3]
+            ? jsonObject[key].records[selectedDate][0]
+            : undefined;
+
+    if (typeof timeRecordForDate === "undefined") {
+        cell4.textContent = "-";
+    } else {
+        var timeToString = timeRecordForDate.toString();
+        var splitString = timeToString.split(" ");
+        getFirstTimeIndex = splitString[index];
+
+        getFirstTimeIndexLate = splitString[0]; // Extract first time (clock-in)
+        let timeMatch = getFirstTimeIndexLate.match(/\b\d{1,2}:\d{2}\b/); 
+        if (timeMatch) {
+            let [hours, minutes] = timeMatch[0].split(":").map(Number);
+            let totalMinutes = hours * 60 + minutes;
+
+            // Check if selected day is a Monday and adjust threshold
+            let thresholdMinutes = mondays.includes(day1.toString()) ? 8 * 60 : 9 * 60;
+
+            if (totalMinutes > thresholdMinutes) {
+                let lateMinutes = totalMinutes - thresholdMinutes;
+                totalLateMinutes = lateMinutes; // Store late minutes globally
+                console.log(`Late by ${lateMinutes} minutes`);
+            } else {
+                totalLateMinutes = 0; // Reset if not late
+            }
+        }
+
         cell4.textContent = getFirstTimeIndex;
     }
 }
+
 
 function calculateTimeDifference(key, cell8, cell5) {
     // var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
@@ -585,7 +654,8 @@ function calculateTimeDifference(key, cell8, cell5) {
         var [hoursLast, minutesLast] = getLastTime.split(":").map(Number);
         if (hours < 7) {
             getFirstTime = "07:00";
-        } else if (hoursLast > 18 || minutesLast > 0 || hoursLast < 7) {
+            
+        } else if (hoursLast > 18 || (hoursLast === 18 && minutesLast > 0) ) {
             getLastTime = "18:00";
         }
         
@@ -595,7 +665,7 @@ function calculateTimeDifference(key, cell8, cell5) {
 }
 
 var totalRenderedTime, hours, minutes;
-
+/*
 function calc(start, end, cell8, cell5) {
     if (start && end) {
         start = start.split(":");
@@ -604,7 +674,7 @@ function calc(start, end, cell8, cell5) {
         var startDate = new Date(0, 0, 0, start[0], start[1], 0);
         var endDate = new Date(0, 0, 0, end[0], end[1], 0);
         var diff = endDate.getTime() - startDate.getTime();
-
+       // console.log(startDate);
         if (diff < 0) {
             cell8.textContent = "Invalid time range";
             return;
@@ -629,7 +699,41 @@ function calc(start, end, cell8, cell5) {
         cell8.textContent = "No time data";
         cell5.textContent = "No time data";
     }
-}
+} */
+
+    function calc(start, end, cell8, cell5) {
+        if (start && end) {
+            start = start.split(":");
+            end = end.split(":");
+    
+            var startDate = new Date(0, 0, 0, start[0], start[1], 0);
+            var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+            var diff = endDate.getTime() - startDate.getTime();
+    
+            if (diff < 0) {
+                cell8.textContent = "Invalid time range";
+                return;
+            }
+    
+            let totalMinutesWorked = diff / 1000 / 60; // Convert total milliseconds to minutes
+            let adjustedMinutes = totalMinutesWorked - totalLateMinutes; // Subtract late minutes
+    
+            if (adjustedMinutes < 0) {
+                adjustedMinutes = 0; // Prevent negative total time
+            }
+    
+            hours = Math.floor(adjustedMinutes / 60);
+            minutes = adjustedMinutes % 60;
+    
+            totalRenderedTime = `${hours-1} HR ${minutes} MIN`;
+            
+            cell8.textContent = totalRenderedTime;
+        } else {
+            cell8.textContent = "No time data";
+            cell5.textContent = "No time data";
+        }
+    }
+    
 
 function overtime(key, cell6, cell9, cell7) {
     if (typeof timeRecordForDate === "undefined") {
