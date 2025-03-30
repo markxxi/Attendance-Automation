@@ -284,15 +284,17 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
                     timeio.push(splitTimes);
                     calculatedtimeio.push(calc2(times[0], times[3]));
                     
-                    timein.push(times[0]);
+                  //  timein.push(times[0]);
                     const day = latestDDRow[index]; 
                     timeDayMap[day] = times[0];
+                    timein.push(day + ": " + times[0]);
                 });
                  const mapString = Object.entries(timeDayMap)
                      .map(([day, time]) => `${day}: (${time})`)
                      .join(", ");
-
-                console.log("Mapped Timeins by Day:", mapString);
+                
+                console.log("Mapped Timeins by Day:", timein);
+                console.log(calculateLateRenderedTime(timein)); 
                 for (var employeekey in jsonObject) {
                     if (jsonObject.hasOwnProperty(employeekey)) {
                         if (!mergedEmployeeData[employeekey]) {
@@ -519,21 +521,33 @@ function calculateUndertimeRenderedTime(calculatedTimeIO) {
 }
 
 function calculateLateRenderedTime(firstTime) {
+    const cal = document.getElementById("startDate");
+    let datevalue = cal.value.toString();
+    let [year1, month1] = datevalue.split("-").map(Number);
+    let mondays = getMondays(year1, month1).map(String); 
+    console.log(mondays);
     const thresholdMinutes = 9 * 60; // 7:00 AM in minutes
     let totalLateMinutes = 0;
 
-    firstTime.forEach(time => {
-        let [hours, minutes] = time.split(":").map(Number);
-        let totalMinutes = hours * 60 + minutes;
+    firstTime.forEach(entry => {
+        let dayMatch = entry.match(/^\d+/); // Extracts day number (e.g., "3" from "3: 08:16")
+        let timeMatch = entry.match(/\b\d{1,2}:\d{2}\b/); // Extracts time in HH:MM format
+        
+        if (timeMatch) {
+            let [hours, minutes] = timeMatch[0].split(":").map(Number);
+            let totalMinutes = hours * 60 + minutes;
 
-        if (totalMinutes > thresholdMinutes) {
-            totalLateMinutes += totalMinutes - thresholdMinutes;
+            // Determine the correct threshold: 8:00 AM for Mondays, 7:00 AM otherwise
+            let thresholdMinutes = mondays.includes(dayMatch?.[0]) ? 8 * 60 : 9 * 60;
+
+            if (totalMinutes > thresholdMinutes) {
+                totalLateMinutes += totalMinutes - thresholdMinutes;
+            }
         }
     });
 
-    return totalLateMinutes; 
+    return totalLateMinutes;
 }
-
 
 var timeRecordForDate;
 var getFirstTimeIndex;
