@@ -98,8 +98,8 @@ function updateTable(date) {
             cell2.textContent = jsonObject[key].name;
             cell3.textContent = jsonObject[key].department;
 
-            splitTime(key, cell4, 0, date);
-            splitTime(key, cell5, 3, date);
+            splitTime(key, cell4, 0, date, date);
+            splitTime(key, cell5, 3, date, date);
 
             calculateTimeDifference(key, cell8, cell5, date);
 
@@ -124,7 +124,6 @@ function displayJsonDataToTable() {
         selectedDate = findLowestNumber(firstNonEmptyKey(jsonObject));
         getMonth();
         updateTable(selectedDate);
-        
         
     }
     document.querySelector("#tableResult tbody").addEventListener("click", function (e) {
@@ -597,7 +596,7 @@ function splitTime(key, cell4, index) {
 
     let totalLateMinutes = 0; // Global variable to store total late minutes
 
-function splitTime(key, cell4, index) {
+function splitTime(key, cell4, index, selecteddate) {
     const cal = document.getElementById("startDate");
     let datevalue = cal.value.toString();
     let [year1, month1, day1] = datevalue.split("-").map(Number);
@@ -605,7 +604,7 @@ function splitTime(key, cell4, index) {
 
     timeRecordForDate =
         jsonObject[key].records && jsonObject[key].records[3]
-            ? jsonObject[key].records[selectedDate][0]
+            ? jsonObject[key].records[selecteddate][0]
             : undefined;
 
     if (typeof timeRecordForDate === "undefined") {
@@ -1204,3 +1203,74 @@ function showSearchFilter() {
     filter.style.display = "inline-block";
 }
 
+function exportToExcel() {
+    let workbook = XLSX.utils.book_new();
+
+    for (let day = 1; day <= 31; day++) {
+        let table = document.createElement("table");
+        let tableBody = table.createTBody();
+
+        // Add headers
+        let headerRow = tableBody.insertRow();
+        let headers = ["ID", "Name", "Department", "Time In", "Time Out", "Overtime", "Undertime", "Total Rendered Time", "Conversion"]; 
+        headers.forEach(text => {
+            let th = document.createElement("th");
+            th.textContent = text;
+            headerRow.appendChild(th);
+        });
+
+        // Populate rows for the given date (day)
+        for (let key in jsonObject) {
+            if (jsonObject.hasOwnProperty(key)) {
+                let row = tableBody.insertRow();
+                let cell1 = row.insertCell(0);
+                let cell2 = row.insertCell(1);
+                let cell3 = row.insertCell(2);
+                let cell4 = row.insertCell(3);
+                let cell5 = row.insertCell(4);
+                let cell6 = row.insertCell(5);
+                let cell7 = row.insertCell(6);
+                let cell8 = row.insertCell(7);
+                let cell9 = row.insertCell(8);
+                cell1.textContent = jsonObject[key].id.toString();
+                cell2.textContent = jsonObject[key].name;
+                cell3.textContent = jsonObject[key].department;
+
+                splitTime(key, cell4, 0, day, day); // Time In
+                splitTime(key, cell5, 3, day, day); // Time Out
+                calculateTimeDifference(key, cell8, cell5, day); // Total Hours
+                overtime(key, cell6, cell9, cell7); // Overtime and extra info
+            }
+        }
+
+        // Convert the table into an Excel sheet
+        let worksheet = XLSX.utils.table_to_sheet(table);
+
+        // Set column widths for better visibility
+        let columnWidths = [
+            { wch: 10 }, // ID
+            { wch: 20 }, // Name
+            { wch: 15 }, // Department
+            { wch: 12 }, // Time In
+            { wch: 12 }, // Time Out
+            { wch: 12 }, // Total Hours
+            { wch: 10 }, // Overtime
+            { wch: 20 },  // Other Info
+            { wch: 20 } 
+        ];
+        worksheet["!cols"] = columnWidths;
+
+        // Apply left alignment to all cells
+        for (let cell in worksheet) {
+            if (cell[0] !== '!') { // Exclude metadata properties
+                if (!worksheet[cell].s) worksheet[cell].s = {}; // Ensure cell style exists
+                worksheet[cell].s.alignment = { horizontal: "left" };
+            }
+        }
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, `Day ${day}`);
+    }
+
+    // Save file
+    XLSX.writeFile(workbook, "Monthly_Report.xlsx");
+}
