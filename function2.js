@@ -1202,7 +1202,7 @@ function showSearchFilter() {
     search.style.display = "inline-block";
     filter.style.display = "inline-block";
 }
-
+/*
 function exportToExcel() {
     let workbook = XLSX.utils.book_new();
 
@@ -1243,7 +1243,6 @@ function exportToExcel() {
             }
         }
 
-        // Convert the table into an Excel sheet
         let worksheet = XLSX.utils.table_to_sheet(table);
 
         // Set column widths for better visibility
@@ -1255,16 +1254,18 @@ function exportToExcel() {
             { wch: 12 }, // Time Out
             { wch: 12 }, // Total Hours
             { wch: 10 }, // Overtime
-            { wch: 20 },  // Other Info
-            { wch: 20 } 
+            { wch: 20 }, // Other Info
+            { wch: 20 }  
         ];
         worksheet["!cols"] = columnWidths;
 
-        // Apply left alignment to all cells
+        // Apply alignment to all cells (center)
         for (let cell in worksheet) {
-            if (cell[0] !== '!') { // Exclude metadata properties
-                if (!worksheet[cell].s) worksheet[cell].s = {}; // Ensure cell style exists
-                worksheet[cell].s.alignment = { horizontal: "left" };
+            if (worksheet.hasOwnProperty(cell) && cell[0] !== "!") {  
+                if (!worksheet[cell].s) {
+                    worksheet[cell].s = {};
+                }
+                worksheet[cell].s.alignment = { horizontal: "center", vertical: "center" };
             }
         }
 
@@ -1273,4 +1274,89 @@ function exportToExcel() {
 
     // Save file
     XLSX.writeFile(workbook, "Monthly_Report.xlsx");
+} */
+let templateWorkbook = null;
+
+async function exportToExcel() {
+    if (!templateWorkbook) {
+        await loadTemplate();
+        if (!templateWorkbook) {
+            alert("Failed to load the template. Please try again.");
+            return;
+        }
+    }
+
+    let workbook = XLSX.utils.book_new();
+
+    for (let day = 1; day <= 31; day++) {
+        let templateSheet = templateWorkbook.Sheets[templateWorkbook.SheetNames[0]];
+        let worksheet = XLSX.utils.sheet_to_json(templateSheet, { header: 1 }); // Convert to array format for editing
+
+        let newData = worksheet.slice(); // Shallow copy to modify per sheet
+
+        for (let key in jsonObject) {
+            if (jsonObject.hasOwnProperty(key)) {
+                let row = [
+                    jsonObject[key].id.toString(),
+                    jsonObject[key].name,
+                    jsonObject[key].department,
+                    "", "", "", "", "", ""
+                ];
+
+                let mockCell4 = { textContent: "" };
+                let mockCell5 = { textContent: "" };
+
+                splitTime(key, mockCell4, 0, day, day); // Time In
+                splitTime(key, mockCell5, 3, day, day);
+                
+                row[3] = mockCell4.textContent;
+                row[4] = mockCell5.textContent;
+
+                
+
+                let mockCell6 = { textContent: "" };
+                let mockCell7 = { textContent: "" };
+                let mockCell8 = { textContent: "" };
+                let mockCell9 = { textContent: "" };
+
+                calculateTimeDifference(key, mockCell8, mockCell5, day);
+                overtime(key, mockCell6, mockCell9, mockCell7);
+
+                row[5] = mockCell6.textContent; // Overtime
+                row[6] = mockCell7.textContent; // Extra info
+                row[7] = mockCell8.textContent; // Total Hours
+                row[8] = mockCell9.textContent; // Another value (if applicable)
+               // overtime(key, mockCell6, mockCell9, mockCell7);
+                 // Time Out
+
+                
+                newData.push(row);
+
+            }
+        }
+
+        let newSheet = XLSX.utils.aoa_to_sheet(newData); // Convert back to sheet
+        XLSX.utils.book_append_sheet(workbook, newSheet, `Day ${day}`);
+    }
+
+    XLSX.writeFile(workbook, "Monthly_Report.xlsx");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadTemplate();
+});
+
+async function loadTemplate() {
+    try {
+        const response = await fetch("/content/Book.xlsx");
+        if (!response.ok) throw new Error("Failed to fetch template");
+
+        const arrayBuffer = await response.arrayBuffer();
+        templateWorkbook = XLSX.read(arrayBuffer, { type: "array" });
+
+        console.log("Template loaded successfully!");
+    } catch (error) {
+        console.error("Error loading template:", error);
+    }
+}
+
