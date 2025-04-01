@@ -1326,6 +1326,24 @@ async function loadTemplate() {
 function exportToExcel() {
     let table = document.getElementById("excelView");
     let clonedTable = table.cloneNode(true);
+
+    let rows = clonedTable.getElementsByTagName("tr");
+    for (let row of rows){
+        let firstCell = row.cells[0];
+        if(firstCell && firstCell.innerText.trim().startsWith("US")){
+            firstCell.colSpan = 17;
+        } else if(firstCell && firstCell.innerText.trim().startsWith("Attendance") ){
+            firstCell.colSpan = 17;
+        } else if (firstCell && firstCell.innerText.trim().startsWith("DHSUD")){
+            firstCell.colSpan = 17;
+        } else if (firstCell && firstCell.innerText.trim().startsWith("Month")) {
+            firstCell.colSpan = 17;
+        }
+        row.style.textAlign = "center";
+        for (let cell of row.cells) {
+            cell.style.border = "0.5px solid black";
+        }
+    }
     // Convert table to HTML string and remove <hr> tags
     let tableHTML = clonedTable.outerHTML.replace(/<hr[^>]*>/g, '<br>');
     
