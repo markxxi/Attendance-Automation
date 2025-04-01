@@ -159,7 +159,7 @@
     color: #fff;
  }
 
- .export {
+ .export{
     /* width: clamp(80px, 8vw, 135px); */
     width: clamp(80px, 8vw, 135px);
     height: clamp(20px, 5vh, 35px);

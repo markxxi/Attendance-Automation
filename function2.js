@@ -74,6 +74,7 @@ var jsonObject;
 //display the acquired data to table
 var key, detailsCell, tableBody;
 function updateTable(date) {
+    showSearchFilter();
     tableBody = document.querySelector("#tableResult tbody");
     tableBody.innerHTML = ""; // Clear previous rows
 
@@ -931,12 +932,14 @@ function getMondays(year, month) {
 function ExcelView() {
     const excelView = document.getElementById("tabView");
     const tableView = document.getElementById("tableView");
+   
     excelView.addEventListener("click", function () {
         hideSearchFilter();
         tableView.classList.remove("btn-table");
         excelView.classList.remove("btn-default");
         tableView.classList.add("btn-default");
         excelView.classList.add("btn-table");
+        
 
         fetch("test2.html")
             .then((response) => response.text())
@@ -1191,90 +1194,31 @@ function filterTable() {
 function hideSearchFilter() {
     var search = document.getElementById("search-input");
     var filter = document.getElementById("filter");
+    var exportBtn = document.getElementById("exportTableView");
+    var startDate = document.getElementById("startDate");
+    var exportExcelView = document.getElementById("exportExcelView");
     search.style.display = "none";
     filter.style.display = "none";
-
+    exportBtn.style.display = "none";
+    startDate.style.display = "none";
+    exportExcelView.style.display = "inline-block";
+    
 }
 
 function showSearchFilter() {
     var search = document.getElementById("search-input");
     var filter = document.getElementById("filter");
+    var exportBtn = document.getElementById("exportTableView");
+    var startDate = document.getElementById("startDate");
+    var exportExcelView = document.getElementById("exportExcelView");
     search.style.display = "inline-block";
     filter.style.display = "inline-block";
+    exportBtn.style.display = "inline-block";
+    startDate.style.display = "inline-block";
+    exportExcelView.style.display = "none";
+   
 }
-/*
-function exportToExcel() {
-    let workbook = XLSX.utils.book_new();
 
-    for (let day = 1; day <= 31; day++) {
-        let table = document.createElement("table");
-        let tableBody = table.createTBody();
-
-        // Add headers
-        let headerRow = tableBody.insertRow();
-        let headers = ["ID", "Name", "Department", "Time In", "Time Out", "Overtime", "Undertime", "Total Rendered Time", "Conversion"]; 
-        headers.forEach(text => {
-            let th = document.createElement("th");
-            th.textContent = text;
-            headerRow.appendChild(th);
-        });
-
-        // Populate rows for the given date (day)
-        for (let key in jsonObject) {
-            if (jsonObject.hasOwnProperty(key)) {
-                let row = tableBody.insertRow();
-                let cell1 = row.insertCell(0);
-                let cell2 = row.insertCell(1);
-                let cell3 = row.insertCell(2);
-                let cell4 = row.insertCell(3);
-                let cell5 = row.insertCell(4);
-                let cell6 = row.insertCell(5);
-                let cell7 = row.insertCell(6);
-                let cell8 = row.insertCell(7);
-                let cell9 = row.insertCell(8);
-                cell1.textContent = jsonObject[key].id.toString();
-                cell2.textContent = jsonObject[key].name;
-                cell3.textContent = jsonObject[key].department;
-
-                splitTime(key, cell4, 0, day, day); // Time In
-                splitTime(key, cell5, 3, day, day); // Time Out
-                calculateTimeDifference(key, cell8, cell5, day); // Total Hours
-                overtime(key, cell6, cell9, cell7); // Overtime and extra info
-            }
-        }
-
-        let worksheet = XLSX.utils.table_to_sheet(table);
-
-        // Set column widths for better visibility
-        let columnWidths = [
-            { wch: 10 }, // ID
-            { wch: 20 }, // Name
-            { wch: 15 }, // Department
-            { wch: 12 }, // Time In
-            { wch: 12 }, // Time Out
-            { wch: 12 }, // Total Hours
-            { wch: 10 }, // Overtime
-            { wch: 20 }, // Other Info
-            { wch: 20 }  
-        ];
-        worksheet["!cols"] = columnWidths;
-
-        // Apply alignment to all cells (center)
-        for (let cell in worksheet) {
-            if (worksheet.hasOwnProperty(cell) && cell[0] !== "!") {  
-                if (!worksheet[cell].s) {
-                    worksheet[cell].s = {};
-                }
-                worksheet[cell].s.alignment = { horizontal: "center", vertical: "center" };
-            }
-        }
-
-        XLSX.utils.book_append_sheet(workbook, worksheet, `Day ${day}`);
-    }
-
-    // Save file
-    XLSX.writeFile(workbook, "Monthly_Report.xlsx");
-} */
 let templateWorkbook = null;
 
 async function exportToExcel() {
@@ -1326,16 +1270,24 @@ async function exportToExcel() {
                 row[6] = mockCell7.textContent; // Extra info
                 row[7] = mockCell8.textContent; // Total Hours
                 row[8] = mockCell9.textContent; // Another value (if applicable)
-               // overtime(key, mockCell6, mockCell9, mockCell7);
-                 // Time Out
 
-                
                 newData.push(row);
 
             }
         }
 
-        let newSheet = XLSX.utils.aoa_to_sheet(newData); // Convert back to sheet
+        let newSheet = XLSX.utils.aoa_to_sheet(newData);
+        newSheet["!cols"] = [
+            { wch: 8 }, // ID
+            { wch: 20 }, // Name
+            { wch: 8 }, // Department
+            { wch: 8 }, // Time In
+            { wch: 8 }, // Time Out
+            { wch: 12 }, // Overtime
+            { wch: 12 }, // Extra Info
+            { wch: 20 }, // Total Hours
+            { wch: 12 }  // Another value
+        ];
         XLSX.utils.book_append_sheet(workbook, newSheet, `Day ${day}`);
     }
 
@@ -1359,4 +1311,35 @@ async function loadTemplate() {
         console.error("Error loading template:", error);
     }
 }
+// $("#exportExcelView").click(function(){
+//     $("#excelView").table2excel({
+//       // exclude CSS class
+//       exclude: ".noExl",
+//       name: "Worksheet Name",
+//       filename: "SomeFile", //do not include extension
+//       fileext: ".xls", // file extension
+//       preserveColors:true
 
+//     }); 
+//   });
+
+function exportToExcel() {
+    let table = document.getElementById("excelView");
+    let clonedTable = table.cloneNode(true);
+    // Convert table to HTML string and remove <hr> tags
+    let tableHTML = clonedTable.outerHTML.replace(/<hr[^>]*>/g, '<br>');
+    
+    let htmlBlob = new Blob([
+        `<html><head><meta charset="UTF-8"></head><body>${tableHTML}</body></html>`
+    ], { type: "application/vnd.ms-excel" });
+    
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(htmlBlob);
+    link.download = "Attendance_Report.xls";
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+document.getElementById("exportExcelView").addEventListener("click", exportToExcel);
