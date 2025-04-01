@@ -1,0 +1,30 @@
+{
+  "name": "dhsud-4a",
+  "version": "1.0.0",
+  "description": "automated dtr monitoring",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "electron": "^35.1.2",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+  "files": [
+    "index.js",
+    "index.html",
+    "main.js",
+    "renderer.js",
+    "assets/**/*"
+  ],
+    "icon": "/content/Logo.ico"
+} 
+}
