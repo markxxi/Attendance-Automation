@@ -1158,13 +1158,20 @@ function searchByName() {
 
 
 // dropdown for filter by division
+// dropdown for filter by division
 function filterTable() {
-    var filterValue = document.getElementById("filter").value;
+    var filterValue = document.getElementById("filter").value.trim().toUpperCase();
     var table = document.getElementById("tableResult");
     var tr = table.getElementsByTagName("tr");
 
-    for (var i = 1; i < tr.length; i++) {
-        // Start at 1 to skip table header
+    // Close all collapsibles first
+    document.querySelectorAll(".collapsible-content").forEach(row => row.classList.add("d-none"));
+    document.querySelectorAll(".custom-arrow i").forEach(icon => {
+        icon.classList.remove("bi-chevron-down");
+        icon.classList.add("bi-chevron-right");
+    });
+
+    for (var i = 1; i < tr.length; i++) { // Start at 1 to skip table header
         var mainRow = tr[i];
         var detailsRow = tr[i + 1]; 
 
@@ -1172,20 +1179,30 @@ function filterTable() {
             continue;
         }
 
-        var td = tr[i].getElementsByTagName("td")[2]; // 3rd column (Department)
+        var td = mainRow.getElementsByTagName("td")[2]; // 3rd column (Department)
 
         if (td) {
             var val = td.textContent || td.innerText;
-            if (filterValue === "" || val.indexOf(filterValue) > -1) {
-                mainRow.style.display = "";
-                if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
-                    detailsRow.style.display = "?";
-                }
-            } else {
-                mainRow.style.display = "none";
-                if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
-                    detailsRow.style.display = "none";
-                }
+            var isMatch = filterValue === "" || val.toUpperCase().includes(filterValue);
+
+            mainRow.style.display = isMatch ? "" : "none";
+
+            // Handle collapsible content (next row)
+            if (detailsRow && detailsRow.classList.contains("collapsible-content")) {
+                detailsRow.style.display = isMatch ? "" : "none";
+
+                // Show/hide inner ck-rows inside the collapsible content
+                detailsRow.querySelectorAll("tr").forEach(row => {
+                    if (row.classList.contains("ck-row") || !row.getAttribute("class")) {
+                        if (isMatch) {
+                            row.style.removeProperty('display');
+                            row.classList.add('show-row');
+                        } else {
+                            row.classList.remove('show-row');
+                            row.style.display = "none";
+                        }
+                    }
+                });
             }
         }
     }
