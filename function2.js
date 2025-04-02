@@ -613,9 +613,10 @@ function splitTime(key, cell4, index, selecteddate) {
     } else {
         var timeToString = timeRecordForDate.toString();
         var splitString = timeToString.split(" ");
-        getFirstTimeIndex = splitString[index];
+        const splitString2 = splitString.filter(str => str !== "");
+        getFirstTimeIndex = splitString2[index];
 
-        getFirstTimeIndexLate = splitString[0]; // Extract first time (clock-in)
+        getFirstTimeIndexLate = splitString2[0]; // Extract first time (clock-in)
         let timeMatch = getFirstTimeIndexLate.match(/\b\d{1,2}:\d{2}\b/); 
         if (timeMatch) {
             let [hours, minutes] = timeMatch[0].split(":").map(Number);
@@ -632,7 +633,7 @@ function splitTime(key, cell4, index, selecteddate) {
                 totalLateMinutes = 0; // Reset if not late
             }
         }
-
+        console.log("breakpoint" + splitString);
         cell4.textContent = getFirstTimeIndex;
     }
 }
@@ -646,26 +647,28 @@ function calculateTimeDifference(key, cell8, cell5) {
     } else {
         var timeToString = timeRecordForDate.toString();
         var splitString = timeToString.split(" ");
+        const splitString2 = splitString.filter(str => str !== "");
         
-        var getFirstTime = splitString[0];
-        var getLastTime = splitString[3];
+        var getFirstTime = splitString2[0];
+        var getLastTime = splitString2[3];
         var [hours, minutes] = getFirstTime.split(":").map(Number);
         //console.log(hours);
         var [hoursLast, minutesLast] = getLastTime.split(":").map(Number);
         if (hours < 7) {
             getFirstTime = "07:00";
             
-        } else if (hoursLast > 18 || (hoursLast === 18 && minutesLast > 0) ) {
+        } 
+        if (hoursLast > 18 || (hoursLast === 18 && minutesLast > 0) ) {
             getLastTime = "18:00";
         }
         
-        //console.log(getLastTime);
+        console.log(splitString2 + " " + getLastTime);
         calc(getFirstTime, getLastTime, cell8, cell5);
     }
 }
 
 var totalRenderedTime, hours, minutes;
-/*
+
 function calc(start, end, cell8, cell5) {
     if (start && end) {
         start = start.split(":");
@@ -699,8 +702,8 @@ function calc(start, end, cell8, cell5) {
         cell8.textContent = "No time data";
         cell5.textContent = "No time data";
     }
-} */
-
+} 
+/*
     function calc(start, end, cell8, cell5) {
         if (start && end) {
             start = start.split(":");
@@ -733,7 +736,7 @@ function calc(start, end, cell8, cell5) {
             cell5.textContent = "No time data";
         }
     }
-    
+    */
 
 function overtime(key, cell6, cell9, cell7) {
     if (typeof timeRecordForDate === "undefined") {

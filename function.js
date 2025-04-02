@@ -33,8 +33,7 @@ var json;
 
 function previewExcelFile(file) {
       const reader = new FileReader();
-
-    reader.onload = function (e) {
+        reader.onload = function (e) {
         const data = e.target.result;
         const workbook = XLSX.read(data, {
             type: "binary",
@@ -258,13 +257,13 @@ function validateTimeRecords() {
         for (let day in employee.records) {
             const recordTimes = employee.records[day];
             const splitTimes = recordTimes[0] ? recordTimes[0].split(" ") : [];
-
-            if (splitTimes.length !== 0 && splitTimes.length !== 4) {
+            const splitTimes2 = splitTimes.filter(str => str !== "");
+            if (splitTimes2.length !== 0 && splitTimes2.length !== 4) {
                 if (!errorRecords[employee.name]) {
                     errorRecords[employee.name] = [];
                 }
                 errorRecords[employee.name].push(
-                    `day ${day} (found ${splitTimes.length})`,
+                    `day ${day} (found ${splitTimes2.length})`,
                 );
             }
         }
@@ -341,3 +340,38 @@ function tableresult() {
         tableBody.appendChild(tr);
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("fileInput");
+    const expandIcon = document.getElementById("expandIcon");
+    const fileModal = document.getElementById("fileModal");
+    const modalBody = document.getElementById("modalBody");
+    const closeModal = document.getElementById("closeModal");
+
+    if (!fileInput || !expandIcon || !fileModal || !modalBody) {
+        console.error("Missing required elements in the DOM.");
+        return;
+    }
+
+    // Function to preview file inside modal
+    expandIcon.addEventListener("click", function () {
+        if (json) {
+            modalBody.innerHTML = document.getElementById("previewExcelFile").innerHTML; // Copy preview to modal
+            fileModal.style.display = "block";
+        } else {
+            alert("Please upload an Excel file first.");
+        }
+    });
+
+    // Close the modal when clicking 'X'
+    closeModal.addEventListener("click", function () {
+        fileModal.style.display = "none";
+    });
+
+    // Close the modal if user clicks outside of it
+    window.addEventListener("click", function (event) {
+        if (event.target === fileModal) {
+            fileModal.style.display = "none";
+        }
+    });
+});
