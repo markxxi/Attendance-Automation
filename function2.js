@@ -1381,3 +1381,47 @@ function exportToExcel() {
 }
 
 document.getElementById("exportExcelView").addEventListener("click", exportToExcel);
+
+/*******************
+ * Leave Calculation */
+
+function computeleave () {
+    const computeBtn = document.querySelector(".computeBtn");
+    const vl = document.querySelector(".VL_input");
+    const SL_input = document.querySelector(".SL_input");
+
+    computeBtn.addEventListener("click", () => {
+        console.log("VL value:", vl.value);
+        console.log("SL value:", SL_input.value);
+    });
+}
+function adjustLeave(daySample, lateSample) {
+    const hoursPerDay = 8; // 8 hours in a workday
+    const totalHours = daySample * hoursPerDay; // Convert leave days to total hours
+
+    // Subtract late minutes from total hours
+    const remainingMinutes = totalHours * 60 - lateSample; 
+
+    // Convert back to days, hours, and minutes
+    const remainingDays = Math.floor(remainingMinutes / (hoursPerDay * 60)); // Full days
+    const remainingHours = Math.floor((remainingMinutes % (hoursPerDay * 60)) / 60); // Hours left
+    const remainingMins = remainingMinutes % 60; // Remaining minutes
+
+    return { remainingDays, remainingHours, remainingMins };
+}
+
+// Example
+var daySample = 8; // 8 days leave
+var lateSample = 179; // 3 minutes late
+
+const { remainingDays, remainingHours, remainingMins } = adjustLeave(daySample, lateSample);
+
+console.log(`Adjusted Leave Days: ${remainingDays} days, ${remainingHours} hours, ${remainingMins} minutes`);
+
+function backButton() {
+    const backButton = document.getElementById("back-button");
+    backButton.addEventListener("click", function () {
+        window.location.href = "test.html";
+    });
+}
+backButton();

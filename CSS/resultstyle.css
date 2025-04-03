@@ -396,3 +396,25 @@ hr {
     margin-top: 4px !important;
     margin-bottom: 4px !important;
 }
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.25) !important;
+    font-size: 14px !important;
+    display: flex;
+    align-items: center; /* Vertically center the content */
+    justify-content: center; /* Horizontally center the content */
+    color: rgba(255, 255, 255, 0.7) !important;
+    padding: 5px 15px 3px 15px !important;
+
+}
+
+.back-btn i {
+     margin-right: 5px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.back-btn-container {
+  position: absolute; /* Position it to the left */
+  left: 17px; /* Adjust the distance from the left side */
+}

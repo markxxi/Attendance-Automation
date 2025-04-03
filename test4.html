@@ -22,8 +22,7 @@
         />
     </head>
     <style>
-   
-          @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+        @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
         .counter-box,
         .counter-box1 {
             display: inline-block;
@@ -57,7 +56,6 @@
             cursor: pointer;
             height: 30px;
             color: white;
-            
         }
         .btn-counter1 {
             border: none;
@@ -82,28 +80,26 @@
         .leftpanel {
             text-align: left;
             color: #000;
-            font-feature-settings: 'case' on;
-            font-family: 'inter';
+            font-feature-settings: "case" on;
+            font-family: "inter";
             font-size: 13px;
             font-style: normal;
             font-weight: 600;
             line-height: 40%; /* 15.861px */
-        
-            
+
             flex: 1 0 0;
             align-self: stretch;
         }
         .col-left {
-          
-          overflow: hidden;
-          margin-right: 10px;
-          background: rgba(255, 255, 255, 0.30);
-          backdrop-filter: blur(10px);
-          border-radius: 7px;
-          text-align: center;
-          color: white;
+            overflow: hidden;
+            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 7px;
+            text-align: center;
+            color: white;
             display: flex;
-            
+
             padding: 28px 20px 20px 20px;
             flex-direction: column;
             justify-content: center;
@@ -115,15 +111,14 @@
         .col-right {
             height: 251px;
             padding-top: 8.5px;
-              background: rgba(255, 255, 255, 0.30);
-              backdrop-filter: blur(10px);
-              border-radius: 7px;
-            
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 7px;
         }
 
         .bottom-btn-grp {
             width: 100%;
-            
+
             flex-shrink: 0;
             bottom: 5px;
         }
@@ -134,66 +129,78 @@
     </style>
     <body>
         <div class="container-fluid">
-            <div class="row  custom-row">
+            <div class="row custom-row">
                 <div class="col col-left">
                     <div class="leftpanel">
-                    <p>TOTAL COMPUTATION</p>
-                    <p>Late: <span class="totallate" id=""> placeholder </span> MIN</p>
-                    <p>Overtime: <span class="totalot" id=""> placeholder </span></p> 
-                    <p>Undertime:  <span class="totalut" id=""> placeholder </span></p> 
-                    <p>Vacation Leave:</p>
-                    <p>
-                        Hours Rendered:
-                        <span class="totaltime" id=""> placeholder </span>
-                    </p>
-                        </div>
-                    <div class="bottom-btn-grp ">
-                    <div class="d-flex align-items-center   p-0">
-                        <!-- Left side: counter boxes -->
-                        <div class="d-flex">
-                            <!-- First counter box -->
-                            <div class="counter-box me-3">
-                                <input
-                                    type="text"
-                                    class="counter-input"
-                                    value="0"
-                                    readonly
-                                />
-                                <div class="btn-group ms-3" role="group">
-                                    <button class="btn-counter px-2">
-                                        <i class="bi bi-dash"></i>
-                                    </button>
-                                    <button class="btn-counter1 px-2">
-                                        <i class="bi bi-plus"></i>
-                                    </button>
+                        <p>TOTAL COMPUTATION</p>
+                        <p>
+                            Late:
+                            <span class="totallate" id=""> placeholder </span>
+                            MIN
+                        </p>
+                        <p>
+                            Overtime:
+                            <span class="totalot" id=""> placeholder </span>
+                        </p>
+                        <p>
+                            Undertime:
+                            <span class="totalut" id=""> placeholder </span>
+                        </p>
+                        <p>Vacation Leave:</p>
+                        <p>
+                            Hours Rendered:
+                            <span class="totaltime" id=""> placeholder </span>
+                        </p>
+                    </div>
+                    <div class="bottom-btn-grp">
+                        <div class="d-flex align-items-center p-0">
+                            <!-- Left side: counter boxes -->
+                            <div class="d-flex">
+                                <!-- First counter box -->
+                                <div class="counter-box me-3">
+                                    <input
+                                        type="text"
+                                        class="counter-input VL_input"
+                                        value="0"
+                                       
+                                    />
+                                    <div class="btn-group ms-3" role="group">
+                                        <button class="btn-counter px-2">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                        <button class="btn-counter1 px-2">
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Second counter box -->
+                                <div class="counter-box">
+                                    <input
+                                        type="text"
+                                        class="counter-input SL_input"
+                                        value="0"
+                                      
+                                    />
+                                    <div class="btn-group ms-3" role="group">
+                                        <button class="btn-counter px-2">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                        <button class="btn-counter1 px-2">
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Second counter box -->
-                            <div class="counter-box">
-                                <input
-                                    type="text"
-                                    class="counter-input"
-                                    value="0"
-                                    readonly
-                                />
-                                <div class="btn-group ms-3" role="group">
-                                    <button class="btn-counter px-2">
-                                        <i class="bi bi-dash"></i>
-                                    </button>
-                                    <button class="btn-counter1 px-2">
-                                        <i class="bi bi-plus"></i>
-                                    </button>
-                                </div>
+                            <!-- Right side: Compute button -->
+                            <div class="ms-auto">
+                                <button
+                                    class="btn btn-submit px-4 computeBtn"
+                                   onclick="computeleave()">
+                                    COMPUTE
+                                </button>
                             </div>
-                        </div>
-
-                        <!-- Right side: Compute button -->
-                        <div class="ms-auto">
-                            <button class="btn btn-submit px-4" id="computeBtn">
-                                COMPUTE
-                            </button>
-                        </div>
                         </div>
                     </div>
                 </div>
