@@ -100,7 +100,7 @@ function updateTable(date) {
             cell3.textContent = jsonObject[key].department;
 
             splitTime(key, cell4, 0, date, date);
-            splitTime(key, cell5, 3, date, date);
+            splitTime2(key, cell5, 3, date, date);
 
             calculateTimeDifference(key, cell8, cell5, date);
 
@@ -327,10 +327,11 @@ function ExcelViewForCollapsible(excelView, selectedUSID) {
 
                 tableHTML += "<tr>";
                 row.forEach((cell, idx) => {
-                    tableHTML += `<td>${cell || ""}</td>`;
+                    tableHTML += `<td>${cell || "?"}</td>`;
                 });
-                for (let i = row.length; i < maxColumns; i++) {
-                    tableHTML += `<td></td>`;
+                if (row.length < maxColumns) {
+                    let remainingColumns = maxColumns - row.length;
+                    tableHTML += `<td style=" font-style: italic; font-weight:bold;" colspan="${remainingColumns}">RAW DATA</td>`;  // Merge empty cells into one
                 }
                 tableHTML += "</tr>";
             } 
@@ -596,7 +597,7 @@ function splitTime(key, cell4, index) {
 } */
 
     let totalLateMinutes = 0; // Global variable to store total late minutes
-
+/*
 function splitTime(key, cell4, index, selecteddate) {
     const cal = document.getElementById("startDate");
     let datevalue = cal.value.toString();
@@ -633,7 +634,99 @@ function splitTime(key, cell4, index, selecteddate) {
                 totalLateMinutes = 0; // Reset if not late
             }
         }
-        console.log("breakpoint" + splitString);
+        
+        cell4.textContent = getFirstTimeIndex;
+    }
+} */
+
+function splitTime(key, cell4, index) {
+    const cal = document.getElementById("startDate");
+    let datevalue = cal.value.toString();
+    let [year1, month1, day1] = datevalue.split("-").map(Number);
+    let mondays = getMondays(year1, month1).map(String); 
+
+    timeRecordForDate =
+        jsonObject[key].records && jsonObject[key].records[3]
+            ? jsonObject[key].records[selectedDate][0]
+            : undefined;
+
+    if (typeof timeRecordForDate === "undefined") {
+        cell4.textContent = "-";
+    } else {
+        var timeToString = timeRecordForDate.toString();
+        var splitString = timeToString.split(" ");
+        getFirstTimeIndex = splitString[index];
+
+        getFirstTimeIndexLate = splitString[0]; // Extract first time (clock-in)
+        let timeMatch = getFirstTimeIndexLate.match(/\b\d{1,2}:\d{2}\b/); 
+        if (timeMatch) {
+            let [hours, minutes] = timeMatch[0].split(":").map(Number);
+            let totalMinutes = hours * 60 + minutes;
+
+            let thresholdMinutes = mondays.includes(day1.toString()) ? 8 * 60 : 9 * 60;
+
+            if (totalMinutes > thresholdMinutes) {
+                let lateMinutes = totalMinutes - thresholdMinutes;
+                totalLateMinutes = lateMinutes; 
+                //console.log(`Late by ${lateMinutes} minutes`);
+                    if (mondays.includes(day1.toString()) && totalMinutes > 8 * 60) {
+                  
+                         cell4.style.color = "red";
+                   
+                    
+                }
+            } else {
+                totalLateMinutes = 0; 
+                cell4.style.color = "black"; // Reset color if not late
+            }
+        }
+
+        cell4.textContent = getFirstTimeIndex;
+    }
+}
+
+function splitTime2(key, cell4, index) {
+    const cal = document.getElementById("startDate");
+    let datevalue = cal.value.toString();
+    let [year1, month1, day1] = datevalue.split("-").map(Number);
+    let mondays = getMondays(year1, month1).map(String); 
+
+    timeRecordForDate =
+        jsonObject[key].records && jsonObject[key].records[3]
+            ? jsonObject[key].records[selectedDate][0]
+            : undefined;
+
+    if (typeof timeRecordForDate === "undefined") {
+        cell4.textContent = "-";
+    } else {
+        var timeToString = timeRecordForDate.toString();
+        var splitString = timeToString.split(" ");
+        getFirstTimeIndex = splitString[index];
+
+        getFirstTimeIndexLate = splitString[0]; // Extract first time (clock-in)
+        let timeMatch = getFirstTimeIndexLate.match(/\b\d{1,2}:\d{2}\b/); 
+        if (timeMatch) {
+            let [hours, minutes] = timeMatch[0].split(":").map(Number);
+            let totalMinutes = hours * 60 + minutes;
+
+            let thresholdMinutes = mondays.includes(day1.toString()) ? 8 * 60 : 9 * 60;
+
+            if (totalMinutes > thresholdMinutes) {
+                let lateMinutes = totalMinutes - thresholdMinutes;
+                totalLateMinutes = lateMinutes; 
+              //  console.log(`Late by ${lateMinutes} minutes`);
+                    if (mondays.includes(day1.toString()) && totalMinutes > 8 * 60) {
+
+                         cell4.style.color = "black";
+
+
+                }
+            } else {
+                totalLateMinutes = 0; 
+                cell4.style.color = "black"; // Reset color if not late
+            }
+        }
+
         cell4.textContent = getFirstTimeIndex;
     }
 }
@@ -641,6 +734,11 @@ function splitTime(key, cell4, index, selecteddate) {
 
 function calculateTimeDifference(key, cell8, cell5) {
     // var timeRecordForDate = jsonObject[key].records && jsonObject[key].records[3] ? jsonObject[key].records[3][0] : undefined;
+
+    const cal = document.getElementById("startDate");
+    let datevalue = cal.value.toString();
+    let [year1, month1, day1] = datevalue.split("-").map(Number);
+    let mondays = getMondays(year1, month1).map(String);
 
     if (typeof timeRecordForDate === "undefined") {
         cell8.textContent = "-";
@@ -661,8 +759,12 @@ function calculateTimeDifference(key, cell8, cell5) {
         if (hoursLast > 18 || (hoursLast === 18 && minutesLast > 0) ) {
             getLastTime = "18:00";
         }
+       
+        if (mondays.includes(day1.toString()) && hoursLast > 17 || (hoursLast === 17 && minutesLast > 0) ) {
+            getLastTime="17:00";
+        } 
         
-        console.log(splitString2 + " " + getLastTime);
+       // console.log(splitString2 + " " + getLastTime);
         calc(getFirstTime, getLastTime, cell8, cell5);
     }
 }
@@ -852,6 +954,7 @@ function hourValues(h) {
 function getMonth() {
     const cal = document.getElementById("startDate");
     const getMonth = localStorage.getItem("monthOfFile");
+    console.log(getMonth);
     //const getMonth = "Month : Mar 05 2024";
     //console.log(getMonth);
     var months = [
@@ -906,7 +1009,7 @@ function getMonth() {
         const date = new Date(match[3], monthIndex, selectedDate + 1);
         const formattedDate = date.toISOString().split("T")[0];
         cal.value = formattedDate;
-       // console.log(match[3], mapMonth, shortMonth, date);
+       console.log(match[3], mapMonth, shortMonth, date);
     }
     else {
         //console.log(regex3.test(getMonth));
