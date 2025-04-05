@@ -214,13 +214,6 @@ if (currentUser !== null && days.length > 0) {
   users.push(currentUser);
 }
 convertedToJsonObj = JSON.stringify(users, null, 2);
-//console.log(convertedToJsonObj);
-//getResult();
-// console.log("Final Output:", JSON.stringify(users, null, 2));
-// openTest2();
-//window.location.href = "test3.html";
-
-//window.addEventListener('load',tableresult,false);
 handleJsonString();
 }
 

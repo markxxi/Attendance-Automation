@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "electron": "^35.1.4",
     "exceljs": "^4.4.0",
     "xlsx": "^0.18.5",
     "xlsx-js-style": "^1.2.0",
