@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Parent container for left and right columns */
+.cf-cl {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+/* Left column: 40% width */
+.col-left {
+  flex: 1 1 30%;
+  width: 200px; /* Adjust as needed */
+  overflow: hidden;
+  margin: 5px;
+  background: rgba(255, 255, 255, 0.30);
+  backdrop-filter: blur(10px);
+  border-radius: 7px;
+  text-align: left;
+  color: black;
+  display: flex;
+  padding: 28px 20px 20px 30px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: none;
+}
+.col-left > p:first-child {
+  align-self: center; /* Override flex alignment */
+  text-align: center; /* Center text within the element */
+  width: 100%;
+}
+/* Right column: 60% width */
+.col-right {
+  flex: 1 1 65%;
+  margin: 5px;
+  width: 200px; /* Adjust as needed */
+  padding: 20px 20px 0px 20px;
+  background: rgba(255, 255, 255, 0.30);
+  backdrop-filter: blur(10px);
+  border-radius: 7px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+/* When the screen is too narrow, stack the columns */
+@media screen and (max-width: 768px) {
+  .col-left,
+  .col-right {
+    flex: 1 1 100%;
+  }
+}
+
+/* Left column text adjustments */
+.leftpanel {
+  text-align: left;
+  color: #000;
+  font-feature-settings: 'case' on;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(11px, calc(11px + 0.5vw), 13px);
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.4;
+  flex: 1 0 auto;
+  align-self: stretch;
+}
+
+/* Make the table responsive inside the right column */
+.col-right table {
+  width: 100%;
+  table-layout: fixed;
+  overflow: hidden;
+}
+.col-right table th,
+.col-right table td {
+  padding: 0.5em;
+  font-size: clamp(5px, calc(5px + 0.5vw), 16px);
+  word-wrap: break-word;
+}
+
+.custom-row {
+  overflow: hidden;
+}
+.total-header {
+  font-weight: bold;
+}
+.show-row {
+  display: table-row !important;
+}
+
+.raw-data {
+  text-align: center;
+  margin-top: 10px;
+ font-style: italic;
+  font-size: clamp(12px, calc(10px + 0.4vw), 10px);
+  width: 100%;
+}
+p {
+  font-weight: bold;
+}
+
+p span {
+  font-weight: normal;
+}
+
+.ptitle {
+  font-weight: bold;
+}
