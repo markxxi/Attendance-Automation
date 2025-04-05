@@ -1,0 +1,60 @@
+    /* ===== Responsive Ellipses Background ===== */
+    .TV {
+        position: fixed;
+        top: 0;
+        left: 0;
+        max-width: 1350px;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1; /* Ensures it stays behind main content */
+      }
+      .TV .group {
+        width: 100vw;
+        height: 100vh;
+      }
+      .TV .overlap-group {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+      }
+      .TV .ellipse,
+      .TV .ellipse-1,
+      .TV .ellipse-2,
+      .TV .ellipse-3 {
+        position: fixed;
+        border-radius: 50%;
+        overflow: hidden;
+        transform: translate(-50%, 50%);
+      }
+      /* Main Ellipse */
+      .TV .ellipse {
+        width: clamp(100vw, 200vw, 300vw);
+        height: clamp(120vw, 220vw, 300vw);
+        left: 40vw;
+        bottom: 0vh;
+        background: radial-gradient(circle, rgb(131, 175, 245) 0%, rgb(36, 82, 193) 57.62%);
+      }
+      /* Large Background Ellipse */
+      .TV .ellipse-1 {
+        width: clamp(70vw, 120vw, 190vw);
+        height: clamp(75vw, 125vw, 195vw);
+        left: 5vw;
+        bottom: 0vh;
+        background: radial-gradient(circle, #83aff5 0%, #2452c1 80%);
+      }
+      /* Mid-sized Ellipse */
+      .TV .ellipse-2 {
+        width: clamp(60vw, 100vw, 150vw);
+        height: clamp(60vw, 95vw, 175vw);
+        left: -5vw;
+        bottom: 0vh;
+        background: radial-gradient(circle, rgb(131, 175, 245) 0%, rgb(36, 82, 193) 80%);
+      }
+      /* Smallest Ellipse */
+      .TV .ellipse-3 {
+        width: clamp(40vw, 60vw, 70vw);
+        height: clamp(40vw, 55vw, 70vw);
+        left: 0vw;
+        bottom: 0vh;
+        background: radial-gradient(circle, rgb(131, 175, 245) 0%, rgb(36, 82, 193) 80%);
+      }
